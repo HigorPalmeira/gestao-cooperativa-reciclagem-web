@@ -35,6 +35,14 @@ public class Fornecedor {
 	
 	private void validar() {
 		
+		if (this.nome == null) {
+			throw new RuntimeException("Nome inválido! O nome não pode estar vazio.");
+		}
+		
+		if (this.nome.isBlank()) {
+			throw new RuntimeException("Nome inválido! O nome não pode estar em branco.");
+		}
+		
 		if (this.tipo.equals(TipoFornecedor.COLETOR)) {
 			if (!Validador.isCpf(this.documento)) {
 				throw new RuntimeException("CPF inválido!");
@@ -43,6 +51,10 @@ public class Fornecedor {
 			if (!Validador.isCnpj(this.documento)) {
 				throw new RuntimeException("CNPJ inválido!");
 			}
+		}
+		
+		if (this.dtCadastro.after(Date.valueOf(LocalDate.now()))) {
+			throw new RuntimeException("Data de cadastro inválida! Não é possível realizar o cadastro com uma data posterior à data atual");
 		}
 		
 	}

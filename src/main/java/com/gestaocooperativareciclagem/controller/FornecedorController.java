@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.gestaocooperativareciclagem.dao.FornecedorDAO;
 import com.gestaocooperativareciclagem.model.Fornecedor;
 import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
+import com.gestaocooperativareciclagem.service.FornecedorService;
 
 /**
  * Servlet implementation class FornecedorController
@@ -23,10 +24,12 @@ public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private FornecedorDAO fornecedorDao;
+	private FornecedorService fornecedorService;
 	
 	public void init() throws ServletException {
 		try {
 			fornecedorDao = new FornecedorDAO();
+			fornecedorService = new FornecedorService(fornecedorDao);
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar FornecedorDAO", e);
 		}
@@ -104,7 +107,8 @@ public class FornecedorController extends HttpServlet {
 	
 	protected void listarFornecedores(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Fornecedor> fornecedores = fornecedorDao.listarFornecedores();
+		List<Fornecedor> fornecedores = fornecedorService.listarFornecedores();
+				//fornecedorDao.listarFornecedores();
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
