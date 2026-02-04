@@ -109,7 +109,7 @@ public class FornecedorDAO {
 		
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorNome(String nomeFornecedor) {
+	public List<Fornecedor> listarFornecedoresPorNome(String nomeFornecedor) {
 
 		String select = "select * from fornecedor where nome_fornecedor = ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
@@ -148,7 +148,7 @@ public class FornecedorDAO {
 
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorTipo(TipoFornecedor tipoFornecedor) {
+	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipoFornecedor) {
 
 		String select = "select * from fornecedor where tipo_fornecedor = ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
@@ -187,7 +187,7 @@ public class FornecedorDAO {
 
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
+	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
 
 		String select = "select * from fornecedor where dtCadastro_fornecedor between ? and ?;";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
@@ -227,18 +227,19 @@ public class FornecedorDAO {
 
 	}
 
-	public void atualizarFornecedor(Fornecedor fornecedor) {
+	public void atualizarFornecedor(String documentoOriginal, Fornecedor fornecedor) {
 
-		String update = "update fornecedor set nome_fornecedor=?, tipo_fornecedor=? where documento_fornecedor=?";
+		String update = "update fornecedor set documento_fornecedor=?, nome_fornecedor=?, tipo_fornecedor=? where documento_fornecedor=?";
 
 		try {
 
 			Connection conexao = Conexao.getConnection();
 
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setString(1, fornecedor.getNome());
-			pst.setString(2, fornecedor.getTipo().name());
-			pst.setString(3, fornecedor.getDocumento());
+			pst.setString(1, fornecedor.getDocumento());
+			pst.setString(2, fornecedor.getNome());
+			pst.setString(3, fornecedor.getTipo().name());
+			pst.setString(4, documentoOriginal);
 
 			pst.executeUpdate();
 

@@ -84,11 +84,11 @@ public class FornecedorController extends HttpServlet {
 		try {
 			switch(action) {
 				case "criar":
-					criarFornecedor(request, response);
+					inserirFornecedor(request, response);
 					break;
 					
 				case "editar":
-					editarFornecedor(request, response);
+					atualizarFornecedor(request, response);
 					break;
 					
 				case "deletar":
@@ -121,10 +121,7 @@ public class FornecedorController extends HttpServlet {
 		
 		String documento = request.getParameter("documento");
 		
-		Fornecedor fornecedor = new Fornecedor();
-		fornecedor.setDocumento(documento);
-		
-		fornecedorDao.buscarFornecedorPorDocumento(fornecedor);
+		Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
 		
 		request.setAttribute("fornecedor", fornecedor);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/detalheFornecedor.jsp");
@@ -133,11 +130,11 @@ public class FornecedorController extends HttpServlet {
 		
 	}
 	
-	protected void buscarFornecedoresPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarFornecedoresPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String nome = request.getParameter("nome");
 		
-		List<Fornecedor> fornecedores = fornecedorDao.buscarFornecedoresPorNome(nome);
+		List<Fornecedor> fornecedores = fornecedorDao.listarFornecedoresPorNome(nome);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
@@ -146,11 +143,11 @@ public class FornecedorController extends HttpServlet {
 		
 	}
 	
-	protected void buscarFornecedoresPorTipo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarFornecedoresPorTipo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
 		
-		List<Fornecedor> fornecedores = fornecedorDao.buscarFornecedoresPorTipo(tipo);
+		List<Fornecedor> fornecedores = fornecedorService.buscarFornecedoresPorTipo(tipo);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
@@ -159,11 +156,12 @@ public class FornecedorController extends HttpServlet {
 		
 	}
 	
-	protected void buscarFornecedoresPorData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarFornecedoresPorData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
+		Date dataInicial = Date.valueOf(request.getParameter("dataInicial"));
+		Date dataFinal = Date.valueOf(request.getParameter("dataFinal"));
 		
-		List<Fornecedor> fornecedores = fornecedorDao.buscarFornecedoresPorTipo(tipo);
+		List<Fornecedor> fornecedores = fornecedorService.buscarFornecedoresPorDataCadastro(dataInicial, dataFinal);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
@@ -172,28 +170,26 @@ public class FornecedorController extends HttpServlet {
 		
 	}
 	
-	protected void criarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void inserirFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String documento = request.getParameter("documento");
 		String nome = request.getParameter("nome");
 		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
-		Date dtCadastro = Date.valueOf(request.getParameter("dtCadastro"));
-		
-		Fornecedor fornecedor = new Fornecedor(documento, nome, tipo, dtCadastro);
-		fornecedorDao.inserirFornecedor(fornecedor);
+
+		fornecedorService.inserirFornecedor(documento, nome, tipo);
 		
 		response.sendRedirect("ListarFornecedores");
 		
 	}
 
-	protected void editarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void atualizarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String documento = request.getParameter("documento");
+		String documentoOriginal = request.getParameter("documentoOriginal");
+		String documentoNovo = request.getParameter("documentoNovo");
 		String nome = request.getParameter("nome");
 		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
 		
-		Fornecedor fornecedor = new Fornecedor(documento, nome, tipo);
-		fornecedorDao.atualizarFornecedor(fornecedor);
+		fornecedorService.atualizarFornecedor(documentoOriginal, documentoNovo, nome, tipo);
 		
 		response.sendRedirect("pages/fornecedor/fornecedores.jsp");
 		
@@ -202,7 +198,8 @@ public class FornecedorController extends HttpServlet {
 	protected void deletarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String documento = request.getParameter("documento");
-		fornecedorDao.deletarFornecedor(documento);
+		
+		fornecedorService.deletarFornecedor(documento);
 		
 		response.sendRedirect("pages/fornecedor/fornecedores.jsp");
 		
