@@ -74,7 +74,45 @@ public class ClienteDAO {
 		
 	}
 	
-	public void buscarCliente(Cliente cliente) {
+	public List<Cliente> listarClientesPorNomeEmpresa(String nome) {
+		
+		List<Cliente> listaClientes = new ArrayList<>();
+		
+		String select = "select * from cliente where nome_empresa_cliente=?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, nome);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				String cnpj = rset.getString("cnpj_cliente");
+				String nomeEmpresa = rset.getString("nome_empresa_cliente");
+				String contatoPrincipal = rset.getString("contato_principal_cliente");
+				String emailContato = rset.getString("email_contato_cliente");
+				Date dtCadastro = rset.getDate("dtCadastro_cliente");
+				
+				listaClientes.add(new Cliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato, dtCadastro));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaClientes;
+		
+	}
+	
+	public void buscarClientePorCnpj(Cliente cliente) {
 		
 		String select = "select * from cliente where cnpj_cliente = ?";
 		
@@ -83,6 +121,70 @@ public class ClienteDAO {
 			Connection conexao = Conexao.getConnection();
 			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, cliente.getCnpj());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				cliente.setCnpj(rset.getString("cnpj_cliente"));
+				cliente.setNomeEmpresa(rset.getString("nome_empresa_cliente"));
+				cliente.setContatoPrincipal(rset.getString("contato_principal_cliente"));
+				cliente.setEmailContato(rset.getString("email_contato_cliente"));
+				cliente.setDtCadastro(rset.getDate("dtCadastro_cliente"));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void buscarClientePorEmailContato(Cliente cliente) {
+		
+		String select = "select * from cliente where email_contato_cliente = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, cliente.getEmailContato());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				cliente.setCnpj(rset.getString("cnpj_cliente"));
+				cliente.setNomeEmpresa(rset.getString("nome_empresa_cliente"));
+				cliente.setContatoPrincipal(rset.getString("contato_principal_cliente"));
+				cliente.setEmailContato(rset.getString("email_contato_cliente"));
+				cliente.setDtCadastro(rset.getDate("dtCadastro_cliente"));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void buscarClientePorContatoPrincipal(Cliente cliente) {
+		
+		String select = "select * from cliente where contato_principal_cliente = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, cliente.getContatoPrincipal());
 			
 			ResultSet rset = pst.executeQuery();
 			
