@@ -50,6 +50,14 @@ public class Cliente {
 			throw new RuntimeException("Telefone de contato inválido!");
 		}
 		
+		if (nomeEmpresa == null) {
+			throw new RuntimeException("Nome da Empresa inválido! O nome da empresa não pode estar vazio.");
+		}
+		
+		if (nomeEmpresa.isBlank()) {
+			throw new RuntimeException("Nome da Empresa inválido! O noma da empresa não pode estar em branco.");
+		}
+		
 	}
 
 	public String getCnpj() {
