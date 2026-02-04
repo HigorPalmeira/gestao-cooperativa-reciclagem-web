@@ -189,7 +189,7 @@ public class FornecedorDAO {
 	
 	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
 
-		String select = "select * from fornecedor where dtCadastro_fornecedor between ? and ?;";
+		String select = "select * from fornecedor where dtCadastro_fornecedor between ? and ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
 
 		try {
