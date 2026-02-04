@@ -13,19 +13,6 @@ public class FornecedorService {
 		this.fornecedorDao = fornecedorDao;
 	}
 	
-	/*
-	 * protected void listarFornecedores(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		List<Fornecedor> fornecedores = fornecedorDao.listarFornecedores();
-		
-		request.setAttribute("listaFornecedores", fornecedores);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
-		
-		reqDis.forward(request, response);
-		
-	}
-	 * */
-	
 	public List<Fornecedor> listarFornecedores() {
 		
 		return fornecedorDao.listarFornecedores();
