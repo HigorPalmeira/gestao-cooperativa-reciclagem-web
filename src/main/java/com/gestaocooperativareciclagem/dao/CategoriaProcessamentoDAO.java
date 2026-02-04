@@ -68,7 +68,43 @@ public class CategoriaProcessamentoDAO {
 		
 	}
 	
-	public void buscarCategoriaProcessamento(CategoriaProcessamento categoriaProcessamento) {
+	public List<CategoriaProcessamento> listarCategoriasProcessamentoPorDescricao(String descricaoCategoria) {
+		
+		List<CategoriaProcessamento> listaCategoriasProcessamento = new ArrayList<>();
+		
+		String select = "select * from categoria_processamento where descricao_categoriaprocessamento = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, descricaoCategoria);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int id = rset.getInt("id_categoriaprocessamento");
+				String nome = rset.getString("nome_categoriaprocessamento");
+				String descricao = rset.getString("descricao_categoriaprocessamento");
+				
+				listaCategoriasProcessamento.add(new CategoriaProcessamento(id, nome, descricao));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaCategoriasProcessamento;
+		
+	}
+	
+	public void buscarCategoriaProcessamentoPorId(CategoriaProcessamento categoriaProcessamento) {
 		
 		String select = "select * from categoria_processamento where id_categoriaprocessamento = ?";
 		
@@ -78,6 +114,37 @@ public class CategoriaProcessamentoDAO {
 			
 			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, categoriaProcessamento.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				categoriaProcessamento.setId(rset.getInt("id_categoriaprocessamento"));
+				categoriaProcessamento.setNome(rset.getString("nome_categoriaprocessamento"));
+				categoriaProcessamento.setDescricao(rset.getString("descricao_categoriaprocessamento"));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void buscarCategoriaProcessamentoPorNome(CategoriaProcessamento categoriaProcessamento) {
+		
+		String select = "select * from categoria_processamento where nome_categoriaprocessamento = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, categoriaProcessamento.getNome());
 			
 			ResultSet rset = pst.executeQuery();
 			
