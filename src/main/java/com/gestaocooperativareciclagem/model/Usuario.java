@@ -33,8 +33,32 @@ public class Usuario {
 	
 	private void validar() {
 		
+		if (nome == null) {
+			throw new RuntimeException("Nome inválido! O nome não pode estar vazio.");
+		}
+		
+		if (nome.isBlank()) {
+			throw new RuntimeException("Nome inválido! O nome não pode estar branco.");
+		}
+		
 		if (!Validador.isEmail(this.email)) {
-			throw new RuntimeException("E-mail inválido!");
+			throw new RuntimeException("E-mail inválido! É necessário informar um e-mail válido.");
+		}
+		
+		if (senha == null) {
+			throw new RuntimeException("Senha inválida! A senha não pode estar vazia.");
+		}
+		
+		if (senha.isBlank()) {
+			throw new RuntimeException("Senha inválida! O senha não pode estar branco.");
+		}
+		
+		if (papel == null) {
+			throw new RuntimeException("Papel inválido! A papel não pode estar vazia.");
+		}
+		
+		if (papel.isBlank()) {
+			throw new RuntimeException("Papel inválido! O papel não pode estar branco.");
 		}
 		
 	}
