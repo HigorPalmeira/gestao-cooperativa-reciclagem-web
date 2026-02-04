@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gestaocooperativareciclagem.dao.UsuarioDAO;
 import com.gestaocooperativareciclagem.model.Usuario;
+import com.gestaocooperativareciclagem.service.UsuarioService;
 
 /**
  * Servlet implementation class UsuarioController
@@ -20,13 +21,13 @@ import com.gestaocooperativareciclagem.model.Usuario;
 public class UsuarioController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private UsuarioDAO usuarioDao;
+	private UsuarioService usuarioService;
 	
 	public void init() throws ServletException {
 		try {
-			usuarioDao = new UsuarioDAO();
+			usuarioService = new UsuarioService(new UsuarioDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar FornecedorDAO", e);
+			throw new ServletException("Erro ao inicializar UsuarioService", e);
 		}
 	}
        
@@ -74,11 +75,11 @@ public class UsuarioController extends HttpServlet {
 			
 			switch (action) {
 				case "criar":
-					criarUsuario(request, response);
+					inserirUsuario(request, response);
 					break;
 					
 				case "editar":
-					editarUsuario(request, response);
+					atualizarUsuario(request, response);
 					break;
 					
 				case "deletar":
@@ -97,22 +98,20 @@ public class UsuarioController extends HttpServlet {
 		
 	}
 	
-	protected void criarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void inserirUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//String nome, String email, String senha, String papel
 		String nome = request.getParameter("nome");
 		String email = request.getParameter("email");
 		String senha = request.getParameter("senha");
 		String papel = request.getParameter("papel");
 		
-		Usuario usuario = new Usuario(nome, email, senha, papel);
-		usuarioDao.inserirUsuario(usuario);
+		usuarioService.inserirUsuario(nome, email, senha, papel);
 		
 		response.sendRedirect("ListarUsuarios");
 		
 	}
 	
-	protected void editarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void atualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int id = Integer.parseInt( request.getParameter("id") );
 		String nome = request.getParameter("nome");
@@ -120,8 +119,7 @@ public class UsuarioController extends HttpServlet {
 		String senha = request.getParameter("senha");
 		String papel = request.getParameter("papel");
 		
-		Usuario usuario = new Usuario(id, nome, email, senha, papel);
-		usuarioDao.atualizarUsuario(usuario);
+		usuarioService.atualizarUsuario(id, nome, email, senha, papel);
 		
 		response.sendRedirect("ListarUsuarios");
 		
@@ -130,7 +128,7 @@ public class UsuarioController extends HttpServlet {
 	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		usuarioDao.deletarUsuario(id);
+		usuarioService.deletarUsuario(id);
 		
 		response.sendRedirect("ListarUsuarios");
 		
@@ -138,7 +136,7 @@ public class UsuarioController extends HttpServlet {
 	
 	protected void listarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Usuario> usuarios = usuarioDao.listarUsuarios();
+		List<Usuario> usuarios = usuarioService.listarUsuarios();
 		
 		request.setAttribute("listaUsuarios", usuarios);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
@@ -147,11 +145,11 @@ public class UsuarioController extends HttpServlet {
 		
 	}
 	
-	protected void buscarUsuariosPorPapel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarUsuariosPorPapel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String papel = request.getParameter("papel");
 		
-		List<Usuario> usuarios = usuarioDao.buscarUsuariosPorPapel(papel);
+		List<Usuario> usuarios = usuarioService.listarUsuariosPorPapel(papel);
 		
 		request.setAttribute("listaUsuarios", usuarios);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
@@ -160,11 +158,11 @@ public class UsuarioController extends HttpServlet {
 		
 	}
 	
-	protected void buscarUsuariosPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarUsuariosPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String nome = request.getParameter("nome");
 		
-		List<Usuario> usuarios = usuarioDao.buscarUsuariosPorNome(nome);
+		List<Usuario> usuarios = usuarioService.listarUsuariosPorNome(nome);
 		
 		request.setAttribute("listaUsuarios", usuarios);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
@@ -177,10 +175,7 @@ public class UsuarioController extends HttpServlet {
 		
 		int id = Integer.parseInt(request.getParameter("id"));
 		
-		Usuario usuario = new Usuario();
-		usuario.setId(id);
-		
-		usuarioDao.buscarUsuarioPorId(usuario);
+		Usuario usuario = usuarioService.buscarUsuarioPorId(id);
 		
 		request.setAttribute("usuario", usuario);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");
@@ -193,10 +188,7 @@ public class UsuarioController extends HttpServlet {
 		
 		String email = request.getParameter("email");
 		
-		Usuario usuario = new Usuario();
-		usuario.setEmail(email);
-		
-		usuarioDao.buscarUsuarioPorEmail(usuario);
+		Usuario usuario = usuarioService.buscarUsuarioPorEmail(email);
 		
 		request.setAttribute("usuario", usuario);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");

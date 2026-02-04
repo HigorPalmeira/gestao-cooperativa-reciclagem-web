@@ -1,5 +1,108 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.util.List;
+
+import com.gestaocooperativareciclagem.dao.UsuarioDAO;
+import com.gestaocooperativareciclagem.model.Usuario;
+
 public class UsuarioService {
+	
+	private UsuarioDAO usuarioDao;
+	
+	public UsuarioService(UsuarioDAO usuarioDao) {
+		this.usuarioDao = usuarioDao;
+	}
+	
+	public void inserirUsuario(String nome, String email, String senha, String papel) {
+		
+		Usuario usuario = new Usuario(nome, email, senha, papel);
+		
+		usuarioDao.inserirUsuario(usuario);
+		
+	}
+	
+	public void atualizarUsuario(int id, String nome, String email, String senha, String papel) {
+		
+		Usuario usuarioOriginal = buscarUsuarioPorId(id);
+		
+		Usuario usuarioAtualizado = new Usuario(nome, email, senha, papel);
+		
+		if (nome == null || nome.isBlank()) {
+			usuarioAtualizado.setNome(usuarioOriginal.getNome());
+		}
+		
+		if (email == null || email.isBlank()) {
+			usuarioAtualizado.setEmail(usuarioOriginal.getEmail());
+		}
+		
+		if (senha == null || senha.isBlank()) {
+			usuarioAtualizado.setSenha(usuarioOriginal.getSenha());
+		}
+		
+		if (papel == null || papel.isBlank()) {
+			usuarioAtualizado.setPapel(usuarioOriginal.getPapel());
+		}
+		
+		usuarioDao.atualizarUsuario(usuarioAtualizado);
+		
+	}
+	
+	public void deletarUsuario(int id) {
+		
+		usuarioDao.deletarUsuario(id);
+		
+	}
+	
+	public List<Usuario> listarUsuarios() {
+		
+		return usuarioDao.listarUsuarios();
+		
+	}
+	
+	public List<Usuario> listarUsuariosPorPapel(String papel) {
+
+		if (papel == null || papel.isBlank()) {
+			throw new RuntimeException("Papel inválido! É necessário informar um 'Papel' para realizar a busca.");
+		}
+		
+		return usuarioDao.listarUsuariosPorPapel(papel);
+
+	}
+	
+	public List<Usuario> listarUsuariosPorNome(String nome) {
+		
+		if (nome == null || nome.isBlank()) {
+			throw new RuntimeException("Nome inválido! É necessário informar um 'Nome' para realizar a busca.");
+		}
+		
+		return usuarioDao.listarUsuariosPorNome(nome);
+		
+	}
+	
+	public Usuario buscarUsuarioPorId(int id) {
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(id);
+		
+		usuarioDao.buscarUsuarioPorId(usuario);
+		
+		return usuario;
+		
+	}
+	
+	public Usuario buscarUsuarioPorEmail(String email) {
+		
+		if (email == null || email.isBlank()) {
+			throw new RuntimeException("E-mail inválido! É necessário informar um 'E-mail' para realizar a busca.");
+		}
+		
+		Usuario usuario = new Usuario();
+		usuario.setEmail(email);
+		
+		usuarioDao.buscarUsuarioPorEmail(usuario);
+		
+		return usuario;
+		
+	}
 
 }

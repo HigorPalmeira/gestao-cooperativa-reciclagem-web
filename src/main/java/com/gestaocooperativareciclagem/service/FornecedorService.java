@@ -49,7 +49,7 @@ public class FornecedorService {
 		
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorNome(String nome) {
+	public List<Fornecedor> listarFornecedoresPorNome(String nome) {
 		
 		if (nome == null) {
 			throw new RuntimeException("Nome inválido! O nome não pode estar vazio.");
@@ -63,13 +63,13 @@ public class FornecedorService {
 		
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorTipo(TipoFornecedor tipo) {
+	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipo) {
 		
 		return fornecedorDao.listarFornecedoresPorTipo(tipo);
 		
 	}
 	
-	public List<Fornecedor> buscarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
+	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
 		
 		boolean afterInicial = dataInicial.after(Date.valueOf(LocalDate.now()));
 		boolean afterFinal = dataFinal.after(Date.valueOf(LocalDate.now()));

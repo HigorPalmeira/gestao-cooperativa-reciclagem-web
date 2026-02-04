@@ -23,15 +23,13 @@ import com.gestaocooperativareciclagem.service.FornecedorService;
 public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private FornecedorDAO fornecedorDao;
 	private FornecedorService fornecedorService;
 	
 	public void init() throws ServletException {
 		try {
-			fornecedorDao = new FornecedorDAO();
-			fornecedorService = new FornecedorService(fornecedorDao);
+			fornecedorService = new FornecedorService(new FornecedorDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar FornecedorDAO", e);
+			throw new ServletException("Erro ao inicializar FornecedorService", e);
 		}
 	}
        
@@ -134,7 +132,7 @@ public class FornecedorController extends HttpServlet {
 		
 		String nome = request.getParameter("nome");
 		
-		List<Fornecedor> fornecedores = fornecedorDao.listarFornecedoresPorNome(nome);
+		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorNome(nome);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
@@ -147,7 +145,7 @@ public class FornecedorController extends HttpServlet {
 		
 		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
 		
-		List<Fornecedor> fornecedores = fornecedorService.buscarFornecedoresPorTipo(tipo);
+		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorTipo(tipo);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
@@ -161,7 +159,7 @@ public class FornecedorController extends HttpServlet {
 		Date dataInicial = Date.valueOf(request.getParameter("dataInicial"));
 		Date dataFinal = Date.valueOf(request.getParameter("dataFinal"));
 		
-		List<Fornecedor> fornecedores = fornecedorService.buscarFornecedoresPorDataCadastro(dataInicial, dataFinal);
+		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorDataCadastro(dataInicial, dataFinal);
 		
 		request.setAttribute("listaFornecedores", fornecedores);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");

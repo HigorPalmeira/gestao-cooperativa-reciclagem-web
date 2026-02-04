@@ -73,7 +73,7 @@ public class UsuarioDAO {
 		
 	}
 	
-	public List<Usuario> buscarUsuariosPorPapel(String papelUsuario) {
+	public List<Usuario> listarUsuariosPorPapel(String papelUsuario) {
 		
 		List<Usuario> listaUsuarios = new ArrayList<>();
 		
@@ -112,7 +112,7 @@ public class UsuarioDAO {
 		
 	}
 	
-	public List<Usuario> buscarUsuariosPorNome(String nomeUsuario) {
+	public List<Usuario> listarUsuariosPorNome(String nomeUsuario) {
 		
 		List<Usuario> listaUsuarios = new ArrayList<>();
 		
