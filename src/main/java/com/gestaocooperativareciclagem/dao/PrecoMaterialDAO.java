@@ -77,7 +77,219 @@ public class PrecoMaterialDAO {
 		
 	}
 	
-	public void buscarPrecoMaterial(PrecoMaterial precoMaterial) {
+	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(double precoCompra) {
+		
+		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
+		
+		String select = "select * from info_preco_material where preco_compra_kg_precomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDouble(1, precoCompra);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idPrecoMaterial = rset.getInt("id_precomaterial");
+				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaPrecoMaterial;
+		
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(double precoCompraInicial, double precoCompraFinal) {
+		
+		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
+		
+		String select = "select * from info_preco_material where preco_compra_kg_precomaterial between ? and ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDouble(1, precoCompraInicial);
+			pst.setDouble(2, precoCompraFinal);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idPrecoMaterial = rset.getInt("id_precomaterial");
+				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaPrecoMaterial;
+		
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialPorDataVigencia(Date dtVigencia) {
+		
+		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
+		
+		String select = "select * from info_preco_material where dtVigencia_precomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDate(1, dtVigencia);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idPrecoMaterial = rset.getInt("id_precomaterial");
+				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaPrecoMaterial;
+		
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloDataVigencia(Date dtVigenciaInicial, Date dtVigenciaFinal) {
+		
+		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
+		
+		String select = "select * from info_preco_material where dtVigencia_precomaterial between ? and ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDate(1, dtVigenciaInicial);
+			pst.setDate(2, dtVigenciaFinal);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idPrecoMaterial = rset.getInt("id_precomaterial");
+				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaPrecoMaterial;
+		
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialPorTipoMaterial(int idTipoMaterialBuscado) {
+		
+		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
+		
+		String select = "select * from info_preco_material where id_tipomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDouble(1, idTipoMaterialBuscado);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idPrecoMaterial = rset.getInt("id_precomaterial");
+				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaPrecoMaterial;
+		
+	}
+	
+	public void buscarPrecoMaterialPorId(PrecoMaterial precoMaterial) {
 		
 		String select = "select * from info_preco_material where id_precomaterial = ?";
 		
