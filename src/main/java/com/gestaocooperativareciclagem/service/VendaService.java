@@ -28,6 +28,10 @@ public class VendaService {
 			throw new RuntimeException("Data da venda inválida! Não é possível cadastrar uma venda em uma data posterior à atual.");
 		}
 		
+		if (cnpjCliente == null || cnpjCliente.isBlank()) {
+			throw new RuntimeException("CNPJ do Cliente inválido! Não é pssível cadastrar uma venda sem um cliente válido.");
+		}
+		
 		if (listaItensVenda == null || listaItensVenda.size() < 1) {
 			throw new RuntimeException("Itens da Venda inválidos! É necessário informar corretamente os itens da venda, para o cadastro.");
 		}
@@ -76,6 +80,54 @@ public class VendaService {
 		for (ItemVenda itemVenda : listaItensVenda) {
 			inserirItemVenda(itemVenda);
 		}
+		
+	}
+	
+	public void atualizarVenda(int idVenda, Date dtVenda, String cnpjCliente, List<ItemVenda> listaItensVenda) {
+		
+		if (dtVenda.after(Date.valueOf(LocalDate.now()))) {
+			throw new RuntimeException("Data da venda inválida! Não é possível atualizar uma venda em uma data posterior à atual.");
+		}
+		
+		if (cnpjCliente == null || cnpjCliente.isBlank()) {
+			throw new RuntimeException("CNPJ do Cliente inválido! Não é pssível cadastrar uma venda sem um cliente válido.");
+		}
+		
+		if (listaItensVenda == null || listaItensVenda.size() < 1) {
+			throw new RuntimeException("Itens da Venda inválidos! É necessário informar corretamente os itens da venda, para a atualização. Caso não possua itens, delete a venda.");
+		}
+		
+		Cliente cliente = clienteService.buscarClientePorCnpj(cnpjCliente);
+		double valorTotal = listaItensVenda.stream()
+				.mapToDouble(itemVenda -> itemVenda.getPrecoUnitarioKg() * itemVenda.getPesoVendidoKg())
+				.sum();
+		
+		Venda venda = new Venda(idVenda, dtVenda, valorTotal, cliente);
+		
+		vendaDao.atualizarVenda(venda);
+		
+	}
+	
+	public void deletarVenda(int id) {
+		
+		vendaDao.deletarVenda(id);
+		
+	}
+	
+	public List<Venda> listarVendas() {
+		
+		return vendaDao.listarVendas();
+		
+	}
+	
+	public Venda buscarVendaPorId(int id) {
+		
+		Venda venda = new Venda();
+		venda.setId(id);
+		
+		vendaDao.buscarVendaPorId(venda);
+		
+		return venda;
 		
 	}
 
