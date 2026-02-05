@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,22 @@ public class VendaDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			
-			PreparedStatement pst = conexao.prepareStatement(insert);
+			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+			
 			pst.setDate(1, venda.getDtVenda());
 			pst.setDouble(2, venda.getValorTotal());
 			pst.setString(3, venda.getCliente().getCnpj());
 			
-			pst.executeUpdate();
+			int linhasAfetadas = pst.executeUpdate();
+			
+			if (linhasAfetadas > 0) {
+				ResultSet rset = pst.getGeneratedKeys();
+				if (rset.next()) {
+					venda.setId(rset.getInt(1));
+				}
+				
+				rset.close();
+			}
 			
 			pst.close();
 			conexao.close();
