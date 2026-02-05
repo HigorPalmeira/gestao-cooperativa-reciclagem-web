@@ -37,7 +37,9 @@ public class VendaService {
 		
 		vendaDao.inserirVenda(venda);
 		
-		// preciso do id da venda para inserir os itens
+		for (ItemVenda itemVenda : listaItensVenda) {
+			itemVenda.setVenda(venda);
+		}
 		
 		inserirListaItensVenda(listaItensVenda);
 		
