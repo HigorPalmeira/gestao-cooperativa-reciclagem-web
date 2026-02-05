@@ -28,6 +28,10 @@ public class VendaService {
 			throw new RuntimeException("Data da venda inválida! Não é possível cadastrar uma venda em uma data posterior à atual.");
 		}
 		
+		if (listaItensVenda == null || listaItensVenda.size() < 1) {
+			throw new RuntimeException("Itens da Venda inválidos! É necessário informar corretamente os itens da venda, para o cadastro.");
+		}
+		
 		Cliente cliente = clienteService.buscarClientePorCnpj(cnpjCliente);
 		double valorTotal = listaItensVenda.stream()
 				.mapToDouble(itemVenda -> itemVenda.getPrecoUnitarioKg() * itemVenda.getPesoVendidoKg())
