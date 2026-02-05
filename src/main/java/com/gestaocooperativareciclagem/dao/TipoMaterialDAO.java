@@ -69,7 +69,44 @@ public class TipoMaterialDAO {
 		
 	}
 	
-	public void buscarTipoMaterial(TipoMaterial tipoMaterial) {
+	public List<TipoMaterial> listarTiposMaterialPorDescricao(String descricaoBuscada) {
+		
+		List<TipoMaterial> listaTiposMaterial = new ArrayList<>();
+		
+		String select = "select * from tipo_material where descricao_tipomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, descricaoBuscada);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int id = rset.getInt("id_tipomaterial");
+				String nome = rset.getString("nome_tipomaterial");
+				String descricao = rset.getString("descricao_tipomaterial");
+				
+				listaTiposMaterial.add(new TipoMaterial(id, nome, descricao));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaTiposMaterial;
+		
+	}
+	
+	public void buscarTipoMaterialPorId(TipoMaterial tipoMaterial) {
 		
 		String select = "select * from tipo_material where id_tipomaterial = ?";
 		
@@ -79,6 +116,37 @@ public class TipoMaterialDAO {
 			
 			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, tipoMaterial.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				tipoMaterial.setId( rset.getInt("id_tipomaterial") );
+				tipoMaterial.setNome( rset.getString("nome_tipomaterial") );
+				tipoMaterial.setDescricao( rset.getString("descricao_tipomaterial") );
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void buscarTipoMaterialPorNome(TipoMaterial tipoMaterial) {
+		
+		String select = "select * from tipo_material where nome_tipomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, tipoMaterial.getNome());
 			
 			ResultSet rset = pst.executeQuery();
 			
@@ -124,7 +192,7 @@ public class TipoMaterialDAO {
 		
 	}
 	
-	public void deletarUsuario(int id) {
+	public void deletarTipoMaterial(int id) {
 		
 		String delete = "delete from tipo_material where id_tipomaterial=?";
 		
