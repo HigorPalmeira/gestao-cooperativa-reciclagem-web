@@ -82,7 +82,140 @@ public class LoteBrutoDAO {
 		
 	}
 	
-	public void buscarLoteBruto(LoteBruto loteBruto) {
+	public List<LoteBruto> listarLotesBrutoPorStatus(StatusLoteBruto status) {
+		
+		List<LoteBruto> listaLotesBruto = new ArrayList<>();
+		
+		String select = "select * from info_lote_bruto where status_lotebruto = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, status.name());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idLoteBruto = rset.getInt("id_lotebruto");
+				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				
+				String documentoFornecedor = rset.getString("documento_fornecedor");
+				String nomeFornecedor = rset.getString("nome_fornecedor");
+				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+				
+				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				
+				listaLotesBruto.add(new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaLotesBruto;
+		
+	}
+	
+	public List<LoteBruto> listarLotesBrutoPorFornecedor(Fornecedor fornecedorBuscado) {
+		
+		List<LoteBruto> listaLotesBruto = new ArrayList<>();
+		
+		String select = "select * from info_lote_bruto where documento_fornecedor = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, fornecedorBuscado.getDocumento());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idLoteBruto = rset.getInt("id_lotebruto");
+				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				
+				String documentoFornecedor = rset.getString("documento_fornecedor");
+				String nomeFornecedor = rset.getString("nome_fornecedor");
+				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+				
+				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				
+				listaLotesBruto.add(new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaLotesBruto;
+		
+	}
+	
+	public List<LoteBruto> listarLotesBrutoPorIntervaloDePesoEntrada(double pesoEntradaInicial, double pesoEntradaFinal) {
+		
+		List<LoteBruto> listaLotesBruto = new ArrayList<>();
+		
+		String select = "select * from info_lote_bruto where peso_entrada_kg_lotebruto between ? and ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setDouble(1, pesoEntradaInicial);
+			pst.setDouble(2, pesoEntradaFinal);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idLoteBruto = rset.getInt("id_lotebruto");
+				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				
+				String documentoFornecedor = rset.getString("documento_fornecedor");
+				String nomeFornecedor = rset.getString("nome_fornecedor");
+				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+				
+				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				
+				listaLotesBruto.add(new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaLotesBruto;
+		
+	}
+	
+	public void buscarLoteBrutoPorId(LoteBruto loteBruto) {
 		
 		String select = "select * from info_lote_bruto where id_lotebruto = ?";
 		
