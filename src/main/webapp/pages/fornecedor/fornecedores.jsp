@@ -10,6 +10,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Fornecedores</title>
+    <link rel="stylesheet" href="assets/_css/styles.css">
+    
+    <!-- 
     <style>
         /* --- CSS: Estilização Visual --- */
         :root {
@@ -199,15 +202,18 @@
         .quick-links a { color: var(--secondary-color); margin-right: 15px; }
 
     </style>
+    
+    -->
+    
 </head>
 <body>
 
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="../../index.html">Início</a>
-            <a href="../lotes/lotesBrutos.jsp">Lotes Brutos</a>
-            <a href="./transacoesCompra.jsp">Transações de Compra</a>
+            <a href="index.jsp">Início</a>
+            <a href="pages/lotes_bruto/lotesBrutos.jsp">Lotes Brutos</a>
+            <a href="pages/transacoes_compra/transacoesCompra.jsp">Transações de Compra</a>
         </div>
     </nav>
 

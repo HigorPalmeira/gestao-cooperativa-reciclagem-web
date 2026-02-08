@@ -8,29 +8,11 @@
     <title>Início - Gestão de Cooperativa</title>
     <!-- Importação do Chart.js para o gráfico -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="assets/_css/styles.css">
+    
+    <!-- 
     <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #6c757d;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
         /* --- Menu de Navegação (Topo) --- */
         nav.main-nav {
             background-color: var(--primary-color);
@@ -81,98 +63,7 @@
         .dropdown:hover .dropdown-content {display: block;}
 
 
-        /* --- Layout do Dashboard --- */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Seção 1: KPIs (Grid de 4 cartões) */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .kpi-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--primary-color);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .kpi-title { font-size: 0.9rem; color: #666; margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;}
-        .kpi-value { font-size: 1.8rem; font-weight: bold; color: #2c3e50; }
-        .kpi-desc { font-size: 0.8rem; color: #888; margin-top: 5px; }
-
-        /* Cores específicas para bordas dos KPIs */
-        .kpi-blue { border-left-color: var(--primary-color); }
-        .kpi-green { border-left-color: var(--success-color); }
-        .kpi-yellow { border-left-color: var(--warning-color); }
-        .kpi-info { border-left-color: var(--info-color); }
-
-        /* Seção 2 e 3: Gráfico e Ações (Grid assimétrico) */
-        .main-dashboard-area {
-            display: grid;
-            grid-template-columns: 2fr 1fr; /* 2 partes gráfico, 1 parte ações */
-            gap: 1.5rem;
-        }
-
-        .dashboard-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header {
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #444;
-        }
-
-        /* Botões de Ação Rápida */
-        .quick-actions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-            transition: opacity 0.2s;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn-action:hover { opacity: 0.9; }
-
-        /* Cores dos botões */
-        .action-batch { background-color: var(--primary-color); }
-        .action-sale { background-color: var(--success-color); }
-        .action-supplier { background-color: var(--info-color); }
-
+        
         /* Responsividade */
         @media (max-width: 768px) {
             .main-dashboard-area {
@@ -183,6 +74,8 @@
             }
         }
     </style>
+    
+    -->
 </head>
 <body>
 
@@ -192,24 +85,24 @@
         <div class="nav-links">
             <!-- Funcionalidades Core -->
             <a href="ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
-            <a href="pages/lotes/lotesBrutos.jsp">Lotes Brutos</a>
-            <a href="pages/lotes/lotesProcessados.jsp">Lotes Processados</a>
+            <a href="pages/lote_bruto/lotesBrutos.jsp">Lotes Brutos</a>
+            <a href="pages/lote_processado/lotesProcessados.jsp">Lotes Processados</a>
             <a href="pages/venda/vendas.jsp">Vendas</a>
-            <a href="pages/venda/clientes.jsp">Clientes</a>
+            <a href="pages/clientes/clientes.jsp">Clientes</a>
             <a href="pages/fornecedor/transacoesCompra.jsp">Financeiro</a>
             
             <!-- Dropdown para Cadastros Básicos -->
             <div class="dropdown">
                 <a href="#">Configurações &#9662;</a>
                 <div class="dropdown-content">
-                    <a href="pages/lotes/categoriasProcessamento.jsp">Categorias de Processamento</a>
-                    <a href="pages/lotes/tiposMaterial.jsp">Tipos de Materiais</a>
-                    <a href="pages/fornecedor/precosMaterial.jsp">Preços de Materiais</a>
+                    <a href="pages/categorias_processamento/categoriasProcessamento.jsp">Categorias de Processamento</a>
+                    <a href="pages/tipos_materiais/tiposMaterial.jsp">Tipos de Materiais</a>
+                    <a href="pages/precos_materiais/precosMaterial.jsp">Preços de Materiais</a>
                     <a href="pages/usuario/usuarios.jsp">Usuários (Admin)</a>
                 </div>
             </div>
             
-            <a href="login/login.html" style="margin-left: 15px; color: #ffcccc;">Sair</a>
+            <a href="pages/login/login.jsp" style="margin-left: 15px; color: #ffcccc;">Sair</a>
         </div>
     </nav>
 
@@ -219,7 +112,7 @@
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
             <!-- KPI 1 -->
-            <div class="kpi-card kpi-blue" onclick="window.location.href='pages/lotes/lotesBrutos.jsp'">
+            <div class="kpi-card kpi-blue" onclick="window.location.href='pages/lote_bruto/lotesBrutos.jsp'">
                 <div class="kpi-title">Lotes Brutos Recebidos (Hoje)</div>
                 <div class="kpi-value">12</div>
                 <div class="kpi-desc">Total de 4.500 Kg</div>
@@ -233,14 +126,14 @@
             </div>
 
             <!-- KPI 3 -->
-            <div class="kpi-card kpi-yellow" onclick="window.location.href='pages/fornecedor/transacoesCompra.jsp'">
+            <div class="kpi-card kpi-yellow" onclick="window.location.href='pages/transacoes_compra/transacoesCompra.jsp'">
                 <div class="kpi-title">Pagamentos Pendentes</div>
                 <div class="kpi-value">5</div>
                 <div class="kpi-desc">Valor Total: R$ 3.150</div>
             </div>
 
             <!-- KPI 4 -->
-            <div class="kpi-card kpi-info" onclick="window.location.href='pages/lotes/lotesProcessados.jsp'">
+            <div class="kpi-card kpi-info" onclick="window.location.href='pages/lote_processado/lotesProcessados.jsp'">
                 <div class="kpi-title">Estoque Processado</div>
                 <div class="kpi-value">1.200 Kg</div>
                 <div class="kpi-desc">Pronto para venda</div>

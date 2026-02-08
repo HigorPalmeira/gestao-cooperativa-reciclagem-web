@@ -7,6 +7,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Fornecedor</title>
+    
+    <link rel="stylesheet" href="assets/_css/styles.css">
+    
+    <!-- 
     <style>
         /* --- CSS: Estilização Visual --- */
         :root {
@@ -141,6 +145,9 @@
         #success-msg { color: var(--success-color); font-size: 0.9rem; margin-top: 10px; display: none; }
 
     </style>
+    
+     -->
+     
 </head>
 <body>
 

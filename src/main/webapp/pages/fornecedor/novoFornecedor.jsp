@@ -6,6 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Fornecedor</title>
+    
+    <link rel="stylesheet" href="assets/_css/styles.css">
+    
+    <!-- 
     <style>
         /* --- CSS: Estilização Visual (Consistente com a página anterior) --- */
         :root {
@@ -136,6 +140,8 @@
         .btn-back:hover { text-decoration: underline; color: var(--primary-color); }
 
     </style>
+     -->
+     
 </head>
 <body>
 

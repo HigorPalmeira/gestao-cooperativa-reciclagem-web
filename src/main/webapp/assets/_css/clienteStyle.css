@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+/* --- CSS: Estilização Visual (Padrão ERP) --- */
+:root {
+	--primary-color: #0056b3;
+	--secondary-color: #6c757d;
+	--background-color: #f4f6f9;
+	--white: #ffffff;
+	--border-color: #dee2e6;
+	--success-color: #28a745;
+	--danger-color: #dc3545;
+	--disabled-color: #95a5a6;
+	--text-color: #333;
+}
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: var(--background-color);
+	color: var(--text-color);
+}
+
+/* Menu Superior / Navegação */
+nav.main-nav {
+	background-color: var(--primary-color);
+	color: var(--white);
+	padding: 1rem 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+
+
+
+
+

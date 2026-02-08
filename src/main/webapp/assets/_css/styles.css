@@ -1,0 +1,447 @@
+/* --- 1. Variáveis Globais (Paleta de Cores) --- */
+:root {
+    --primary-color: #0056b3;       /* Azul Principal */
+    --primary-hover: #004494;       /* Azul Escuro (Hover) */
+    --secondary-color: #6c757d;     /* Cinza Secundário */
+    --background-color: #f4f6f9;    /* Fundo da Página */
+    --white: #ffffff;               /* Branco Puro */
+    --border-color: #dee2e6;        /* Bordas Suaves */
+    --text-color: #333333;          /* Texto Principal */
+    --text-muted: #666666;          /* Texto Secundário */
+    
+    /* Cores de Estado */
+    --success-color: #28a745;       /* Verde (Sucesso/Pago) */
+    --danger-color: #dc3545;        /* Vermelho (Erro/Excluir) */
+    --warning-color: #ffc107;       /* Amarelo (Atenção/Pendente) */
+    --info-color: #17a2b8;          /* Azul Claro (Info) */
+    --disabled-bg: #e9ecef;         /* Fundo Desabilitado */
+    --disabled-color: #95a5a6;      /* Texto Desabilitado */
+    
+    --overlay-color: rgba(0, 0, 0, 0.5); /* Fundo de Modais */
+}
+
+/* --- 2. Reset e Base --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Para páginas de Login/Recuperação que precisam de altura total */
+body.auth-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a { text-decoration: none; color: inherit; }
+
+h1, h2, h3 { color: #2c3e50; margin-top: 0; }
+h1 { font-size: 1.75rem; margin-bottom: 1.5rem; }
+h2 { font-size: 1.3rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+/* --- 3. Layout e Containers --- */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    padding-bottom: 4rem; /* Espaço extra no rodapé */
+}
+
+/* Flexbox utilitário para cabeçalhos de página */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Cartões (Cards) Padrão */
+.card, .search-card, .form-card, .dashboard-card {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+/* --- 4. Navegação (Navbar) --- */
+nav.main-nav {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
+nav.main-nav .nav-links { display: flex; gap: 15px; flex-wrap: wrap; } 
+
+nav.main-nav a { 
+    color: #fff; 
+    font-size: 0.9rem; 
+    margin-left: 20px; 
+    opacity: 0.9; 
+    cursor: pointer;
+}
+nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
+
+/* --- 5. Formulários --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    align-items: end;
+}
+
+.search-form {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.form-group, .filter-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    flex: 1; /* Para search forms */
+}
+
+.form-group label, .filter-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+input[type="text"], input[type="email"], input[type="password"], 
+input[type="number"], input[type="date"], select, textarea {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Estados de Input */
+input:disabled, input[readonly], select:disabled {
+    background-color: var(--disabled-bg);
+    color: #6c757d;
+    cursor: not-allowed;
+    border-color: #ced4da;
+}
+
+.inputs-row { display: flex; gap: 10px; align-items: center; }
+.separator { color: #888; font-size: 0.9rem; }
+.error-msg { color: var(--danger-color); font-size: 0.85rem; margin-top: 5px; display: none; }
+span.required { color: var(--danger-color); }
+
+/* --- 6. Botões --- */
+/* Botão Base */
+button, .btn-link {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Variantes de Botões */
+.btn-new, .btn-save, .btn-submit, .btn-modal-create, .btn-login {
+    background-color: var(--success-color);
+    color: white;
+}
+.btn-new:hover, .btn-save:hover, .btn-submit:hover { background-color: #218838; }
+
+.btn-search, .btn-add, .btn-modal-save {
+    background-color: var(--primary-color);
+    color: white;
+}
+.btn-search:hover, .btn-add:hover { background-color: var(--primary-hover); }
+
+.btn-delete, .btn-modal-delete {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+.btn-delete:hover { background-color: var(--danger-color); color: white; }
+
+.btn-back, .btn-cancel {
+    background: none;
+    color: var(--text-muted);
+    font-weight: normal;
+    text-decoration: underline;
+}
+.btn-back:hover { color: var(--primary-color); }
+
+button:disabled {
+    background-color: var(--disabled-color) !important;
+    border-color: transparent;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* --- 7. Tabelas --- */
+.table-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
+tr:hover { background-color: #f1f1f1; }
+
+/* Links dentro de tabelas */
+.id-link, .table-link, .name-link {
+    color: var(--primary-color);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+.id-link:hover, .table-link:hover { text-decoration: underline; }
+.text-right { text-align: right; }
+
+/* --- 8. Badges e Status --- */
+.badge, .status-badge, .stage-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.status-ok, .status-pago, .status-concluido, .badge-success, .stage-extrusao {
+    background-color: #d4edda; color: #155724;
+}
+.status-pend, .status-pendente, .badge-warning, .stage-trituracao {
+    background-color: #fff3cd; color: #856404;
+}
+.status-atrasado {
+    background-color: #f8d7da; color: #721c24;
+}
+.status-recebido, .stage-triagem, .role-admin {
+    background-color: #e2e3e5; color: #383d41;
+}
+.stage-lavagem, .role-manager {
+    background-color: #d1ecf1; color: #0c5460;
+}
+.stage-armazenado {
+    background-color: #cce5ff; color: #004085;
+}
+
+/* --- 9. Modais (Pop-ups) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.modal-footer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.close-icon { cursor: pointer; font-size: 1.5rem; color: #999; }
+.close-icon:hover { color: #333; }
+
+/* --- 10. Estilos Específicos de Login --- */
+.login-card {
+    background-color: var(--white);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.brand-logo { color: var(--primary-color); margin-bottom: 2rem; }
+.brand-icon { font-size: 3rem; display: block; }
+.brand-text { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; }
+
+/* --- 11. Rodapé de Perigo (Exclusão) --- */
+.danger-zone {
+    margin-top: 4rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.5rem;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+
+/* --- 12. Dashboard Específico (KPIs e Layout) --- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--primary-color);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.kpi-title { font-size: 0.9rem; color: #666; margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;}
+.kpi-value { font-size: 1.8rem; font-weight: bold; color: #2c3e50; }
+.kpi-desc { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+/* Cores específicas para KPIs */
+.kpi-blue { border-left-color: var(--primary-color); }
+.kpi-green { border-left-color: var(--success-color); }
+.kpi-yellow { border-left-color: var(--warning-color); }
+.kpi-info { border-left-color: var(--info-color); }
+
+/* Layout da área principal do dashboard */
+.main-dashboard-area {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.card-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #444;
+}
+
+/* Botões de Ação Rápida */
+.quick-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    transition: opacity 0.2s;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-action:hover { opacity: 0.9; }
+
+.action-batch { background-color: var(--primary-color); }
+.action-sale { background-color: var(--success-color); }
+.action-supplier { background-color: var(--info-color); }
+
+/* Responsividade do Dashboard */
+@media (max-width: 768px) {
+    .main-dashboard-area {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- 13. Dropdowns (Menu Superior) - ATUALIZADO --- */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--white); /* Alterado para Branco Puro */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+    border: 1px solid var(--border-color); /* Adicionado borda para destaque */
+}
+
+/* Seletor específico para sobrepor a cor branca dos links da navbar */
+nav.main-nav .dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    margin-left: 0; /* Reset da margem da navbar */
+    opacity: 1; /* Remove a opacidade da navbar */
+}
+
+nav.main-nav .dropdown-content a:hover {
+    background-color: var(--background-color); /* Hover cinza suave */
+    text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
