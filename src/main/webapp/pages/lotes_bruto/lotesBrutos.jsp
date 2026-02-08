@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.LoteBruto" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -208,9 +211,9 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links atualizados para evitar erro de navegação no preview -->
-            <a href="../index.html">Início</a>
-            <a href="../lotes_processados/lotes_processados.html">Lotes Processados</a>
-            <a href="../fornecedores/fornecedores.html">Fornecedores</a>
+            <a href="index.html">Início</a>
+            <a href="pages/lotes_processados/lotes_processados.html">Lotes Processados</a>
+            <a href="pages/fornecedores/fornecedores.html">Fornecedores</a>
         </div>
     </nav>
 
@@ -220,7 +223,7 @@
         <div class="page-header">
             <h1>Gestão de Lotes Brutos</h1>
             <!-- Botão Novo Lote (Safe Navigation) -->
-            <button class="btn-new" onclick="window.location.href='./novo_lote_bruto.html'">
+            <button class="btn-new" onclick="window.location.href='pages/lotes_bruto/novoLoteBruto.jsp'">
                 + Novo Lote Bruto
             </button>
         </div>
@@ -270,7 +273,17 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
-                    <!-- Conteúdo inicial (Mock) -->
+                    
+                    <c:forEach items="${listaLotesBrutos}" var="loteBruto">
+                    	<tr>
+                    		<td><a href="DetalharLoteBruto?id=${loteBruto.id}">#LB-${loteBruto.id}</a></td>
+                    		<td>${loteBruto.pesoEntradaKg}</td>
+                    		<td>${loteBruto.dtEntrada}</td>
+                    		<td><span class="status-badge ">${loteBruto.status}</span></td>
+                    	</tr>
+                    </c:forEach>
+                    
+                    <!-- 
                     <tr>
                         <td><a href="./lote_bruto.html?id=101" onclick="alert('Ver detalhes do lote #LB-101')" class="id-link">#LB-101</a></td>
                         <td>500,00</td>
@@ -289,6 +302,7 @@
                         <td>02/01/2026</td>
                         <td><span class="status-badge status-recebido">Recebido</span></td>
                     </tr>
+                     -->
                 </tbody>
             </table>
         </section>
@@ -300,12 +314,14 @@
 
         // Dados simulados (Mock Database)
         // Formato de data ISO para facilitar filtragem: YYYY-MM-DD
+        /*
         const batchesDatabase = [
             { id: 101, weight: 500.00, date: '2026-01-12', status: 'Em Processamento' },
             { id: 98, weight: 1200.50, date: '2026-01-05', status: 'Concluído' },
             { id: 95, weight: 320.00, date: '2026-01-02', status: 'Recebido' },
             { id: 90, weight: 800.00, date: '2025-12-20', status: 'Concluído' }
         ];
+        */
 
         function searchBatches() {
             // 1. Obter inputs
@@ -317,7 +333,18 @@
             const feedbackMsg = document.getElementById('feedback-message');
             const tbody = document.getElementById('resultsTableBody');
 
-            // 2. Validação: A pesquisa só é executada quando pelo menos um campo for preenchido
+        const listaLotesBruto = [
+        	<c:forEach var="loteBruto" items="${listaLotesBrutos}" varStatus="loop">
+        		{
+        			"id": "${loteBruto.id}",
+        			"weight": "${loteBruto.pesoEntradaKg}",
+        			"date": "${loteBruto.dtEntrada}",
+        			"status": "${loteBruto.status}"
+        		}
+        	</c:forEach>
+        ];
+
+        	// 2. Validação: A pesquisa só é executada quando pelo menos um campo for preenchido
             const isDateEmpty = !dateStart && !dateEnd;
             const isWeightEmpty = !weightMin && !weightMax;
 
@@ -329,7 +356,7 @@
             }
 
             // 3. Filtragem
-            const filteredData = batchesDatabase.filter(batch => {
+            const filteredData = listaLotesBruto.filter(batch => {
                 let dateValid = true;
                 let weightValid = true;
 
@@ -364,16 +391,16 @@
                 if (batch.status === 'Em Processamento') statusClass = 'status-processamento';
 
                 const row = document.createElement('tr');
-                row.innerHTML = `
+                row.innerHTML = ```
                     <td>
-                        <a href="./lote_bruto.html?id=${batch.id}" onclick="alert('Ver detalhes do lote #LB-${batch.id}')" class="id-link">
-                            #LB-${String(batch.id).padStart(3, '0')}
+                        <a href="./detalheLoteBruto.jsp?id=${batch.id}" onclick="alert('Ver detalhes do lote #LB-${batch.id}')" class="id-link">
+                            #LB-\${String(batch.id).padStart(3, '0')}
                         </a>
                     </td>
                     <td>${formattedWeight}</td>
                     <td>${formattedDate}</td>
                     <td><span class="status-badge ${statusClass}">${batch.status}</span></td>
-                `;
+                ```;
                 tbody.appendChild(row);
             });
         }

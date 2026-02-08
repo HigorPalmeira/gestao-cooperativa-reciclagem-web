@@ -318,7 +318,7 @@
             			"date": "${fornecedor.dtCadastro}"
             		}
             	</c:forEach>
-            ]
+            ];
             
             // FIM DA MÃOZINHA
 

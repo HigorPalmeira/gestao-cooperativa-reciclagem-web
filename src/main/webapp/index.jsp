@@ -85,7 +85,7 @@
         <div class="nav-links">
             <!-- Funcionalidades Core -->
             <a href="ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
-            <a href="pages/lote_bruto/lotesBrutos.jsp">Lotes Brutos</a>
+            <a href="ListarLotesBruto">Lotes Brutos</a>
             <a href="pages/lote_processado/lotesProcessados.jsp">Lotes Processados</a>
             <a href="pages/venda/vendas.jsp">Vendas</a>
             <a href="pages/clientes/clientes.jsp">Clientes</a>
