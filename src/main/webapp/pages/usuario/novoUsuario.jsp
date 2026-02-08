@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Usuário</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
     
     <!-- 
     <style>
@@ -255,7 +255,7 @@
         function handleRegister(event) {
             event.preventDefault();
             alert(`Usuário ${nameInput.value} criado com sucesso!\nPapel: ${roleInput.value}`);
-            window.location.href = './usuarios.html';
+            window.location.href = '../../ListarUsuarios';
         }
 
     </script>

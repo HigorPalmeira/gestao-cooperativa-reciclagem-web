@@ -185,7 +185,7 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="../index.html">Início</a>
+            <a href="index.html">Início</a>
             <a href="#">Relatórios</a>
             <a href="#">Configurações</a>
         </div>
@@ -194,7 +194,7 @@
     <main class="container">
         <div class="page-header">
             <h1>Gestão de Usuários</h1>
-            <button class="btn-new" onclick="window.location.href='./novo_usuario.html'">
+            <button class="btn-new" onclick="window.location.href='pages/usuario/novoUsuario.jsp'">
                 + Novo Usuário
             </button>
         </div>
@@ -230,17 +230,17 @@
                 </thead>
                 <tbody id="resultsTableBody">
                     <tr>
-                        <td><a href="./detalhes_usuario.html?id=1" class="user-link">Carlos Eduardo</a></td>
+                        <td><a href="DetalharUsuario?id=1" class="user-link">Carlos Eduardo</a></td>
                         <td>carlos.edu@empresa.com</td>
                         <td><span class="role-badge role-admin">Administrador</span></td>
                     </tr>
                     <tr>
-                        <td><a href="./detalhes_usuario.html?id=2" class="user-link">Ana Souza</a></td>
+                        <td><a href="DetalharUsuario?id=2" class="user-link">Ana Souza</a></td>
                         <td>ana.souza@empresa.com</td>
                         <td><span class="role-badge role-manager">Gerente</span></td>
                     </tr>
                     <tr>
-                        <td><a href="./detalhes_usuario.html?id=3" class="user-link">Roberto Dias</a></td>
+                        <td><a href="DetalharUsuario?id=3" class="user-link">Roberto Dias</a></td>
                         <td>roberto.dias@empresa.com</td>
                         <td><span class="role-badge role-user">Operador</span></td>
                     </tr>
@@ -300,7 +300,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
-                        <a href="./detalhes_usuario.html?id=${user.id}" class="user-link">
+                        <a href="DetalharUsuario?id=${user.id}" class="user-link">
                             ${user.name}
                         </a>
                     </td>

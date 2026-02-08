@@ -34,7 +34,7 @@
                     <a href="pages/categorias_processamento/categoriasProcessamento.jsp">Categorias de Processamento</a>
                     <a href="pages/tipos_materiais/tiposMaterial.jsp">Tipos de Materiais</a>
                     <a href="pages/precos_materiais/precosMaterial.jsp">Preços de Materiais</a>
-                    <a href="pages/usuario/usuarios.jsp">Usuários (Admin)</a>
+                    <a href="ListarUsuarios">Usuários (Admin)</a>
                 </div>
             </div>
             

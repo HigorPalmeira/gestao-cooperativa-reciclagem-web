@@ -157,7 +157,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="./usuarios.html">Voltar para Gestão de Usuários</a>
+            <a href="ListarUsuarios">Voltar para Gestão de Usuários</a>
         </div>
     </nav>
 
@@ -303,7 +303,7 @@
             const confirmed = confirm(`Tem certeza que deseja remover o acesso de "${nameInput.value}"?\n\nEsta ação não pode ser desfeita.`);
             if (confirmed) {
                 alert("Usuário excluído.");
-                window.location.href = "./usuarios.html";
+                window.location.href = "ListarUsuarios";
             }
         }
 
