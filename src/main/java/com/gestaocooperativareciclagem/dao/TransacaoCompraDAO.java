@@ -94,7 +94,7 @@ public class TransacaoCompraDAO {
 		return listaTransacaoCompra;
 	}
 	
-	public void buscarTransacaoCompra(TransacaoCompra transacaoCompra) {
+	public void buscarTransacaoCompraPorId(TransacaoCompra transacaoCompra) {
 		
 		String select = "select * from info_transacao_compra where id_transacaocompra = ?";
 		
