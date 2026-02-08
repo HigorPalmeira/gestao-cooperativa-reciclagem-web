@@ -90,7 +90,7 @@ public class VendaDAO {
 		
 	}
 	
-	public void buscarVenda(Venda venda) {
+	public void buscarVendaPorId(Venda venda) {
 	
 		String select = "select * from info_venda where id_venda = ?";
 		
