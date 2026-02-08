@@ -6,76 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Início - Gestão de Cooperativa</title>
+    
     <!-- Importação do Chart.js para o gráfico -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- Menu de Navegação (Topo) --- */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 0.8rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        nav.main-nav .brand { font-weight: bold; font-size: 1.3rem; margin-right: 20px;}
-        
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            font-size: 0.9rem;
-        }
-
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-            cursor: pointer;
-        }
-        .nav-links a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Dropdown simples para Configurações */
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {background-color: #f1f1f1;}
-        .dropdown:hover .dropdown-content {display: block;}
-
-
-        
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .main-dashboard-area {
-                grid-template-columns: 1fr; /* Empilha em telas menores */
-            }
-            .nav-links {
-                display: none; /* Em produção, usaríamos um menu hambúrguer */
-            }
-        }
-    </style>
-    
-    -->
 </head>
 <body>
 
@@ -89,7 +25,7 @@
             <a href="pages/lote_processado/lotesProcessados.jsp">Lotes Processados</a>
             <a href="pages/venda/vendas.jsp">Vendas</a>
             <a href="pages/clientes/clientes.jsp">Clientes</a>
-            <a href="pages/fornecedor/transacoesCompra.jsp">Financeiro</a>
+            <a href="pages/transacoes_compra/transacoesCompra.jsp">Financeiro</a>
             
             <!-- Dropdown para Cadastros Básicos -->
             <div class="dropdown">
@@ -112,7 +48,7 @@
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
             <!-- KPI 1 -->
-            <div class="kpi-card kpi-blue" onclick="window.location.href='pages/lote_bruto/lotesBrutos.jsp'">
+            <div class="kpi-card kpi-blue" onclick="window.location.href='ListarLotesBrutos'"> <!-- pages/lote_bruto/lotesBrutos.jsp -->
                 <div class="kpi-title">Lotes Brutos Recebidos (Hoje)</div>
                 <div class="kpi-value">12</div>
                 <div class="kpi-desc">Total de 4.500 Kg</div>

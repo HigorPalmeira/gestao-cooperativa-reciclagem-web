@@ -167,7 +167,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Lote Bruto #LB-101</div>
         <div>
-            <a href="./lotes_brutos.html" onclick="alert('Voltar para Gestão de Lotes')">Voltar para Gestão</a>
+            <a href="ListarLotesBrutos">Voltar para Gestão</a>
         </div>
     </nav>
 
@@ -401,7 +401,7 @@
             processedBatches.forEach(item => {
                 procBody.innerHTML += `
                     <tr>
-                        <td><a href="../lotes_processados/lote_processado?id=${item.id}" onclick="alert('Ir para Lote Processado ${item.id}')" class="table-link">#${item.id}</a></td>
+                        <td><a href="pages/lotes_processados/lote_processado?id=${item.id}" onclick="alert('Ir para Lote Processado ${item.id}')" class="table-link">#${item.id}</a></td>
                         <td>${item.weight.toFixed(2)}</td>
                         <td>${item.type}</td>
                         <td><span class="badge badge-info">${item.stage}</span></td>
@@ -416,7 +416,7 @@
                 
                 transBody.innerHTML += `
                     <tr>
-                        <td><a href="../transacoes_compra/transacao_compra?id=${item.id}" onclick="alert('Ir para Transação ${item.id}')" class="table-link">#${item.id}</a></td>
+                        <td><a href="pages/transacoes_compra/transacao_compra?id=${item.id}" onclick="alert('Ir para Transação ${item.id}')" class="table-link">#${item.id}</a></td>
                         <td>${item.date}</td>
                         <td>R$ ${item.value.toFixed(2)}</td>
                         <td><span class="badge ${badgeClass}">${item.status}</span></td>
@@ -437,7 +437,7 @@
         function deleteBatch() {
             if (confirm("Tem a certeza que deseja excluir este Lote Bruto e todos os vínculos?\nEsta ação não pode ser desfeita.")) {
                 alert("Lote excluído.");
-                window.location.href = 'lotes_brutos.html';
+                window.location.href = 'ListarLotesBrutos';
             }
         }
 

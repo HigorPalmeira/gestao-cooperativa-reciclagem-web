@@ -76,6 +76,8 @@ public class LoteBrutoController extends HttpServlet {
 	protected void listarLotesBruto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<LoteBruto> lotesBrutos = loteBrutoService.listarLotesBrutos();
+			
+		System.out.println(lotesBrutos);
 		
 		request.setAttribute("listaLotesBrutos", lotesBrutos);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/lotesBrutos.jsp");

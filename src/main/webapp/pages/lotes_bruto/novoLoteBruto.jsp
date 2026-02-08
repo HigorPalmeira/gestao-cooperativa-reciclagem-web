@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Lote Bruto</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
     
     <!-- 
     <style>
@@ -217,7 +217,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="./lotes_brutos.html" onclick="alert('Voltar para Gestão de Lotes Brutos')" class="btn-back">
+                    <a href="../../ListarLotesBrutos" onclick="alert('Voltar para Gestão de Lotes Brutos')" class="btn-back">
                         Cancelar e voltar
                     </a>
                 </div>
@@ -311,7 +311,7 @@
             alert(`Lote Cadastrado com Sucesso!\n\nFornecedor: ${supplierName}\nPeso: ${weight} Kg\nData de Entrada: ${currentDate}\nStatus: ${defaultStatus}`);
 
             // Opcional: Redirecionar
-            window.location.href = './lotes_brutos.html';
+            window.location.href = '../../ListarLotesBrutos';
         }
 
     </script>
