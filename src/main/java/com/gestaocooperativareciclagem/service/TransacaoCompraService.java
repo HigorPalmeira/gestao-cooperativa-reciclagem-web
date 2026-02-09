@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
@@ -28,12 +29,44 @@ public class TransacaoCompraService {
 	public void atualizarTransacaoCompra(int idTransacao, double valorTotalCalculado, StatusPagamentoTransacaoCompra status, 
 			Date dtCalculo, Date dtPagamento, LoteBruto loteBruto) {
 		
-		TransacaoCompra transacaoCompra = buscarTransacaoCompraPorId(idTransacao);
+		TransacaoCompra transacaoCompraOriginal = buscarTransacaoCompraPorId(idTransacao);
 		
-		TransacaoCompra transacaoCompraAtualizada = new TransacaoCompra(idTransacao, valorTotalCalculado, status, 
-				dtCalculo, dtPagamento, loteBruto);
+		if (transacaoCompraOriginal.getStatus().equals(StatusPagamentoTransacaoCompra.PAGO)) {
+			throw new RuntimeException("Não é possível editar uma transação de compra paga!");
+		}
 		
+		TransacaoCompra transacaoCompraAtualizada = new TransacaoCompra();
+		transacaoCompraAtualizada.setId(idTransacao);	
 		
+		transacaoCompraAtualizada.setValorTotalCalculado( 
+				valorTotalCalculado > 0 
+				? valorTotalCalculado 
+				: transacaoCompraOriginal.getValorTotalCalculado()
+				);
+		
+		transacaoCompraAtualizada.setStatus(
+				status != null
+				? status
+				: transacaoCompraOriginal.getStatus()
+				);
+		
+		transacaoCompraAtualizada.setDtCalculo(transacaoCompraAtualizada.getDtCalculo());
+		if ( dtCalculo != null && !(dtCalculo.after(Date.valueOf(LocalDate.now()))) ) {
+			transacaoCompraAtualizada.setDtCalculo(dtCalculo);
+		}
+		
+		transacaoCompraAtualizada.setDtPagamento(transacaoCompraOriginal.getDtPagamento());
+		if (dtPagamento != null) {
+			transacaoCompraAtualizada.setDtPagamento(dtPagamento);
+		}
+		
+		transacaoCompraAtualizada.setLoteBruto(
+				loteBruto != null
+				? loteBruto
+				: transacaoCompraOriginal.getLoteBruto()
+				);
+		
+		transacaoCompraDao.atualizarTransacaoCompra(transacaoCompraAtualizada);
 		
 	}
 	
