@@ -1,5 +1,10 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.LoteProcessado" %>
+<%@ page import="com.gestaocooperativareciclagem.model.TipoMaterial" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,199 +14,6 @@
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            opacity: 0.9;
-            cursor: pointer;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho e Botão Novo */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* --- Formulário de Pesquisa (Filtros Avançados) --- */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 2rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .inputs-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .inputs-row input, .inputs-row select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            min-width: 140px;
-        }
-
-        .separator { color: #888; font-size: 0.9rem; }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px; /* Altura alinhada com inputs */
-            margin-left: auto;
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Mensagem de Erro/Validação */
-        #feedback-message {
-            margin-top: 15px;
-            color: #dc3545;
-            font-size: 0.9rem;
-            display: none;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-
-        /* --- Tabela de Resultados --- */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Link no ID */
-        .id-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-family: monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .id-link:hover { text-decoration: underline; }
-
-        /* Badges de Etapa */
-        .stage-badge {
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-        .stage-triagem { background-color: #e2e3e5; color: #383d41; }
-        .stage-trituracao { background-color: #fff3cd; color: #856404; }
-        .stage-lavagem { background-color: #d1ecf1; color: #0c5460; }
-        .stage-extrusao { background-color: #d4edda; color: #155724; }
-        .stage-armazenado { background-color: #cce5ff; color: #004085; }
-
-    </style>
-    
-     -->
 </head>
 <body>
 
@@ -210,9 +22,9 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação segura -->
-            <a href="../index.html" onclick="alert('Navegar para Início')">Início</a>
-            <a href="../lotes_brutos/lotes_brutos.html" onclick="alert('Navegar para Lotes Brutos')">Lotes Brutos</a>
-            <a href="../tipos_materiais/tipos_materiais.html" onclick="alert('Navegar para Tipos de Materiais')">Tipos de Materiais</a>
+            <a href="index.jsp">Início</a>
+            <a href="ListarLotesBruto">Lotes Brutos</a>
+            <a href="ListarTiposMateriais">Tipos de Materiais</a>
         </div>
     </nav>
 
@@ -222,7 +34,7 @@
         <div class="page-header">
             <h1>Gestão de Lotes Processados</h1>
             <!-- Botão Novo Lote -->
-            <button class="btn-new" onclick="window.location.href='./novo_lote_processado.html'">
+            <button class="btn-new" onclick="window.location.href='pages/lotes_processados/novoLoteProcessado.jsp'">
                 + Novo Lote Processado
             </button>
         </div>
@@ -288,28 +100,42 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
+                
+                	<c:forEach items="${listaLotesProcessados}" var="loteProcessado">
+                		<tr>
+                			<td><a href="DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
+                			<td>${loteProcessado.pesoAtualKg}</td>
+                			<td>${loteProcessado.dtCriacao}</td>
+                			<td>${loteProcessado.tipoMaterial.nome}</td>
+                			<td><span class="stage-badge">Sem isso ainda :(</span></td>
+                		</tr>
+                	</c:forEach>
+                
                     <!-- Conteúdo inicial (Mock) -->
+                    <!--
                     <tr>
-                        <td><a href="./lote_processado.html?id=201" onclick="alert('Ver detalhes do lote #LP-201')" class="id-link">#LP-201</a></td>
+                        <td><a href="DetalharLoteProcessado?id=201" class="id-link">#LP-201</a></td>
                         <td>250,00</td>
                         <td>20/01/2026</td>
                         <td>Plástico PET</td>
                         <td><span class="stage-badge stage-lavagem">Lavagem</span></td>
                     </tr>
                     <tr>
-                        <td><a href="./lote_processado.html?id=205" onclick="alert('Ver detalhes do lote #LP-205')" class="id-link">#LP-205</a></td>
+                        <td><a href="DetalharLoteProcessado?id=205" class="id-link">#LP-205</a></td>
                         <td>120,50</td>
                         <td>22/01/2026</td>
                         <td>Alumínio</td>
                         <td><span class="stage-badge stage-armazenado">Armazenado</span></td>
                     </tr>
                     <tr>
-                        <td><a href="./lote_processado.html?id=210" onclick="alert('Ver detalhes do lote #LP-210')" class="id-link">#LP-210</a></td>
+                        <td><a href="DetalharLoteProcessado?id=210" class="id-link">#LP-210</a></td>
                         <td>500,00</td>
                         <td>25/01/2026</td>
                         <td>Plástico HDPE</td>
                         <td><span class="stage-badge stage-trituracao">Trituração</span></td>
                     </tr>
+                     -->
+                     
                 </tbody>
             </table>
         </section>
@@ -398,7 +224,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
-                        <a href="./lote_processado.html?id=${batch.id}" onclick="alert('Ver detalhes do lote #LP-${batch.id}')" class="id-link">
+                        <a href="DetalharLoteProcessado?id=${batch.id}" class="id-link">
                             #LP-${batch.id}
                         </a>
                     </td>

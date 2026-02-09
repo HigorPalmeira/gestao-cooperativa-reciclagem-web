@@ -23,7 +23,7 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 /**
  * Servlet implementation class LoteProcessadoController
  */
-@WebServlet(urlPatterns= {"/LoteProcessadoController", "/ListarLotesProcessados"})
+@WebServlet(urlPatterns= {"/LoteProcessadoController", "/ListarLotesProcessados", "/DetalharLoteProcessado"})
 public class LoteProcessadoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -224,7 +224,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Lote Processado #LP-201</div>
         <div>
-            <a href="./lotes_processados.html" onclick="alert('Voltar para Gestão de Lotes Processados')">Voltar para Gestão</a>
+            <a href="ListarLotesProcessados">Voltar para Gestão</a>
         </div>
     </nav>
 
@@ -469,7 +469,7 @@
         function deleteProcessedBatch() {
             if(confirm("Tem a certeza que deseja excluir este registo?\nEsta ação é irreversível.")) {
                 alert("Lote Processado excluído.");
-                window.location.href = './lotes_processados.html';
+                window.location.href = 'ListarLotesProcessados';
             }
         }
 

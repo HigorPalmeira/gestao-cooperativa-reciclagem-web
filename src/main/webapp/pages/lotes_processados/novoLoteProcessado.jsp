@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Lote Processado</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
     
     <!-- 
     <style>
@@ -277,7 +277,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="./lotes_processados.html" onclick="alert('Voltar para Gestão de Lotes Processados')" class="btn-back">
+                    <a href="../../ListarLotesProcessados" class="btn-back">
                         Cancelar e voltar
                     </a>
                 </div>
@@ -433,7 +433,7 @@
             alert(`Lote Processado Cadastrado com Sucesso!\n\nOrigem: ${batchId}\nMaterial: ${materialSelect.value}\nEtapa: ${stageSelect.value}\nData de Criação: ${creationDate}`);
             
             // Opcional: Redirecionar
-            window.location.href = './lotes_processados.html';
+            window.location.href = '../../ListarLotesProcessados';
         }
 
     </script>
