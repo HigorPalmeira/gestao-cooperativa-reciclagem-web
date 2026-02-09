@@ -12,23 +12,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.gestaocooperativareciclagem.dao.ClienteDAO;
-import com.gestaocooperativareciclagem.model.Cliente;
-import com.gestaocooperativareciclagem.service.ClienteService;
+import com.gestaocooperativareciclagem.dao.CategoriaProcessamentoDAO;
+import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
+import com.gestaocooperativareciclagem.service.CategoriaProcessamentoService;
 
 /**
- * Servlet implementation class ClienteController
+ * Servlet implementation class CategoriaProcessamentoController
  */
-@WebServlet({ "/ClienteController", "/ListarClientes", "/DetalharCliente" })
-public class ClienteController extends HttpServlet {
+@WebServlet({ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", "/DetalharCategoriaProcessamento" })
+public class CategoriaProcessamentoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	private ClienteService clienteService;
+	private CategoriaProcessamentoService categoriaProcessamentoService;
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClienteController() {
+    public CategoriaProcessamentoController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,11 +37,11 @@ public class ClienteController extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		
+
 		try {
-			clienteService = new ClienteService(new ClienteDAO());
+			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar ClienteService", e);
+			throw new ServletException("Erro ao inicializar CategoriaProcessamentoService", e);
 		}
 		
 	}
@@ -50,25 +50,25 @@ public class ClienteController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String path = request.getServletPath();
 		
 		try {
 			
 			switch(path) {
-				case "DetalharCliente":
+				case "DetalharCategoriaProcessamento":
 					System.out.println("Sem implementação...");
 					break;
 					
 				default:
-					listarClientes(request, response);
+					listarCategoriasProcessamento(request, response);
 					break;
 			}
 			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
-
+		
 	}
 
 	/**
@@ -78,16 +78,16 @@ public class ClienteController extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	protected void listarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void listarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Cliente> listaClientes = clienteService.listarClientes();
+		List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamento();
 		
-		request.setAttribute("listaClientes", listaClientes);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
+		request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/categorias_processamento/categoriasProcessamento.jsp");
 		
 		reqDis.forward(request, response);
 		
 	}
-
+	
 }

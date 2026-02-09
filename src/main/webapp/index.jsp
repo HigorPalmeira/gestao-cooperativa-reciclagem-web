@@ -22,18 +22,18 @@
             <!-- Funcionalidades Core -->
             <a href="ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
             <a href="ListarLotesBruto">Lotes Brutos</a>
-            <a href="pages/lote_processado/lotesProcessados.jsp">Lotes Processados</a>
-            <a href="pages/venda/vendas.jsp">Vendas</a>
-            <a href="pages/clientes/clientes.jsp">Clientes</a>
-            <a href="pages/transacoes_compra/transacoesCompra.jsp">Financeiro</a>
+            <a href="ListarLotesProcessados">Lotes Processados</a>
+            <a href="ListarVendas">Vendas</a>
+            <a href="ListarClientes">Clientes</a>
+            <a href="ListarTransacoesCompra">Financeiro</a>
             
             <!-- Dropdown para Cadastros Básicos -->
             <div class="dropdown">
                 <a href="#">Configurações &#9662;</a>
                 <div class="dropdown-content">
-                    <a href="pages/categorias_processamento/categoriasProcessamento.jsp">Categorias de Processamento</a>
-                    <a href="pages/tipos_materiais/tiposMaterial.jsp">Tipos de Materiais</a>
-                    <a href="pages/precos_materiais/precosMaterial.jsp">Preços de Materiais</a>
+                    <a href="ListarCategoriasProcessamento">Categorias de Processamento</a>
+                    <a href="ListarTiposMateriais">Tipos de Materiais</a>
+                    <a href="ListarPrecosMateriais">Preços de Materiais</a>
                     <a href="ListarUsuarios">Usuários (Admin)</a>
                 </div>
             </div>

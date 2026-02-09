@@ -1,6 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,12 +12,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
+import com.gestaocooperativareciclagem.model.TipoMaterial;
+import com.gestaocooperativareciclagem.service.TipoMaterialService;
+
 /**
  * Servlet implementation class TipoMaterialController
  */
-@WebServlet({ "/TipoMaterialController", "/ListarTiposMaterial", "/DetalharTipoMaterial" })
+@WebServlet({ "/TipoMaterialController", "/ListarTiposMateriais", "/DetalharTipoMaterial" })
 public class TipoMaterialController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private TipoMaterialService tipoMaterialService;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -27,15 +37,38 @@ public class TipoMaterialController extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		
+		try {
+			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
+		} catch (Exception e) {
+			throw new ServletException("Erro ao inicializar TipoMaterialService", e);
+		}
+		
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		String path = request.getServletPath();
+		
+		try {
+			
+			switch(path) {
+				case "DetalharTipoMaterial":
+					System.out.println("Sem implementação...");
+					break;
+					
+				default:
+					listarTiposMateriais(request, response);
+					break;
+			}
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+
 	}
 
 	/**
@@ -46,4 +79,15 @@ public class TipoMaterialController extends HttpServlet {
 		doGet(request, response);
 	}
 
+	protected void listarTiposMateriais(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+		
+		request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/tipos_materiais/tiposMaterial.jsp");
+		
+		reqDis.forward(request, response);
+		
+	}
+	
 }

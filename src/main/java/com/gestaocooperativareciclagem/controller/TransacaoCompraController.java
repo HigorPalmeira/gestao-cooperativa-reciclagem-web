@@ -12,23 +12,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.gestaocooperativareciclagem.dao.ClienteDAO;
-import com.gestaocooperativareciclagem.model.Cliente;
-import com.gestaocooperativareciclagem.service.ClienteService;
+import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
+import com.gestaocooperativareciclagem.model.TransacaoCompra;
+import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 
 /**
- * Servlet implementation class ClienteController
+ * Servlet implementation class TransacaoCompraController
  */
-@WebServlet({ "/ClienteController", "/ListarClientes", "/DetalharCliente" })
-public class ClienteController extends HttpServlet {
+@WebServlet({ "/TransacaoCompraController", "/ListarTransacoesCompra", "/DetalharTransacaoCompra" })
+public class TransacaoCompraController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	private ClienteService clienteService;
 	
+	private TransacaoCompraService transacaoCompraService;
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClienteController() {
+    public TransacaoCompraController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,9 +39,11 @@ public class ClienteController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 		try {
-			clienteService = new ClienteService(new ClienteDAO());
+			
+			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
+			
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar ClienteService", e);
+			throw new ServletException("Erro ao inicializar TransacaoCompraService", e);
 		}
 		
 	}
@@ -50,25 +52,25 @@ public class ClienteController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String path = request.getServletPath();
 		
 		try {
 			
 			switch(path) {
-				case "DetalharCliente":
+				case "DetalharTransacaoCompra":
 					System.out.println("Sem implementação...");
 					break;
 					
 				default:
-					listarClientes(request, response);
+					listarTransacoesCompra(request, response);
 					break;
 			}
 			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
-
+		
 	}
 
 	/**
@@ -79,12 +81,12 @@ public class ClienteController extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	protected void listarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarTransacoesCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Cliente> listaClientes = clienteService.listarClientes();
+		List<TransacaoCompra> listaTransacoesCompra = transacaoCompraService.listarTransacoesCompra();
 		
-		request.setAttribute("listaClientes", listaClientes);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
+		request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/transacoes_compra/transacoesCompra.jsp");
 		
 		reqDis.forward(request, response);
 		

@@ -13,22 +13,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gestaocooperativareciclagem.dao.ClienteDAO;
-import com.gestaocooperativareciclagem.model.Cliente;
+import com.gestaocooperativareciclagem.dao.ItemVendaDAO;
+import com.gestaocooperativareciclagem.dao.VendaDAO;
+import com.gestaocooperativareciclagem.model.Venda;
 import com.gestaocooperativareciclagem.service.ClienteService;
+import com.gestaocooperativareciclagem.service.VendaService;
 
 /**
- * Servlet implementation class ClienteController
+ * Servlet implementation class VendaController
  */
-@WebServlet({ "/ClienteController", "/ListarClientes", "/DetalharCliente" })
-public class ClienteController extends HttpServlet {
+@WebServlet({ "/VendaController", "/ListarVendas", "/DetalharVenda" })
+public class VendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	private ClienteService clienteService;
 	
+	private VendaService vendaService;
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClienteController() {
+    public VendaController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,9 +42,12 @@ public class ClienteController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 		try {
-			clienteService = new ClienteService(new ClienteDAO());
+			vendaService = new VendaService(
+					new VendaDAO(), 
+					new ItemVendaDAO(), 
+					new ClienteService(new ClienteDAO()));
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar ClienteService", e);
+			throw new ServletException("Erro ao inicializar VendaService", e);
 		}
 		
 	}
@@ -56,12 +62,12 @@ public class ClienteController extends HttpServlet {
 		try {
 			
 			switch(path) {
-				case "DetalharCliente":
+				case "/DetalharVenda":
 					System.out.println("Sem implementação...");
 					break;
 					
 				default:
-					listarClientes(request, response);
+					listarVendas(request, response);
 					break;
 			}
 			
@@ -78,16 +84,16 @@ public class ClienteController extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	protected void listarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void listarVendas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Cliente> listaClientes = clienteService.listarClientes();
+		List<Venda> listaVendas = vendaService.listarVendas();
 		
-		request.setAttribute("listaClientes", listaClientes);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
+		request.setAttribute("listaVendas", listaVendas);
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/vendas.jsp");
 		
 		reqDis.forward(request, response);
 		
 	}
-
+	
 }

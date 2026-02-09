@@ -12,23 +12,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.gestaocooperativareciclagem.dao.ClienteDAO;
-import com.gestaocooperativareciclagem.model.Cliente;
-import com.gestaocooperativareciclagem.service.ClienteService;
+import com.gestaocooperativareciclagem.dao.PrecoMaterialDAO;
+import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
+import com.gestaocooperativareciclagem.model.PrecoMaterial;
+import com.gestaocooperativareciclagem.service.PrecoMaterialService;
+import com.gestaocooperativareciclagem.service.TipoMaterialService;
 
 /**
- * Servlet implementation class ClienteController
+ * Servlet implementation class PrecoMaterialController
  */
-@WebServlet({ "/ClienteController", "/ListarClientes", "/DetalharCliente" })
-public class ClienteController extends HttpServlet {
+@WebServlet({ "/PrecoMaterialController", "/ListarPrecosMateriais", "/DetalharPrecoMaterial" })
+public class PrecoMaterialController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	private ClienteService clienteService;
 	
+	private PrecoMaterialService precoMaterialService;
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClienteController() {
+    public PrecoMaterialController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,9 +41,11 @@ public class ClienteController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 		try {
-			clienteService = new ClienteService(new ClienteDAO());
+			precoMaterialService = new PrecoMaterialService(
+					new PrecoMaterialDAO(), 
+					new TipoMaterialService(new TipoMaterialDAO()));
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar ClienteService", e);
+			throw new ServletException("Erro ao inicializar PrecoMaterialService", e);
 		}
 		
 	}
@@ -50,25 +54,25 @@ public class ClienteController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String path = request.getServletPath();
 		
 		try {
 			
 			switch(path) {
-				case "DetalharCliente":
+				case "DetalharPrecoMaterial":
 					System.out.println("Sem implementação...");
 					break;
-					
+				
 				default:
-					listarClientes(request, response);
+					listarPrecosMateriais(request, response);
 					break;
 			}
 			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
-
+		
 	}
 
 	/**
@@ -79,12 +83,12 @@ public class ClienteController extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	protected void listarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void listarPrecosMateriais(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Cliente> listaClientes = clienteService.listarClientes();
+		List<PrecoMaterial> listaPrecosMateriais = precoMaterialService.listarPrecosMaterial();
 		
-		request.setAttribute("listaClientes", listaClientes);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
+		request.setAttribute("listaPrecosMateriais", listaPrecosMateriais);
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/precos_materiais/precosMateriais.jsp");
 		
 		reqDis.forward(request, response);
 		
