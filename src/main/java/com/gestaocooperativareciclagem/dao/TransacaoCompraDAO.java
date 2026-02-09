@@ -94,6 +94,108 @@ public class TransacaoCompraDAO {
 		return listaTransacaoCompra;
 	}
 	
+	public List<TransacaoCompra> listarTransacoesCompraPorLoteBruto(LoteBruto loteBrutoBuscado) {
+		
+		List<TransacaoCompra> listaTransacaoCompra = new ArrayList<>();
+		
+		String select = "select * from info_transacao_compra where id_lotebruto = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setInt(1, loteBrutoBuscado.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idTransacaoCompra = rset.getInt("id_transacaocompra");
+				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
+				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
+						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
+				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
+				
+				int idLoteBruto = rset.getInt("id_lotebruto");
+				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				
+				String documentoFornecedor = rset.getString("documento_fornecedor");
+				String nomeFornecedor = rset.getString("nome_fornecedor");
+				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+				
+				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKg, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+				
+				listaTransacaoCompra.add(new TransacaoCompra(idTransacaoCompra, valorTotalCalculado, statusPagamento, dtCalculo, dtPagamento, loteBruto));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaTransacaoCompra;
+	}
+	
+	public List<TransacaoCompra> listarTransacoesCompraPorStatusPagamento(StatusPagamentoTransacaoCompra status) {
+		
+		List<TransacaoCompra> listaTransacaoCompra = new ArrayList<>();
+		
+		String select = "select * from info_transacao_compra where status_pagamento_transacaocompra = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, status.name());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idTransacaoCompra = rset.getInt("id_transacaocompra");
+				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
+				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
+						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
+				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
+				
+				int idLoteBruto = rset.getInt("id_lotebruto");
+				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				
+				String documentoFornecedor = rset.getString("documento_fornecedor");
+				String nomeFornecedor = rset.getString("nome_fornecedor");
+				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+				
+				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKg, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+				
+				listaTransacaoCompra.add(new TransacaoCompra(idTransacaoCompra, valorTotalCalculado, statusPagamento, dtCalculo, dtPagamento, loteBruto));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaTransacaoCompra;
+	}
+	
 	public void buscarTransacaoCompraPorId(TransacaoCompra transacaoCompra) {
 		
 		String select = "select * from info_transacao_compra where id_transacaocompra = ?";

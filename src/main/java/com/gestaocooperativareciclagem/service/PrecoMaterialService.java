@@ -114,4 +114,15 @@ public class PrecoMaterialService {
 		
 	}
 	
+	public PrecoMaterial buscarPrecoMaterialVigentePorTipoMaterial(TipoMaterial tipoMaterial) {
+		
+		PrecoMaterial precoMaterial = new PrecoMaterial();
+		precoMaterial.setTipoMaterial(tipoMaterial);
+		
+		precoMaterialDao.buscarPrecoMaterialVigentePorTipoMaterial(precoMaterial);
+		
+		return precoMaterial;
+		
+	}
+	
 }

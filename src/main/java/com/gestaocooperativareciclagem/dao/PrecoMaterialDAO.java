@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -299,6 +300,46 @@ public class PrecoMaterialDAO {
 			
 			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, precoMaterial.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				precoMaterial.setId( rset.getInt("id_precomaterial") );
+				precoMaterial.setPrecoCompra( rset.getDouble("preco_compra_kg_precomaterial") );
+				precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				
+				precoMaterial.setTipoMaterial( new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial) );
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void buscarPrecoMaterialVigentePorTipoMaterial(PrecoMaterial precoMaterial) {
+		
+		String select = "select * from info_preco_material where id_tipomaterial = ? "
+				+ "and dtVigencia_precomaterial <= ? "
+				+ "order by dtVigencia_precomaterial desc limit 1";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setInt(1, precoMaterial.getTipoMaterial().getId());
+			pst.setDate(2, Date.valueOf(LocalDate.now()));
 			
 			ResultSet rset = pst.executeQuery();
 			

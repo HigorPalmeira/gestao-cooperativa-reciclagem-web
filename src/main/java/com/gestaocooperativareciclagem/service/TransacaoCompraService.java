@@ -82,6 +82,22 @@ public class TransacaoCompraService {
 		
 	}
 	
+	public List<TransacaoCompra> listarTransacoesCompraPorLoteBruto(LoteBruto loteBruto) {
+		
+		if (loteBruto == null || loteBruto.getId() <= 0) {
+			throw new RuntimeException("Lote Bruto inválido para busca! Informe um lote bruto válido para realizar a busca das transações de compra.");
+		}
+		
+		return transacaoCompraDao.listarTransacoesCompraPorLoteBruto(loteBruto);
+		
+	}
+	
+	public List<TransacaoCompra> listarTransacoesCompraPorStatusPagamento(StatusPagamentoTransacaoCompra status) {
+		
+		return transacaoCompraDao.listarTransacoesCompraPorStatusPagamento(status);
+		
+	}
+	
 	public TransacaoCompra buscarTransacaoCompraPorId(int id) {
 		
 		TransacaoCompra transacaoCompra = new TransacaoCompra();
