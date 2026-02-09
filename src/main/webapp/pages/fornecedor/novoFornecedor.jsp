@@ -7,140 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Fornecedor</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
-    
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Consistente com a página anterior) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --disabled-color: #95a5a6;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: #333;
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; margin-right: 20px; }
-        nav.main-nav a { color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.8; }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Centralizado */
-        .container {
-            max-width: 600px; /* Mais estreito para focar no formulário */
-            margin: 3rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cartão do Formulário */
-        .form-card {
-            background-color: var(--white);
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .form-header {
-            margin-bottom: 2rem;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 1rem;
-        }
-
-        h1 { margin: 0; font-size: 1.5rem; color: #2c3e50; }
-        p.subtitle { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
-
-        /* Estilos dos Campos */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #444;
-        }
-        
-        .form-group label span.required { color: #e74c3c; } /* Asterisco vermelho */
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box; /* Garante que o padding não estoure a largura */
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        /* Botão Cadastrar */
-        .form-actions {
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-submit {
-            background-color: var(--success-color);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-
-        .btn-submit:hover:not(:disabled) {
-            background-color: #218838;
-        }
-
-        /* Estado Inativo (Disabled) */
-        .btn-submit:disabled {
-            background-color: var(--disabled-color);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .btn-back {
-            text-align: center;
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            display: block;
-        }
-        .btn-back:hover { text-decoration: underline; color: var(--primary-color); }
-
-    </style>
-     -->
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
      
 </head>
 <body>
@@ -185,7 +52,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="./fornecedores.jsp" class="btn-back">Cancelar e voltar para Gestão de Fornecedores</a>
+                    <a href="../../ListarFornecedores" class="btn-back">Cancelar e voltar para Gestão de Fornecedores</a>
                 </div>
             </form>
         </section>
@@ -228,7 +95,7 @@
             alert(`Sucesso!\nFornecedor "${inputName.value}" cadastrado.`);
             
             // Opcional: Redirecionar de volta para a listagem
-            window.location.href = './fornecedores.jsp';
+            window.location.href = '../../ListarFornecedores';
         }
 
     </script>

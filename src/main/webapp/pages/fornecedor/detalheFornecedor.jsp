@@ -9,144 +9,6 @@
     <title>Detalhes do Fornecedor</title>
     
     <link rel="stylesheet" href="assets/_css/styles.css">
-    
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual --- */
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #6c757d;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --danger-color: #dc3545;
-            --success-color: #28a745;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: #333;
-        }
-
-        /* Menu Superior */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        nav.main-nav a { color: #fff; text-decoration: none; font-size: 0.9rem; margin-left: 15px;}
-        nav.main-nav a:hover { text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            padding-bottom: 4rem; /* Espaço para o botão de excluir no final */
-        }
-
-        h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-top: 2rem; color: #495057; font-size: 1.2rem;}
-
-        /* SEÇÃO 1: Formulário de Edição */
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        .edit-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* 3 colunas */
-            gap: 1.5rem;
-            align-items: end;
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .btn-save {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            height: 42px;
-        }
-        .btn-save:hover { background-color: #004494; }
-
-        /* SEÇÃO 2 e 3: Tabelas */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1rem;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #e9ecef; font-weight: 600; color: #495057; }
-        tr:last-child td { border-bottom: none; }
-        
-        /* Links de ID nas tabelas */
-        .id-link { color: var(--primary-color); font-weight: bold; text-decoration: none; }
-        .id-link:hover { text-decoration: underline; }
-
-        /* Status Badges */
-        .status { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
-        .status-ok { background-color: #d4edda; color: #155724; }
-        .status-pend { background-color: #fff3cd; color: #856404; }
-
-        /* Botão de Exclusão (Final da página) */
-        .danger-zone {
-            margin-top: 3rem;
-            text-align: right;
-            border-top: 1px solid #ddd;
-            padding-top: 1rem;
-        }
-
-        .btn-delete {
-            background-color: var(--danger-color);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .btn-delete:hover { background-color: #c82333; }
-
-        /* Mensagens de Feedback */
-        #error-msg { color: var(--danger-color); font-size: 0.9rem; margin-top: 10px; display: none; }
-        #success-msg { color: var(--success-color); font-size: 0.9rem; margin-top: 10px; display: none; }
-
-    </style>
-    
-     -->
      
 </head>
 <body>
@@ -155,8 +17,8 @@
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System &rsaquo; Fornecedor</div>
         <div>
             <a href="ListarFornecedores">Voltar para Gestão</a>
-            <a href="../lotes_brutos/lotes_brutos.html">Lotes Brutos</a>
-            <a href="../transacoes_compra/transacoes_compra.html">Transações de Compra</a>
+            <a href="ListarLotesBruto">Lotes Brutos</a>
+            <a href="ListarTransacoesCompra">Transações de Compra</a>
         </div>
     </nav>
 
@@ -204,13 +66,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="../lotes_brutos/lote_bruto.html?id=101" class="id-link">#LB-101</a></td>
+                    <td><a href="DetalharLoteBruto?id=101" class="id-link">#LB-101</a></td>
                     <td>12/01/2026</td>
                     <td>500.00</td>
                     <td><span class="status status-pend">Em Análise</span></td>
                 </tr>
                 <tr>
-                    <td><a href="../lotes_brutos/lote_bruto.html?id=098" class="id-link">#LB-098</a></td>
+                    <td><a href="DetalharLoteBruto?id=098" class="id-link">#LB-098</a></td>
                     <td>05/01/2026</td>
                     <td>1,200.00</td>
                     <td><span class="status status-ok">Processado</span></td>
@@ -230,13 +92,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="../transacoes_compra/transacao_compra.html?id=555" class="id-link">#TR-555</a></td>
+                    <td><a href="DetalharTransacaoCompra?id=555" class="id-link">#TR-555</a></td>
                     <td>15/01/2026</td>
                     <td>R$ 15.000,00</td>
                     <td><span class="status status-pend">Pendente</span></td>
                 </tr>
                 <tr>
-                    <td><a href="../transacoes_compra/transacao_compra.html?id=432" class="id-link">#TR-432</a></td>
+                    <td><a href="DetalharTransacaoCompra?id=432" class="id-link">#TR-432</a></td>
                     <td>10/12/2025</td>
                     <td>R$ 8.500,00</td>
                     <td><span class="status status-ok">Pago</span></td>
