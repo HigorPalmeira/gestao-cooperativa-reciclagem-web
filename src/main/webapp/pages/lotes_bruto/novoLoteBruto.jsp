@@ -217,7 +217,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="../../ListarLotesBrutos" onclick="alert('Voltar para Gestão de Lotes Brutos')" class="btn-back">
+                    <a href="../../ListarLotesBruto" class="btn-back">
                         Cancelar e voltar
                     </a>
                 </div>
@@ -311,7 +311,7 @@
             alert(`Lote Cadastrado com Sucesso!\n\nFornecedor: ${supplierName}\nPeso: ${weight} Kg\nData de Entrada: ${currentDate}\nStatus: ${defaultStatus}`);
 
             // Opcional: Redirecionar
-            window.location.href = '../../ListarLotesBrutos';
+            window.location.href = '../../ListarLotesBruto';
         }
 
     </script>

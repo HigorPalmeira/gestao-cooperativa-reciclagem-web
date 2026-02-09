@@ -193,7 +193,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = ```
                     <td>
-                        <a href="DetalharLoteBruto?id=${batch.id}" onclick="alert('Ver detalhes do lote #LB-${batch.id}')" class="id-link">
+                        <a href="DetalharLoteBruto?id=${batch.id}" class="id-link">
                             #LB-\${String(batch.id).padStart(3, '0')}
                         </a>
                     </td>
