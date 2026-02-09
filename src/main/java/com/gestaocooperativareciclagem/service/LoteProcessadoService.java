@@ -2,6 +2,7 @@ package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.LoteProcessadoDAO;
 import com.gestaocooperativareciclagem.model.LoteBruto;
@@ -23,6 +24,16 @@ public class LoteProcessadoService {
 		this.precoMaterialService = precoMaterialService;
 	}
 
+	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, double pesoKg) {
+		
+		PrecoMaterial precoMaterial = precoMaterialService.buscarPrecoMaterialVigentePorTipoMaterial(tipoMaterial);
+		
+		double valorTotalCalculado = precoMaterial.getPrecoCompra() * pesoKg;
+		
+		transacaoCompraService.inserirTransacaoCompra(valorTotalCalculado, StatusPagamentoTransacaoCompra.AGUARDANDO_PAGAMENTO, Date.valueOf(LocalDate.now()), loteBruto);
+		
+	}
+	
 	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
 		
 		if (pesoAtualKg <= 0) {
@@ -45,14 +56,75 @@ public class LoteProcessadoService {
 		
 	}
 	
-	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, double pesoKg) {
+	public void atualizarLoteProcessado(int idLoteProcessado, double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
 		
-		PrecoMaterial precoMaterial = precoMaterialService.buscarPrecoMaterialVigentePorTipoMaterial(tipoMaterial);
-
-		double valorTotalCalculado = precoMaterial.getPrecoCompra() * pesoKg;
+		LoteProcessado loteProcessado = buscarLoteProcessadoPorId(idLoteProcessado);
 		
-		transacaoCompraService.inserirTransacaoCompra(valorTotalCalculado, StatusPagamentoTransacaoCompra.AGUARDANDO_PAGAMENTO, Date.valueOf(LocalDate.now()), loteBruto);
+		LoteProcessado loteProcessadoAtualizado = new LoteProcessado();
+		loteProcessadoAtualizado.setId(idLoteProcessado);
 		
+		loteProcessadoAtualizado.setPesoAtualKg(
+				pesoAtualKg > 0
+				? pesoAtualKg
+				: loteProcessado.getPesoAtualKg()
+				);
+		
+		loteProcessadoAtualizado.setTipoMaterial(
+				tipoMaterial != null
+				? tipoMaterial
+				: loteProcessado.getTipoMaterial()
+				);
+		
+		loteProcessadoAtualizado.setLoteBruto(
+				loteBruto != null
+				? loteBruto
+				: loteProcessado.getLoteBruto()
+				);
+		
+		loteProcessadoDao.atualizarLoteProcessado(loteProcessadoAtualizado);
+		
+	}
+	
+	public void deletarLoteProcessado(int id) {
+		
+		loteProcessadoDao.deletarLoteProcessado(id);
+		
+	}
+	
+	public List<LoteProcessado> listarLotesProcessado() {
+	
+		return loteProcessadoDao.listarLotesProcessado();
+		
+	}
+	
+	public List<LoteProcessado> listarLotesProcessadoPorTipoMaterial(TipoMaterial tipoMaterial) {
+		
+		if (tipoMaterial == null) {
+			throw new RuntimeException("Tipo de Material inválido! Não é possível realizar a busca com o tipo de material inválido!");
+		}
+		
+		return loteProcessadoDao.listarLotesProcessadoPorTipoMaterial(tipoMaterial);
+		
+	}
+	
+	public List<LoteProcessado> listarLotesProcessadoPorLoteBruto(LoteBruto loteBruto) {
+		
+		if (loteBruto == null) {
+			throw new RuntimeException("Lote Bruto inválido! Não é possível realizar a busca com o lote bruto inválido!");
+		}
+		
+		return loteProcessadoDao.listarLotesProcessadoPorLoteBruto(loteBruto);
+		
+	}
+	
+	public LoteProcessado buscarLoteProcessadoPorId(int id) {
+		
+		LoteProcessado loteProcessado = new LoteProcessado();
+		loteProcessado.setId(id);
+		
+		loteProcessadoDao.buscarLoteProcessadoPorId(loteProcessado);
+		
+		return loteProcessado;
 		
 	}
 	
