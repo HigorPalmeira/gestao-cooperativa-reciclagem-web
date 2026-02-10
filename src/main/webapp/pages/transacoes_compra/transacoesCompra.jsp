@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.TransacaoCompra" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,184 +12,6 @@
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            opacity: 0.9;
-            cursor: pointer;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho */
-        .page-header {
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        /* --- Formulário de Pesquisa (Filtros) --- */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 2rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .inputs-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .inputs-row input, .inputs-row select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            min-width: 130px;
-        }
-
-        .separator { color: #888; font-size: 0.9rem; }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px;
-            margin-left: auto; /* Empurra para a direita */
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Mensagem de Validação */
-        #feedback-message {
-            margin-top: 15px;
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            display: none;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-
-        /* --- Tabela de Resultados --- */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Link no ID */
-        .id-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-family: monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .id-link:hover { text-decoration: underline; }
-
-        /* Badges de Status */
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-        .status-pago { background-color: #d4edda; color: #155724; }
-        .status-pendente { background-color: #fff3cd; color: #856404; }
-        .status-atrasado { background-color: #f8d7da; color: #721c24; }
-        .status-cancelado { background-color: #e2e3e5; color: #383d41; }
-
-        /* Alinhamento de valores */
-        .text-right { text-align: right; }
-
-    </style>
-     -->
 </head>
 <body>
 
@@ -195,7 +20,7 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação -->
-            <a href="../index.html" onclick="alert('Navegar para Início')">Início</a>
+            <a href="index.jsp">Início</a>
             <a href="#" onclick="alert('Navegar para Relatórios')">Relatórios Financeiros</a>
         </div>
     </nav>
@@ -266,9 +91,29 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
+                	
+                	<c:forEach items="${listaTransacoesCompra}" var="transacaoCompra">
+                		<tr>
+                			<td><a href="DetalharTransacaoCompra?id=${transacaoCompra.id}" class="id-link">#TR-${String.format("%03d", transacaoCompra.id)}</a></td>
+                			<td>${ (transacaoCompra.dtPagamento != null ? transacaoCompra.dtPagamento : "---") }</td>
+                			<td class="text-right">${String.format("R$ %.2f", transacaoCompra.valorTotalCalculado)}</td>
+                			<td>
+                				<c:choose>
+                					<c:when test="${transacaoCompra.status == 'AGUARDANDO_PAGAMENTO'}">
+                						<span class="status-badge status-pendente">${transacaoCompra.status}</span>
+                					</c:when>
+                					<c:otherwise>
+                						<span class="status-badge status-pago">${transacaoCompra.status}</span>
+                					</c:otherwise>
+                				</c:choose>
+                			</td>
+                		</tr>
+                	</c:forEach>
+                
                     <!-- Mock Data Inicial -->
+                    <!--
                     <tr>
-                        <td><a href="./transacao_compra.html?id=555" onclick="alert('Ver detalhes da transação #TR-555')" class="id-link">#TR-555</a></td>
+                        <td><a href="DetalharTransacaoCompra?id=555" onclick="alert('Ver detalhes da transação #TR-555')" class="id-link">#TR-555</a></td>
                         <td>15/01/2026</td>
                         <td class="text-right">R$ 1.500,00</td>
                         <td><span class="status-badge status-pago">Pago</span></td>
@@ -285,6 +130,8 @@
                         <td class="text-right">R$ 3.200,00</td>
                         <td><span class="status-badge status-atrasado">Atrasado</span></td>
                     </tr>
+                    -->
+                    
                 </tbody>
             </table>
         </section>

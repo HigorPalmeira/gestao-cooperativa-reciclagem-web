@@ -185,7 +185,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Transação #TR-555</div>
         <div>
-            <a href="../transacoes_compra/transacoes_compra.html" onclick="alert('Voltar para Gestão de Transações de Compra')">Voltar para Gestão</a>
+            <a href="ListarTransacoesCompra">Voltar para Gestão</a>
         </div>
     </nav>
 
@@ -333,11 +333,11 @@
             const rbBody = document.getElementById('rawBatchTableBody');
             rbBody.innerHTML = `
                 <tr>
-                    <td><a href="../lotes_brutos/lote_bruto.html?id=${relatedRawBatch.id}" onclick="alert('Ir para página Lote Bruto #${relatedRawBatch.id}')" class="nav-link">#${relatedRawBatch.id}</a></td>
+                    <td><a href="DetalharLoteBruto?id=${relatedRawBatch.id}" class="nav-link">#${relatedRawBatch.id}</a></td>
                     <td>${relatedRawBatch.weight.toFixed(2)}</td>
                     <td>${relatedRawBatch.date}</td>
                     <td>${relatedRawBatch.status}</td>
-                    <td><a href="../fornecedores/fornecedor.html?name=${relatedRawBatch.supplier}" onclick="alert('Ir para página Fornecedor: ${relatedRawBatch.supplier}')" class="nav-link">${relatedRawBatch.supplier}</a></td>
+                    <td><a href="DetalharFornecedor?name=${relatedRawBatch.supplier}" class="nav-link">${relatedRawBatch.supplier}</a></td>
                 </tr>
             `;
 
@@ -347,9 +347,9 @@
             
             priceBody.innerHTML = `
                 <tr>
-                    <td><a href="../precos_materiais/preco_material.html?price=${relatedPrice.price}&validity=${relatedPrice.validity}&material=${relatedPrice.material}" onclick="alert('Ir para página Preço de Compra')" class="nav-link">${formattedPrice}</a></td>
+                    <td><a href="ListarPrecosMateriais?price=${relatedPrice.price}&validity=${relatedPrice.validity}&material=${relatedPrice.material}" class="nav-link">${formattedPrice}</a></td>
                     <td>${relatedPrice.validity}</td>
-                    <td><a href="../tipos_materiais/tipo_material.html?name=${relatedPrice.material}" onclick="alert('Ir para página Tipo de Material: ${relatedPrice.material}')" class="nav-link">${relatedPrice.material}</a></td>
+                    <td><a href="ListarTiposMateriais?name=${relatedPrice.material}" class="nav-link">${relatedPrice.material}</a></td>
                 </tr>
             `;
         }
@@ -399,7 +399,7 @@
         function deleteTransaction() {
             if (confirm("Tem a certeza que deseja excluir esta transação?\nEsta ação é irreversível.")) {
                 alert("Registo excluído.");
-                window.location.href = './transacoes_compra.html';
+                window.location.href = 'ListarTransacoesCompra';
             }
         }
 
