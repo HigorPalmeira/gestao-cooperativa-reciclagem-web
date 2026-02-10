@@ -174,7 +174,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Venda #1020</div>
         <div>
-            <a href="./vendas.html">Voltar para Gestão</a>
+            <a href="ListarVendas">Voltar para Gestão</a>
         </div>
     </nav>
 
@@ -430,7 +430,7 @@
             const confirmDelete = confirm("Tem certeza que deseja excluir esta venda permanentemente?");
             if (confirmDelete) {
                 alert("Venda excluída.");
-                window.location.href = "./vendas.html";
+                window.location.href = "ListarVendas";
             }
         }
 

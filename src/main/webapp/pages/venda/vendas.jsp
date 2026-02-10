@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.Venda" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -194,8 +197,8 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="../index.html">Início</a>
-            <a href="../clientes/clientes.html">Clientes</a>
+            <a href="index.jsp">Início</a>
+            <a href="ListarClientes">Clientes</a>
             <a href="#">Relatórios</a>
         </div>
     </nav>
@@ -204,7 +207,7 @@
         
         <div class="page-header">
             <h1>Gestão de Vendas</h1>
-            <button class="btn-new" onclick="window.location.href='./nova_venda.html'">
+            <button class="btn-new" onclick="window.location.href='pages/venda/novaVenda.jsp'">
                 + Nova Venda
             </button>
         </div>
@@ -248,11 +251,23 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
+                
+                	<c:forEach items="${listaVendas}" var="venda">
+                		<tr>
+                			<td><a href="DetalharVenda?id=${venda.id}">${venda.id}</a></td>
+                			<td>${venda.dtVenda}</td>
+                			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
+                		</tr>
+                	</c:forEach>
+                
+                <!--
                     <tr>
                         <td colspan="3" style="text-align: center; padding: 3rem; color: #777;">
                             Utilize os filtros acima para buscar registros de vendas.
                         </td>
                     </tr>
+                 -->
+                    
                 </tbody>
             </table>
         </section>
@@ -336,7 +351,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
-                        <a href="./detalhes_venda.html?id=${sale.id}" class="id-link">
+                        <a href="DetalharVenda?id=${sale.id}" class="id-link">
                             #${sale.id}
                         </a>
                     </td>

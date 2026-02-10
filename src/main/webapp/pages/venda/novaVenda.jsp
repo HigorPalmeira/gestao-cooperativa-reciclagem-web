@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Venda</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
     
     <!-- 
     <style>
@@ -259,7 +259,7 @@
             <button id="btnSubmit" class="btn-submit" disabled onclick="registerSale()">
                 Cadastrar Venda
             </button>
-            <a href="./vendas.html" class="btn-cancel">Cancelar</a>
+            <a href="../../ListarVendas" class="btn-cancel">Cancelar</a>
         </div>
 
     </main>
@@ -435,7 +435,7 @@
 
         function registerSale() {
             alert(`Sucesso!\nVenda registrada para: ${nameInput.value}\nTotal de Itens: ${saleItems.length}`);
-            window.location.href = './vendas.html';
+            window.location.href = '../../ListarVendas';
         }
 
     </script>
