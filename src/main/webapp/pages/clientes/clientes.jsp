@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.Cliente" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,172 +11,6 @@
     <title>Gestão de Clientes</title>
     
     <link rel="stylesheet" href="assets/_css/styles.css">
-    
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #6c757d;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: #333;
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-        }
-        nav.main-nav a:hover { 
-        	text-decoration: underline; 
-        }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho e Botão Novo */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* Formulário de Pesquisa */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .form-group input {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px; /* Alinhamento visual com inputs */
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Mensagem de Erro */
-        #feedback-message {
-            margin-top: 10px;
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        /* Tabela de Resultados */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Link no CNPJ */
-        .cnpj-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-family: monospace; /* Fonte monoespaçada para números fica melhor */
-            font-size: 1.05rem;
-        }
-        .cnpj-link:hover { text-decoration: underline; }
-
-    </style>
-    
-     -->
      
 </head>
 <body>
@@ -181,8 +18,8 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="../../index.html">Início</a>
-            <a href="../vendas/vendas.html">Vendas</a>
+            <a href="index.jsp">Início</a>
+            <a href="ListarVendas">Vendas</a>
             <a href="#">Relatórios</a>
         </div>
     </nav>
@@ -190,7 +27,7 @@
     <main class="container">
         <div class="page-header">
             <h1>Gestão de Clientes</h1>
-            <button class="btn-new" onclick="window.location.href='./novo_cliente.html'">
+            <button class="btn-new" onclick="window.location.href='pages/clientes/novoCliente.jsp'">
                 + Novo Cliente
             </button>
         </div>
@@ -225,24 +62,16 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
-                    <tr>
-                        <td><a href="./detalhes_cliente.html?cnpj=12.345.678/0001-90" class="cnpj-link">12.345.678/0001-90</a></td>
-                        <td>Supermercados Horizonte Ltda</td>
-                        <td>compras@horizonte.com.br</td>
-                        <td>10/01/2024</td>
-                    </tr>
-                    <tr>
-                        <td><a href="./detalhes_cliente.html?cnpj=98.765.432/0001-15" class="cnpj-link">98.765.432/0001-15</a></td>
-                        <td>Auto Peças Silva</td>
-                        <td>financeiro@silvauto.com</td>
-                        <td>15/02/2024</td>
-                    </tr>
-                    <tr>
-                        <td><a href="./detalhes_cliente.html?cnpj=45.123.789/0001-22" class="cnpj-link">45.123.789/0001-22</a></td>
-                        <td>Restaurante Sabor Caseiro</td>
-                        <td>contato@saborcaseiro.com</td>
-                        <td>22/03/2024</td>
-                    </tr>
+                
+                	<c:forEach items="${listaClientes}" var="cliente">
+                		<tr>
+                			<td><a href="DetalharCliente?cnpj=${cliente.cnpj}" class="cnpj-link">${cliente.cnpj}</a></td>
+                			<td>${cliente.nomeEmpresa}</td>
+                			<td>${cliente.emailContato}</td>
+                			<td>${cliente.dtCadastro}</td>
+                		</tr>
+                	</c:forEach>
+
                 </tbody>
             </table>
         </section>
@@ -300,7 +129,7 @@
                 // Note que o Link está no CNPJ conforme o requisito
                 row.innerHTML = `
                     <td>
-                        <a href="./detalhes_clientes.html?cnpj=${client.cnpj}" class="cnpj-link">
+                        <a href="DetalharCliente?cnpj=${client.cnpj}" class="cnpj-link">
                             ${client.cnpj}
                         </a>
                     </td>

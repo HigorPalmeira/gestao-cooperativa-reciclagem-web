@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Cliente</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="../../assets/_css/styles.css">
     
     <!-- 
     <style>
@@ -185,7 +185,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="clientes.html" class="btn-cancel">Cancelar e voltar para Gestão de Clientes</a>
+                    <a href="../../ListarClientes" class="btn-cancel">Cancelar e voltar para Gestão de Clientes</a>
                 </div>
             </form>
         </section>
@@ -244,7 +244,7 @@
             btnSubmit.disabled = true;
 
             // Opcional: Redirecionar
-            window.location.href = 'clientes.html';
+            window.location.href = '../../ListarClientes';
         }
 
     </script>
