@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.CategoriaProcessamento" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,250 +12,6 @@
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!--
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --text-color: #333;
-            --overlay-color: rgba(0, 0, 0, 0.5);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a { 
-            color: #fff; text-decoration: none; font-size: 0.9rem; margin-left: 20px; cursor: pointer; opacity: 0.9;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho e Botão Novo */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* Formulário de Pesquisa */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 1.5rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .form-group input, .form-group textarea {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box; /* Garante que padding não quebre layout */
-        }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px;
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Tabela de Resultados */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Link no Nome (Trigger do Modal) */
-        .name-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .name-link:hover { text-decoration: underline; }
-
-        /* --- Estilos do MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--overlay-color);
-            display: none; /* Oculto por padrão */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        .modal-header h2 { margin: 0; font-size: 1.5rem; color: #333; }
-
-        .close-icon {
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: #999;
-        }
-        .close-icon:hover { color: #333; }
-
-        /* Rodapé do Modal (Botões) */
-        .modal-footer {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between; /* Botões nas extremidades */
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 1rem;
-        }
-
-        /* Botões do Modal */
-        .btn-modal-save {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: auto; /* Empurra para a direita se estiver sozinho */
-        }
-        .btn-modal-create {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: auto; 
-        }
-
-        .btn-modal-delete {
-            background-color: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-modal-delete:hover { background-color: var(--danger-color); color: white; }
-
-        #feedback-msg { display: none; color: #dc3545; margin-top: 10px; }
-
-    </style>
-    
-    -->
-    
 </head>
 <body>
 
@@ -260,7 +19,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="../index.html">Início</a>
+            <a href="index.jsp">Início</a>
         </div>
     </nav>
 
@@ -301,7 +60,16 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- Preenchido via JS -->
+                    
+					<c:forEach items="${listaCategoriasProcessamento}" var="categoriaProcessamento">
+					
+						<tr> <!-- .id -->
+							<td><span class="name-link" onclick="openModal('edit', {id:${categoriaProcessamento.id}, name: '${categoriaProcessamento.nome}', desc: '${categoriaProcessamento.descricao}'})">${categoriaProcessamento.nome}</span></td>
+							<td>${categoriaProcessamento.descricao}</td>
+						</tr>
+					
+					</c:forEach>
+
                 </tbody>
             </table>
         </section>
@@ -351,6 +119,7 @@
         /* --- Lógica da Aplicação --- */
 
         // 1. Dados Simulados
+/*
         let categoriesDB = [
             { id: 1, name: "Triagem", desc: "Separação inicial de materiais recicláveis por tipo e remoção de contaminantes grosseiros." },
             { id: 2, name: "Lavagem", desc: "Processo de limpeza com água e soluções químicas para remover sujidade e rótulos." },
@@ -358,7 +127,8 @@
             { id: 4, name: "Extrusão", desc: "Derretimento e moldagem do plástico em novos formatos ou pellets." },
             { id: 5, name: "Prensagem", desc: "Compactação do material para facilitar o transporte e armazenamento." }
         ];
-
+*/
+        
         // Estado Atual
         let currentEditId = null;
 
@@ -375,7 +145,9 @@
         const btnCreate = document.getElementById('btnCreate');
 
         // Inicializar tabela
+/*        
         window.onload = () => renderTable(categoriesDB);
+*/
 
         // 2. Renderizar Tabela
         function renderTable(data) {
@@ -401,9 +173,9 @@
         }
 
         // 3. Abrir Modal (Lógica Central)
-        function openModal(mode, id = null) {
+        function openModal(mode, cat = null) { // id = null
             modal.style.display = 'flex';
-            currentEditId = id;
+            currentEditId = cat.id;
 
             if (mode === 'new') {
                 // MODO: NOVA CATEGORIA
@@ -418,7 +190,7 @@
 
             } else if (mode === 'edit') {
                 // MODO: EDITAR CATEGORIA
-                const cat = categoriesDB.find(c => c.id === id);
+                //const cat = categoriesDB.find(c => c.id === id);
                 if (!cat) return;
 
                 modalTitle.innerText = "Editar Categoria";
@@ -454,9 +226,11 @@
                 // Lógica de ATUALIZAR (Salvar Alterações)
                 const index = categoriesDB.findIndex(c => c.id === currentEditId);
                 if (index !== -1) {
+                	/*
                     categoriesDB[index].name = newName;
                     categoriesDB[index].desc = newDesc;
-                    alert("Categoria atualizada com sucesso!");
+                    */
+                    alert("CRIAR REQUISIÇÃO DE ATUALIZAÇÃO");
                 }
             } else {
                 // Lógica de CRIAR (Cadastrar)
