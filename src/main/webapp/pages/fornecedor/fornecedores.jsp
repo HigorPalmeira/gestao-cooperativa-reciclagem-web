@@ -66,7 +66,7 @@
                 <tbody id="resultsTableBody">
                 	<c:forEach items="${listaFornecedores}" var="fornecedor">
                 		<tr>
-                			<td> <a href="DetalharFornecedor?documento=${fornecedor.documento}">${fornecedor.documento}</a></td>
+                			<td><a href="DetalharFornecedor?documento=${fornecedor.documento}">${fornecedor.documento}</a></td>
                 			<td>${fornecedor.nome}</td>
                 			<td>${fornecedor.tipo}</td>
                 			<td>${fornecedor.dtCadastro}</td>

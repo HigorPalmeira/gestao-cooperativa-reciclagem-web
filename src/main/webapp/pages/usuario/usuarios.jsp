@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.Usuario" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,183 +12,13 @@
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão do Sistema) --- */
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #6c757d;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: #333;
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-        }
-        nav.main-nav a:hover { text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho: Título e Botão Novo */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* Formulário de Pesquisa */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px;
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Mensagem de erro/validação */
-        #feedback-message {
-            margin-top: 10px;
-            color: #dc3545;
-            font-size: 0.9rem;
-            display: none; /* Oculto por padrão */
-        }
-
-        /* Tabela de Resultados */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Links da Tabela */
-        .user-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .user-link:hover { text-decoration: underline; }
-
-        /* Badges de Papel (Role) */
-        .role-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        .role-admin { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
-        .role-manager { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-        .role-user { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-
-    </style>
-     -->
 </head>
 <body>
 
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="index.html">Início</a>
+            <a href="index.jsp">Início</a>
             <a href="#">Relatórios</a>
             <a href="#">Configurações</a>
         </div>
@@ -229,21 +62,17 @@
                     </tr>
                 </thead>
                 <tbody id="resultsTableBody">
-                    <tr>
-                        <td><a href="DetalharUsuario?id=1" class="user-link">Carlos Eduardo</a></td>
-                        <td>carlos.edu@empresa.com</td>
-                        <td><span class="role-badge role-admin">Administrador</span></td>
-                    </tr>
-                    <tr>
-                        <td><a href="DetalharUsuario?id=2" class="user-link">Ana Souza</a></td>
-                        <td>ana.souza@empresa.com</td>
-                        <td><span class="role-badge role-manager">Gerente</span></td>
-                    </tr>
-                    <tr>
-                        <td><a href="DetalharUsuario?id=3" class="user-link">Roberto Dias</a></td>
-                        <td>roberto.dias@empresa.com</td>
-                        <td><span class="role-badge role-user">Operador</span></td>
-                    </tr>
+                
+                	<c:forEach items="${listaUsuarios}" var="usuario">
+                		
+                		<tr>
+                			<td><a href="DetalharUsuario?id=${usuario.id}">${usuario.nome}</a></td>
+                			<td>${usuario.email}</td>
+                			<td><span class="role-badge">${usuario.papel}</span></td>
+                		</tr>
+                		
+                	</c:forEach>
+                	
                 </tbody>
             </table>
         </section>

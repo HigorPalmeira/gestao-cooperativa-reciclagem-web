@@ -1,6 +1,8 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.gestaocooperativareciclagem.dao.UsuarioDAO;
 import com.gestaocooperativareciclagem.model.Usuario;
 import com.gestaocooperativareciclagem.service.UsuarioService;
+import com.gestaocooperativareciclagem.utils.Criptografia;
 
 /**
  * Servlet implementation class UsuarioController
@@ -102,8 +105,16 @@ public class UsuarioController extends HttpServlet {
 		
 		String nome = request.getParameter("nome");
 		String email = request.getParameter("email");
-		String senha = request.getParameter("senha");
+		String senha = null;
 		String papel = request.getParameter("papel");
+		
+		try {
+			senha = Criptografia.criptografar(request.getParameter("senha"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		usuarioService.inserirUsuario(nome, email, senha, papel);
 		
@@ -116,8 +127,16 @@ public class UsuarioController extends HttpServlet {
 		int id = Integer.parseInt( request.getParameter("id") );
 		String nome = request.getParameter("nome");
 		String email = request.getParameter("email");
-		String senha = request.getParameter("senha");
+		String senha = null;
 		String papel = request.getParameter("papel");
+		
+		try {
+			senha = Criptografia.criptografar(request.getParameter("senha"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		usuarioService.atualizarUsuario(id, nome, email, senha, papel);
 		
