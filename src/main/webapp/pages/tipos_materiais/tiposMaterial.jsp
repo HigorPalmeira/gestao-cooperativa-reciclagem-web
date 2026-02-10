@@ -62,8 +62,10 @@
                 <tbody id="tableBody">
                     
                     <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
-                    	<td><span class="name-link" onclick="openModal('edit', {id: ${tipoMaterial.id}, name: '${tipoMaterial.nome}', desc: '${tipoMaterial.descricao}'})">${tipoMaterial.nome}</span></td>
-                    	<td>${tipoMaterial.descricao}</td>
+                    	<tr>
+                    		<td><span class="name-link" onclick="openModal('edit', {id: ${tipoMaterial.id}, name: '${tipoMaterial.nome}', desc: '${tipoMaterial.descricao}'})">${tipoMaterial.nome}</span></td>
+                    		<td>${tipoMaterial.descricao}</td>
+                    	</tr>
                     </c:forEach>
 
                 </tbody>

@@ -1,5 +1,11 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.gestaocooperativareciclagem.model.PrecoMaterial" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDate" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,248 +15,6 @@
     
     <link rel="stylesheet" href="assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --text-color: #333;
-            --overlay-color: rgba(0, 0, 0, 0.5);
-            --disabled-bg: #e9ecef;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a { 
-            color: #fff; text-decoration: none; font-size: 0.9rem; margin-left: 20px; cursor: pointer; opacity: 0.9;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho e Botão Novo */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* Formulário de Pesquisa */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 2rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .inputs-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .inputs-row input, .inputs-row select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            min-width: 140px;
-        }
-
-        .separator { color: #888; font-size: 0.9rem; }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 42px;
-            margin-left: auto;
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Tabela de Resultados */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Links Interativos na Tabela */
-        .price-link {
-            color: var(--primary-color);
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .price-link:hover { text-decoration: underline; }
-
-        .material-link {
-            color: #495057; /* Cor neutra mas interativa */
-            cursor: pointer;
-            text-decoration: underline;
-            text-decoration-style: dotted;
-        }
-        .material-link:hover { color: var(--primary-color); text-decoration-style: solid; }
-
-        /* --- Estilos dos MODAIS --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--overlay-color);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        .modal-header h2 { margin: 0; font-size: 1.5rem; color: #333; }
-        .close-icon { cursor: pointer; font-size: 1.5rem; color: #999; }
-        .close-icon:hover { color: #333; }
-
-        .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; width: 100%; box-sizing: border-box;
-        }
-
-        /* Inputs Readonly */
-        input:disabled, select:disabled, textarea:disabled {
-            background-color: var(--disabled-bg); color: #6c757d; border-color: #ced4da; cursor: not-allowed;
-        }
-
-        /* Botões do Modal */
-        .modal-footer {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 1rem;
-        }
-
-        .btn-modal-save { background-color: var(--primary-color); color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: auto; }
-        .btn-modal-create { background-color: var(--success-color); color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: auto; }
-        
-        .btn-modal-delete {
-            background-color: transparent; color: var(--danger-color); border: 1px solid var(--danger-color); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;
-        }
-        .btn-modal-delete:hover { background-color: var(--danger-color); color: white; }
-
-        /* Aviso de Bloqueio */
-        .lock-warning {
-            background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; font-size: 0.9rem; margin-bottom: 15px; display: none; border: 1px solid #ffeeba;
-        }
-
-    </style>
-     -->
 </head>
 <body>
 
@@ -258,7 +22,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="../index.html" onclick="alert('Voltar para Início')">Início</a>
+            <a href="index.jsp">Início</a>
         </div>
     </nav>
 
@@ -319,7 +83,27 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- Preenchido via JS -->
+
+					<c:forEach items="${listaPrecosMateriais}" var="precoMaterial">
+						<tr>
+							<td>
+								<span class="price-link" onclick="openPriceModal('edit', {id: ${precoMaterial.id}, price: ${precoMaterial.precoCompra}, date: '${precoMaterial.dtVigencia}', materialId: ${precoMaterial.tipoMaterial.id}})">
+									${String.format("R$ %.2f/Kg", precoMaterial.precoCompra)}
+								</span>
+							</td>
+							<td>
+								<fmt:formatDate value="${precoMaterial.dtVigencia}" pattern="dd/MM/yyyy" />
+							</td>
+							<td>
+								<span class="material-link" onclick="openMaterialModal({id: ${precoMaterial.tipoMaterial.id}, name: '${precoMaterial.tipoMaterial.nome}', desc: '${precoMaterial.tipoMaterial.descricao}'})">
+									${precoMaterial.tipoMaterial.nome}
+								</span>
+							</td>
+						</tr>
+					</c:forEach>      
+					
+					             
+
                 </tbody>
             </table>
         </section>
@@ -411,7 +195,7 @@
         // Inicialização
         window.onload = () => {
             populateMaterialSelects();
-            renderTable(pricesDB);
+            // renderTable(pricesDB);
         };
 
         // Preencher selects com materiais
@@ -457,7 +241,7 @@
         }
 
         // 3. Lógica Modal Preço
-        function openPriceModal(mode, id = null) {
+        function openPriceModal(mode, item = null) { // id = null
             const modal = document.getElementById('priceModal');
             const title = document.getElementById('priceModalTitle');
             const inpPrice = document.getElementById('modalPrice');
@@ -470,7 +254,7 @@
             const btnSave = document.getElementById('btnSavePrice');
             const btnCreate = document.getElementById('btnCreatePrice');
 
-            currentEditPriceId = id;
+            currentEditPriceId = !item ? null : item.id; // ---------------
             modal.style.display = 'flex';
 
             // Resetar estados
@@ -491,7 +275,7 @@
 
             } else {
                 title.innerText = "Editar Preço";
-                const item = pricesDB.find(p => p.id === id);
+                // const item = pricesDB.find(p => p.id === id);
                 if (!item) return;
 
                 inpPrice.value = item.price;
@@ -523,9 +307,9 @@
         }
 
         // 4. Lógica Modal Material (Read-only)
-        function openMaterialModal(matId) {
+        function openMaterialModal(item = null) {
             const modal = document.getElementById('materialInfoModal');
-            const item = materialsDB.find(m => m.id === matId);
+            // const item = materialsDB.find(m => m.id === matId);
             
             if (item) {
                 document.getElementById('infoMatName').value = item.name;
@@ -549,13 +333,14 @@
 
             if (currentEditPriceId) {
                 // Editar
-                const index = pricesDB.findIndex(p => p.id === currentEditPriceId);
+                const index = -1; // pricesDB.findIndex(p => p.id === currentEditPriceId);
                 if (index !== -1) {
                     pricesDB[index].price = priceVal;
                     pricesDB[index].date = dateVal;
                     pricesDB[index].materialId = matId;
                     alert("Preço atualizado com sucesso!");
                 }
+                alert("CRIAR REQUISIÇÃO DE ATUALIZAÇÃO.");
             } else {
                 // Criar
                 const newId = Date.now(); // Simples ID
