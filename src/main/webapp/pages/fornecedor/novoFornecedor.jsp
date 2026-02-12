@@ -24,7 +24,7 @@
                 <p class="subtitle">Preencha os dados abaixo para adicionar um registro.</p>
             </div>
 
-            <form id="createSupplierForm" onsubmit="handleRegister(event)">
+            <form id="createSupplierForm" onsubmit="handleRegister(event)"> <!--  action="../../InserirFornecedor" method="POST" -->
                 
                 <div class="form-group">
                     <label for="supplierName">Nome do Fornecedor <span class="required">*</span></label>
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="supplierDoc">Documento (CNPJ/NIF) <span class="required">*</span></label>
+                    <label for="supplierDoc">Documento (CPF/CNPJ) <span class="required">*</span></label>
                     <input type="text" id="supplierDoc" placeholder="Ex: 00.000.000/0001-00" required>
                 </div>
 
@@ -40,10 +40,10 @@
                     <label for="supplierType">Tipo de Fornecedor <span class="required">*</span></label>
                     <select id="supplierType" required>
                         <option value="">Selecione uma opção...</option>
-                        <option value="Matéria-prima">Matéria-prima</option>
-                        <option value="Serviços">Serviços</option>
-                        <option value="Logística">Logística</option>
-                        <option value="Outros">Outros</option>
+                        <option value="Coletor">Coletor</option>
+                        <option value="Empresa">Empresa</option>
+                        <option value="Municipio">Município</option>
+                        <!-- <option value="Outros">Outros</option> -->
                     </select>
                 </div>
 
@@ -91,8 +91,25 @@
         function handleRegister(event) {
             event.preventDefault(); // Evita recarregar a página real
             
+            const fornecedor = {
+            	nome: inputName.value.trim(),
+            	documento: inputDoc.value.trim(),
+            	tipo: selectType.value
+            };
+            
+            fetch('http://localhost:8080/gestao-cooperativa-reciclagem-web/InserirFornecedor', {
+            	method: 'POST',
+            	headers: {
+            		'Content-Type': 'application/json'
+            	},
+            	body: JSON.stringify(fornecedor)
+            })
+            .then(response => response.json())
+            .then(fornec => alert("Sucesso: ", fornec))
+            .catch(error => alert("Erro: ", error));
+            
             // Aqui entraria a lógica de salvar no Backend
-            alert(`Sucesso!\nFornecedor "${inputName.value}" cadastrado.`);
+            // alert(`Sucesso!\nFornecedor "${inputName.value}" cadastrado.`);
             
             // Opcional: Redirecionar de volta para a listagem
             window.location.href = '../../ListarFornecedores';

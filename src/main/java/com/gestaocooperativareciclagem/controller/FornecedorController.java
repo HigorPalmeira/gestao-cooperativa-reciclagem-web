@@ -19,7 +19,8 @@ import com.gestaocooperativareciclagem.service.FornecedorService;
 /**
  * Servlet implementation class FornecedorController
  */
-@WebServlet(urlPatterns={"/FornecedorController", "/ListarFornecedores", "/DetalharFornecedor"})
+@WebServlet(urlPatterns={"/FornecedorController", "/ListarFornecedores", 
+		"/DetalharFornecedor", "/InserirFornecedor"})
 public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -77,9 +78,22 @@ public class FornecedorController extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
-		String action = request.getParameter("action");
+		// String action = request.getParameter("action");
+		String path = request.getServletPath();
 		
 		try {
+			
+			switch(path) {
+				case "/InserirFornecedor":
+					inserirFornecedor(request, response);
+					break;
+					
+				default:
+					listarFornecedores(request, response);
+					break;
+			}
+			
+			/*
 			switch(action) {
 				case "criar":
 					inserirFornecedor(request, response);
@@ -97,6 +111,8 @@ public class FornecedorController extends HttpServlet {
 					listarFornecedores(request, response);
 					break;
 			}
+			*/
+			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
@@ -170,9 +186,10 @@ public class FornecedorController extends HttpServlet {
 	
 	protected void inserirFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String documento = request.getParameter("documento");
-		String nome = request.getParameter("nome");
-		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
+		String documento = request.getParameter("supplierDoc");
+		String nome = request.getParameter("supplierName");
+		System.out.println(request.getParameter("supplierType"));
+		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("supplierType"));
 
 		fornecedorService.inserirFornecedor(documento, nome, tipo);
 		
