@@ -59,6 +59,12 @@ public class LoteBrutoService {
 		
 	}
 	
+	public List<LoteBruto> listarLotesBrutosPorFornecedor(Fornecedor fornecedor) {
+		
+		return loteBrutoDao.listarLotesBrutoPorFornecedor(fornecedor);
+		
+	}
+	
 	public List<LoteBruto> listarLotesBrutosPorIntervaloDePesoEntrada(double pesoEntradaInicial, double pesoEntradaFinal) {
 		
 		if (pesoEntradaInicial < 0 || pesoEntradaFinal < 0) {
