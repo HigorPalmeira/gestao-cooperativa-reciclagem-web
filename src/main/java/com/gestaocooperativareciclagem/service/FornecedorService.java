@@ -99,12 +99,14 @@ public class FornecedorService {
 
 	public Fornecedor buscarFornecedorPorDocumento(String documento) {
 		
-		if (!Validador.isCpf(documento) && !Validador.isCnpj(documento)) {
+		String fDocumento = Formatador.clearDoc(documento);
+		
+		if (!Validador.isCpf(fDocumento) && !Validador.isCnpj(fDocumento)) {
 			throw new RuntimeException("Documento inválido!");
 		}
 		
 		Fornecedor fornecedor = new Fornecedor();
-		fornecedor.setDocumento(documento);
+		fornecedor.setDocumento(fDocumento);
 		
 		fornecedorDao.buscarFornecedorPorDocumento(fornecedor);
 		

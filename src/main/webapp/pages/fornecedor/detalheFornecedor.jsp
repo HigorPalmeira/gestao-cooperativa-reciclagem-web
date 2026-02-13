@@ -65,18 +65,36 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=101" class="id-link">#LB-101</a></td>
-                    <td>12/01/2026</td>
-                    <td>500.00</td>
-                    <td><span class="status status-pend">Em Análise</span></td>
-                </tr>
-                <tr>
-                    <td><a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=098" class="id-link">#LB-098</a></td>
-                    <td>05/01/2026</td>
-                    <td>1,200.00</td>
-                    <td><span class="status status-ok">Processado</span></td>
-                </tr>
+            
+	            <c:forEach items="${listaLotesBrutos}" var="loteBruto">
+	            
+	            	<tr>
+	            		<td>
+	            			<a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=${loteBruto.id}" class="id-link">
+	            				#LB-${String.format("%03d", loteBruto.id)}
+	            			</a>
+	            		</td>
+	            		<td>${loteBruto.dtEntrada}</td>
+	            		<td>${loteBruto.pesoEntradaKg}</td>
+	            		
+	            		<td>
+	            			<c:choose>
+	            				<c:when test="${loteBruto.status == 'RECEBIDO'}">
+	            					<span class="status-badge status-recebido">${loteBruto.status}</span>
+	            				</c:when>
+	            				<c:when test="${loteBruto.status == 'EM_TRIAGEM'}">
+	            					<span class="status-badge status-processamento">${loteBruto.status}</span>
+	            				</c:when>
+	            				<c:otherwise>
+	            					<span class="status-badge status-concluido">${loteBruto.status}</span>
+	            				</c:otherwise>
+	            			</c:choose>
+	            		</td>
+	            		
+	            	</tr>
+	            
+	            </c:forEach>
+	            
             </tbody>
         </table>
 
@@ -95,13 +113,13 @@
                     <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=555" class="id-link">#TR-555</a></td>
                     <td>15/01/2026</td>
                     <td>R$ 15.000,00</td>
-                    <td><span class="status status-pend">Pendente</span></td>
+                    <td><span class="status-badge status-pend">Pendente</span></td>
                 </tr>
                 <tr>
                     <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=432" class="id-link">#TR-432</a></td>
                     <td>10/12/2025</td>
                     <td>R$ 8.500,00</td>
-                    <td><span class="status status-ok">Pago</span></td>
+                    <td><span class="status-badge status-ok">Pago</span></td>
                 </tr>
             </tbody>
         </table>

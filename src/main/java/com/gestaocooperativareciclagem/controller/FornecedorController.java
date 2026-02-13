@@ -15,6 +15,7 @@ import com.gestaocooperativareciclagem.dao.FornecedorDAO;
 import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.model.Fornecedor;
+import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
 import com.gestaocooperativareciclagem.service.FornecedorService;
 import com.gestaocooperativareciclagem.service.LoteBrutoService;
@@ -145,7 +146,13 @@ public class FornecedorController extends HttpServlet {
 		
 		Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
 		
+		List<LoteBruto> listaLotesBrutos = loteBrutoService.listarLotesBrutosPorFornecedor(fornecedor);
+		
+		// transacaoCompraService.listarTransacoesCompraPorLoteBruto(null);
+		
 		request.setAttribute("fornecedor", fornecedor);
+		request.setAttribute("listaLotesBrutos", listaLotesBrutos);
+		
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/detalheFornecedor.jsp");
 		
 		reqDis.forward(request, response);
