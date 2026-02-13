@@ -148,6 +148,7 @@ input:disabled, input[readonly], select:disabled {
 .inputs-row { display: flex; gap: 10px; align-items: center; }
 .separator { color: #888; font-size: 0.9rem; }
 .error-msg { color: var(--danger-color); font-size: 0.85rem; margin-top: 5px; display: none; }
+.success-msg { color: var(--success-color); font-size: 0.85rem; margin-top: 5px; display: none; }
 span.required { color: var(--danger-color); }
 
 /* --- 6. Botões --- */

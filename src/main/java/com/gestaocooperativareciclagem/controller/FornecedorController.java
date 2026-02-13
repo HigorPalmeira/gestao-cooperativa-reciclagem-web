@@ -12,9 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gestaocooperativareciclagem.dao.FornecedorDAO;
+import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
+import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.model.Fornecedor;
 import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
 import com.gestaocooperativareciclagem.service.FornecedorService;
+import com.gestaocooperativareciclagem.service.LoteBrutoService;
+import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 
 /**
  * Servlet implementation class FornecedorController
@@ -25,12 +29,16 @@ public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private FornecedorService fornecedorService;
+	private LoteBrutoService loteBrutoService;
+	private TransacaoCompraService transacaoCompraService;
 	
 	public void init() throws ServletException {
 		try {
 			fornecedorService = new FornecedorService(new FornecedorDAO());
+			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
+			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar FornecedorService", e);
+			throw new ServletException("Erro ao inicializar FornecedorService e/ou LoteBrutoService e/ou TransacaoCompraService", e);
 		}
 	}
        

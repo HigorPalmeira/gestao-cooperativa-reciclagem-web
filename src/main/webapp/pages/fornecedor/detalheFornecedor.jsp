@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Fornecedor</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
      
 </head>
 <body>
@@ -16,9 +16,9 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System &rsaquo; Fornecedor</div>
         <div>
-            <a href="ListarFornecedores">Voltar para Gestão</a>
-            <a href="ListarLotesBruto">Lotes Brutos</a>
-            <a href="ListarTransacoesCompra">Transações de Compra</a>
+            <a href="${pageContext.request.contextPath}/ListarFornecedores">Voltar para Gestão</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
+            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Transações de Compra</a>
         </div>
     </nav>
 
@@ -48,8 +48,8 @@
             <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
                 <button class="btn-save" onclick="saveChanges()">Salvar Alterações</button>
                 <div>
-                    <span id="error-msg">Erro: Se alterar o Tipo, você deve alterar o Documento.</span>
-                    <span id="success-msg">Alterações salvas com sucesso!</span>
+                    <span class="error-msg">Erro: Se alterar o Tipo, você deve alterar o Documento.</span>
+                    <span class="success-msg">Alterações salvas com sucesso!</span>
                 </div>
             </div>
         </section>
@@ -66,13 +66,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="DetalharLoteBruto?id=101" class="id-link">#LB-101</a></td>
+                    <td><a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=101" class="id-link">#LB-101</a></td>
                     <td>12/01/2026</td>
                     <td>500.00</td>
                     <td><span class="status status-pend">Em Análise</span></td>
                 </tr>
                 <tr>
-                    <td><a href="DetalharLoteBruto?id=098" class="id-link">#LB-098</a></td>
+                    <td><a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=098" class="id-link">#LB-098</a></td>
                     <td>05/01/2026</td>
                     <td>1,200.00</td>
                     <td><span class="status status-ok">Processado</span></td>
@@ -92,13 +92,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="DetalharTransacaoCompra?id=555" class="id-link">#TR-555</a></td>
+                    <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=555" class="id-link">#TR-555</a></td>
                     <td>15/01/2026</td>
                     <td>R$ 15.000,00</td>
                     <td><span class="status status-pend">Pendente</span></td>
                 </tr>
                 <tr>
-                    <td><a href="DetalharTransacaoCompra?id=432" class="id-link">#TR-432</a></td>
+                    <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=432" class="id-link">#TR-432</a></td>
                     <td>10/12/2025</td>
                     <td>R$ 8.500,00</td>
                     <td><span class="status status-ok">Pago</span></td>
@@ -181,7 +181,7 @@
             if (confirmed) {
                 alert("Registro excluído com sucesso.");
                 // Redireciona para a listagem principal
-                window.location.href = "ListarFornecedores";
+                window.location.href = '${pageContext.request.contextPath}/ListarFornecedores';
             }
         }
     </script>
