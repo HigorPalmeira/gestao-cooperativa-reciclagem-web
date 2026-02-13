@@ -7,6 +7,7 @@ import java.util.List;
 import com.gestaocooperativareciclagem.dao.FornecedorDAO;
 import com.gestaocooperativareciclagem.model.Fornecedor;
 import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
+import com.gestaocooperativareciclagem.utils.Formatador;
 import com.gestaocooperativareciclagem.utils.Validador;
 
 public class FornecedorService {
@@ -19,7 +20,17 @@ public class FornecedorService {
 	
 	public void inserirFornecedor(String documento, String nome, TipoFornecedor tipo) {
 		
-		Fornecedor fornecedor = new Fornecedor(documento, nome, tipo);
+		Fornecedor fornecedor = new Fornecedor(Formatador.clearDoc(documento), nome, tipo);
+		
+		fornecedorDao.inserirFornecedor(fornecedor);
+		
+	}
+	
+	public void inserirFornecedor(Fornecedor fornecedor) {
+		
+		if (fornecedor == null) {
+			throw new RuntimeException("Fornecedor inválido! Não é possível cadastrar o fornecedor.");
+		}
 		
 		fornecedorDao.inserirFornecedor(fornecedor);
 		

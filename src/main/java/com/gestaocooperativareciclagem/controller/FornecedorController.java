@@ -186,14 +186,23 @@ public class FornecedorController extends HttpServlet {
 	
 	protected void inserirFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String documento = request.getParameter("supplierDoc");
-		String nome = request.getParameter("supplierName");
-		System.out.println(request.getParameter("supplierType"));
-		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("supplierType"));
-
-		fornecedorService.inserirFornecedor(documento, nome, tipo);
+		request.setCharacterEncoding("UTF-8");
 		
-		response.sendRedirect("ListarFornecedores");
+		String nome = request.getParameter("supplierName");
+		String documento = request.getParameter("supplierDoc");
+		String tipoTexto = request.getParameter("supplierType");
+
+		try {
+			
+			TipoFornecedor tipo = TipoFornecedor.fromDescricao(tipoTexto);
+			
+			fornecedorService.inserirFornecedor(documento, nome, tipo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
 		
 	}
 

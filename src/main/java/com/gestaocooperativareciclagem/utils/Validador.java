@@ -6,7 +6,7 @@ public class Validador {
 
 	private static final String EMAIL_REGEX_PATTERN = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 	private static final String TELEFONE_REGEX_PATTERN = "(\\(?\\d{2}\\)?\\s?)?(\\d{4,5}\\-?\\d{4})";
-
+	
 	public static boolean isCpf(String cpf) {
 
 		if (cpf == null)

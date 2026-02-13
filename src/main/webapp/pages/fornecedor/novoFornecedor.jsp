@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Fornecedor</title>
     
-    <link rel="stylesheet" href="../../assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
      
 </head>
 <body>
@@ -24,26 +24,25 @@
                 <p class="subtitle">Preencha os dados abaixo para adicionar um registro.</p>
             </div>
 
-            <form id="createSupplierForm" onsubmit="handleRegister(event)"> <!--  action="../../InserirFornecedor" method="POST" -->
+            <form id="createSupplierForm" action="${pageContext.request.contextPath}/InserirFornecedor" method="POST">
                 
                 <div class="form-group">
                     <label for="supplierName">Nome do Fornecedor <span class="required">*</span></label>
-                    <input type="text" id="supplierName" placeholder="Ex: Indústria XYZ Ltda" required>
+                    <input type="text" id="supplierName" name="supplierName" placeholder="Ex: Indústria XYZ Ltda" required>
                 </div>
 
                 <div class="form-group">
                     <label for="supplierDoc">Documento (CPF/CNPJ) <span class="required">*</span></label>
-                    <input type="text" id="supplierDoc" placeholder="Ex: 00.000.000/0001-00" required>
+                    <input type="text" id="supplierDoc" name="supplierDoc" placeholder="Ex: 00.000.000/0001-00" required>
                 </div>
 
                 <div class="form-group">
                     <label for="supplierType">Tipo de Fornecedor <span class="required">*</span></label>
-                    <select id="supplierType" required>
+                    <select name="supplierType" id="supplierType" required>
                         <option value="">Selecione uma opção...</option>
                         <option value="Coletor">Coletor</option>
                         <option value="Empresa">Empresa</option>
                         <option value="Municipio">Município</option>
-                        <!-- <option value="Outros">Outros</option> -->
                     </select>
                 </div>
 
@@ -52,7 +51,7 @@
                         Cadastrar
                     </button>
                     
-                    <a href="../../ListarFornecedores" class="btn-back">Cancelar e voltar para Gestão de Fornecedores</a>
+                    <a href="${pageContext.request.contextPath}/ListarFornecedores" class="btn-back">Cancelar e voltar para Gestão de Fornecedores</a>
                 </div>
             </form>
         </section>
@@ -86,34 +85,6 @@
         inputName.addEventListener('input', checkFormValidity);
         inputDoc.addEventListener('input', checkFormValidity);
         selectType.addEventListener('change', checkFormValidity);
-
-        // 4. Simulação do envio do formulário
-        function handleRegister(event) {
-            event.preventDefault(); // Evita recarregar a página real
-            
-            const fornecedor = {
-            	nome: inputName.value.trim(),
-            	documento: inputDoc.value.trim(),
-            	tipo: selectType.value
-            };
-            
-            fetch('http://localhost:8080/gestao-cooperativa-reciclagem-web/InserirFornecedor', {
-            	method: 'POST',
-            	headers: {
-            		'Content-Type': 'application/json'
-            	},
-            	body: JSON.stringify(fornecedor)
-            })
-            .then(response => response.json())
-            .then(fornec => alert("Sucesso: ", fornec))
-            .catch(error => alert("Erro: ", error));
-            
-            // Aqui entraria a lógica de salvar no Backend
-            // alert(`Sucesso!\nFornecedor "${inputName.value}" cadastrado.`);
-            
-            // Opcional: Redirecionar de volta para a listagem
-            window.location.href = '../../ListarFornecedores';
-        }
 
     </script>
 </body>
