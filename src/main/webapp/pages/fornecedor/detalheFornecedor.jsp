@@ -23,35 +23,56 @@
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${msgErro}
+    		</div>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
         
         <section class="card">
             <h1 style="margin-top:0; font-size: 1.5rem;">Editar Fornecedor</h1>
             
-            <div class="edit-form">
-                <div class="form-group">
-                    <label for="doc">Documento</label>
-                    <input type="text" id="doc">
-                </div>
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" id="name">
-                </div>
-                <div class="form-group">
-                    <label for="type">Tipo</label>
-                    <select id="type">
-                        <option value="Coletor">Coletor</option>
-                        <option value="Empresa">Empresa</option>
-                        <option value="Municipio">Municipio</option>
-                    </select>
-                </div>
-            </div>
-            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn-save" onclick="saveChanges()">Salvar Alterações</button>
-                <div>
-                    <span class="error-msg">Erro: Se alterar o Tipo, você deve alterar o Documento.</span>
-                    <span class="success-msg">Alterações salvas com sucesso!</span>
-                </div>
-            </div>
+            <form id="formEditar" action="${pageContext.request.contextPath}/AtualizarFornecedor" method="POST">
+            
+            	<input type="hidden" name="doc" id="doc" value="${not empty fornecedor ? fornecedor.documento : ''}">
+            
+	            <div class="edit-form">
+	                <div class="form-group">
+	                    <label for="docEdit">Documento</label>
+	                    <input type="text" name="docEdit" id="docEdit" 
+	                    	value="${not empty fornecedor ? fornecedor.documento : ''}">
+	                </div>
+	                <div class="form-group">
+	                    <label for="name">Nome</label>
+	                    <input type="text" name="name" id="name"
+	                    	value="${not empty fornecedor ? fornecedor.nome : ''}">
+	                </div>
+	                <div class="form-group">
+	                    <label for="type">Tipo</label>
+	                    <select name="type" id="type">
+	                        <option value="Coletor" ${fornecedor.tipo == 'COLETOR' ? 'selected' : ''}>Coletor</option>
+	                        <option value="Empresa" ${fornecedor.tipo == 'EMPRESA' ? 'selected' : ''}>Empresa</option>
+	                        <option value="Municipio" ${fornecedor.tipo == 'MUNICIPIO' ? 'selected' : ''}>Municipio</option>
+	                    </select>
+	                </div>
+	            </div>
+	            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+	                <button type="button" class="btn-save" onclick="saveChanges()">Salvar Alterações</button>
+	                <div>
+	                    <span class="error-msg" id="error-msg">
+	                    	Erro: Se alterar o Tipo, você deve alterar o Documento.
+	                    </span>
+	                </div>
+	            </div>
+			</form>
         </section>
 
         <h2>Lotes Brutos Recentes</h2>
@@ -109,99 +130,84 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=555" class="id-link">#TR-555</a></td>
-                    <td>15/01/2026</td>
-                    <td>R$ 15.000,00</td>
-                    <td><span class="status-badge status-pend">Pendente</span></td>
-                </tr>
-                <tr>
-                    <td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=432" class="id-link">#TR-432</a></td>
-                    <td>10/12/2025</td>
-                    <td>R$ 8.500,00</td>
-                    <td><span class="status-badge status-ok">Pago</span></td>
-                </tr>
+            
+            	<c:forEach items="${listaTransacoesCompra}" var="transacaoCompra">
+            		<tr>
+            			<td>
+            				<a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=${transacaoCompra.id}" class="id-link">
+            					#TR-${String.format("%03d", transacaoCompra.id)}
+            				</a>
+            			</td>
+            			<td>${transacaoCompra.dtPagamento}</td>
+            			<td>${String.format("R$ %.2f", transacaoCompra.valorTotalCalculado)}</td>
+            			
+            			<td>
+            				<c:choose>
+            					<c:when test="${transacaoCompra.status == 'PAGO'}">
+            						<span class="status-badge status-ok">Pago</span>
+            					</c:when>
+            					<c:otherwise>
+            						<span class="status-badge status-pen">Aguardando Pagamento</span>
+            					</c:otherwise>
+            				</c:choose>
+            			</td>
+            			
+            		</tr>
+            	</c:forEach>
+           
             </tbody>
         </table>
 
         <div class="danger-zone">
-            <button class="btn-delete" onclick="deleteSupplier()">Excluir Fornecedor</button>
+        	<form action="${pageContext.request.contextPath}/DeletarFornecedor" method="POST" id="formDeletar">
+        		
+        		<input type="hidden" name="doc" value="${not empty fornecedor ? fornecedor.documento : ''}">
+        		
+	            <button type="button" class="btn-delete" onclick="deleteSupplier()">Excluir Fornecedor</button>
+	            
+        	</form>
         </div>
 
     </main>
 
     <script>
-        /* --- JavaScript: Lógica de Negócio --- */
-
-        // 1. Simulação de Dados Iniciais (Vindo do Banco de Dados)
-        // Guardamos os valores originais para validar a regra de mudança de Tipo/Documento
         
         const originalData = {
-            doc: '<c:out value="${fornecedor.documento}" />', //"55.123.456/0001-00",
-            name: '<c:out value="${fornecedor.nome}" />', //"Indústrias Metalurgicas Aço",
-            type: '<c:out value="${fornecedor.tipo}" />' // "Matéria-prima"
+            doc: '<c:out value="${fornecedor.documento}" />',
+            type: '<c:out value="${fornecedor.tipo}" />'
         };
 
-        // Preencher o formulário ao carregar a página
-        // EDITEI AQUIIIIII
-        window.onload = function() {
-            document.getElementById('doc').value = originalData.doc;
-            document.getElementById('name').value = originalData.name;
-            document.getElementById('type').value = originalData.type.charAt(0).toUpperCase() + originalData.type.slice(1).toLowerCase() ;
-        };
-
-        // 2. Função de Salvar (Com Validação Obrigatória)
         function saveChanges() {
-            const currentDoc = document.getElementById('doc').value;
+            const currentDoc = document.getElementById('docEdit').value;
             const currentType = document.getElementById('type').value;
-            const currentName = document.getElementById('name').value;
             
             const errorMsg = document.getElementById('error-msg');
-            const successMsg = document.getElementById('success-msg');
-
-            // Reset mensagens
+            
             errorMsg.style.display = 'none';
-            successMsg.style.display = 'none';
-
-            // REGRA DE NEGÓCIO: Se editar o ‘Tipo’, é obrigatório alterar o ‘Documento’
-            const typeChanged = currentType !== "${fornecedor.tipo}";//originalData.type;
-            const docChanged = currentDoc !== "${fornecedor.documento}";//originalData.doc;
+            
+            const typeChanged = currentType.toUpperCase() !== originalData.type.toUpperCase();
+            const docChanged = currentDoc !== originalData.doc;
 
             if (typeChanged && !docChanged) {
-                // Se mudou o tipo, mas manteve o mesmo documento -> ERRO
                 errorMsg.style.display = 'block';
-                // Feedback visual no input
-                document.getElementById('doc').style.borderColor = 'var(--danger-color)';
+                document.getElementById('docEdit').style.borderColor = 'var(--danger-color)';
                 return;
             }
 
-            // Se passou na validação
-            document.getElementById('doc').style.borderColor = 'var(--border-color)';
+            document.getElementById('formEditar').submit();
             
-            // Simula salvamento no banco de dados e atualiza "originais"
-            originalData.doc = currentDoc;
-            originalData.type = currentType;
-            originalData.name = currentName;
-
-            successMsg.style.display = 'block';
-            
-            // Oculta mensagem de sucesso após 3 segundos
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 3000);
         }
 
         // 3. Função de Exclusão
         function deleteSupplier() {
-            // "abre uma caixa de confirmação"
+
             const confirmed = confirm(`ATENÇÃO:\n\nTem certeza que deseja excluir o fornecedor "${document.getElementById('name').value}"?\n\nEsta ação removerá o histórico e não pode ser desfeita.`);
 
-            if (confirmed) {
-                alert("Registro excluído com sucesso.");
-                // Redireciona para a listagem principal
-                window.location.href = '${pageContext.request.contextPath}/ListarFornecedores';
+            if (confirmed) {                
+            	document.getElementById('formDeletar').submit();
             }
         }
+        
     </script>
 </body>
 </html>

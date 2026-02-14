@@ -66,7 +66,7 @@
                 <tbody id="resultsTableBody">
                 	<c:forEach items="${listaFornecedores}" var="fornecedor">
                 		<tr>
-                			<td><a href="DetalharFornecedor?documento=${fornecedor.documento}">${fornecedor.documento}</a></td>
+                			<td><a href="DetalharFornecedor?doc=${fornecedor.documento}">${fornecedor.documento}</a></td>
                 			<td>${fornecedor.nome}</td>
                 			<td>${fornecedor.tipo}</td>
                 			<td>${fornecedor.dtCadastro}</td>
@@ -151,7 +151,7 @@
                 row.innerHTML = `
                     <td>${supplier.doc}</td>
                     <td>
-                        <a href="DetalharFornecedor?documento=${supplier.doc}" class="supplier-link">
+                        <a href="DetalharFornecedor?doc=${supplier.doc}" class="supplier-link">
                             ${supplier.name}
                         </a>
                     </td>
