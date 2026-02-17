@@ -379,6 +379,7 @@ public class PrecoMaterialDAO {
 			pst.setDouble(1, precoMaterial.getPrecoCompra());
 			pst.setDate(2, precoMaterial.getDtVigencia());
 			pst.setInt(3, precoMaterial.getTipoMaterial().getId());
+			pst.setInt(4, precoMaterial.getId());
 			
 			pst.executeUpdate();
 			

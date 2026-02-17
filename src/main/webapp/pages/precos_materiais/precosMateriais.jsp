@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="com.gestaocooperativareciclagem.model.PrecoMaterial" %>
+<%@ page import="com.gestaocooperativareciclagem.model.TipoMaterial" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDate" %>
@@ -13,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Preços de Materiais</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -22,7 +23,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
         </div>
     </nav>
 
@@ -61,9 +62,13 @@
                 <div class="filter-group">
                     <label>Tipo de Material</label>
                     <div class="inputs-row">
-                        <select id="searchMaterial">
+                        <select id="searchMaterial" name="searchMaterial">
                             <option value="">Todos</option>
                             <!-- Preenchido via JS -->
+                            <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                            	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
+                            </c:forEach>
+                            
                         </select>
                     </div>
                 </div>
@@ -124,19 +129,25 @@
             </div>
 
             <form id="priceForm" onsubmit="handlePriceSubmit(event)">
+            	
+            	<input type="text" id="modalId" name="modalId" style="display:none;">
+            	
                 <div class="form-group">
                     <label for="modalPrice">Preço (R$/Kg) *</label>
-                    <input type="number" id="modalPrice" step="0.01" required>
+                    <input type="number" id="modalPrice" name="modalPrice" step="0.01" required>
                 </div>
                 <div class="form-group">
                     <label for="modalDate">Data de Vigência *</label>
-                    <input type="date" id="modalDate" required>
+                    <input type="date" id="modalDate" name="modalDate" required>
                 </div>
                 <div class="form-group">
                     <label for="modalMaterial">Tipo de Material *</label>
-                    <select id="modalMaterial" required>
+                    <select id="modalMaterial" name="modalMaterial" required>
                         <option value="">Selecione...</option>
                         <!-- Preenchido via JS -->
+                        <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                            	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
+                        </c:forEach>
                     </select>
                 </div>
 
@@ -172,39 +183,16 @@
 
     <script>
         /* --- Lógica da Aplicação --- */
-
-        // 1. Dados Simulados
-        const materialsDB = [
-            { id: 1, name: "Plástico PET", desc: "Polímero termoplástico da família dos poliésteres." },
-            { id: 2, name: "Alumínio", desc: "Metal leve, macio e resistente. Altamente reciclável." },
-            { id: 3, name: "Cobre", desc: "Metal de transição avermelhado, excelente condutor." }
-        ];
-
-        let pricesDB = [
-            { id: 101, price: 2.50, date: "2025-01-15", materialId: 1 }, // Passado
-            { id: 102, price: 4.80, date: "2026-05-20", materialId: 2 }, // Futuro
-            { id: 103, price: 15.00, date: "2026-06-01", materialId: 3 } // Futuro
-        ];
+        
+        const ctx = "${pageContext.request.contextPath}";
 
         // Estado
         let currentEditPriceId = null;
 
         // Elementos Globais
         const tableBody = document.getElementById('tableBody');
+        const form = document.getElementById('priceForm');
         
-        // Inicialização
-        window.onload = () => {
-            populateMaterialSelects();
-            // renderTable(pricesDB);
-        };
-
-        // Preencher selects com materiais
-        function populateMaterialSelects() {
-            const options = materialsDB.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
-            document.getElementById('searchMaterial').innerHTML += options;
-            document.getElementById('modalMaterial').innerHTML += options;
-        }
-
         // 2. Renderizar Tabela
         function renderTable(data) {
             tableBody.innerHTML = '';
@@ -244,6 +232,7 @@
         function openPriceModal(mode, item = null) { // id = null
             const modal = document.getElementById('priceModal');
             const title = document.getElementById('priceModalTitle');
+            const inpId = document.getElementById('modalId');
             const inpPrice = document.getElementById('modalPrice');
             const inpDate = document.getElementById('modalDate');
             const inpMat = document.getElementById('modalMaterial');
@@ -265,6 +254,8 @@
 
             if (mode === 'new') {
                 title.innerText = "Novo Preço";
+                form.action = ctx + "/InserirPrecoMaterial";
+                form.method = "POST";
                 inpPrice.value = "";
                 inpDate.value = "";
                 inpMat.value = "";
@@ -275,9 +266,10 @@
 
             } else {
                 title.innerText = "Editar Preço";
-                // const item = pricesDB.find(p => p.id === id);
+                
                 if (!item) return;
 
+                inpId.value = item.id;
                 inpPrice.value = item.price;
                 inpDate.value = item.date;
                 inpMat.value = item.materialId;
@@ -299,6 +291,8 @@
                     // Vou manter Excluir visível, mas edição bloqueada.
                 } else {
                     btnSave.style.display = 'block';
+                    form.action = ctx + "/AtualizarPrecoMaterial";
+                    form.method = "POST";
                 }
 
                 btnDel.style.display = 'block';
@@ -309,7 +303,6 @@
         // 4. Lógica Modal Material (Read-only)
         function openMaterialModal(item = null) {
             const modal = document.getElementById('materialInfoModal');
-            // const item = materialsDB.find(m => m.id === matId);
             
             if (item) {
                 document.getElementById('infoMatName').value = item.name;
@@ -321,6 +314,8 @@
         function closeModal(type) {
             if (type === 'price') document.getElementById('priceModal').style.display = 'none';
             if (type === 'material') document.getElementById('materialInfoModal').style.display = 'none';
+            
+            form.action = "";
         }
 
         // 5. CRUD Operations
@@ -333,33 +328,24 @@
 
             if (currentEditPriceId) {
                 // Editar
-                const index = -1; // pricesDB.findIndex(p => p.id === currentEditPriceId);
-                if (index !== -1) {
-                    pricesDB[index].price = priceVal;
-                    pricesDB[index].date = dateVal;
-                    pricesDB[index].materialId = matId;
-                    alert("Preço atualizado com sucesso!");
-                }
-                alert("CRIAR REQUISIÇÃO DE ATUALIZAÇÃO.");
+                form.submit();
             } else {
-                // Criar
-                const newId = Date.now(); // Simples ID
-                pricesDB.push({ id: newId, price: priceVal, date: dateVal, materialId: matId });
-                alert("Preço cadastrado com sucesso!");
+                form.submit();
             }
 
-            renderTable(pricesDB);
-            closeModal('price');
         }
 
         function deletePrice() {
-            if (!currentEditPriceId) return;
+            
+        	if (!currentEditPriceId) return;
             if (confirm("Tem a certeza que deseja excluir este registo de preço?")) {
-                pricesDB = pricesDB.filter(p => p.id !== currentEditPriceId);
-                alert("Registo excluído.");
-                renderTable(pricesDB);
-                closeModal('price');
+                
+                form.action = ctx + "/DeletarPrecoMaterial";
+                form.method = "POST";
+                form.submit();
+                
             }
+            
         }
 
         // 6. Pesquisa
