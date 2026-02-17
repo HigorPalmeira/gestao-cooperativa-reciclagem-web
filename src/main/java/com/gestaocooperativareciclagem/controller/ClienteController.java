@@ -16,8 +16,11 @@ import com.gestaocooperativareciclagem.dao.ClienteDAO;
 import com.gestaocooperativareciclagem.dao.ItemVendaDAO;
 import com.gestaocooperativareciclagem.dao.VendaDAO;
 import com.gestaocooperativareciclagem.model.Cliente;
+import com.gestaocooperativareciclagem.model.Venda;
 import com.gestaocooperativareciclagem.service.ClienteService;
 import com.gestaocooperativareciclagem.service.VendaService;
+import com.gestaocooperativareciclagem.utils.Formatador;
+import com.gestaocooperativareciclagem.utils.Validador;
 
 /**
  * Servlet implementation class ClienteController
@@ -93,11 +96,11 @@ public class ClienteController extends HttpServlet {
 					break;
 					
 				case "/AtualizarCliente":
-					System.out.println("Sem implementação...");
+					atualizarCliente(request, response);
 					break;
 					
 				case "/DeletarCliente":
-					System.out.println("Sem implementação...");
+					deletarCliente(request, response);
 					break;
 					
 				default:
@@ -125,6 +128,68 @@ public class ClienteController extends HttpServlet {
 		
 	}
 	
+	protected void atualizarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		String cnpjOriginal = request.getParameter("cnpj");
+		String cnpj = request.getParameter("cnpjEdit");
+		String nomeEmpresa = request.getParameter("companyName");
+		String contatoPrincipal = request.getParameter("contact");
+		String emailContato = request.getParameter("email");
+		
+		try {
+			
+			boolean temErro = false;
+			StringBuilder msgErro = new StringBuilder("Erro: ");
+			
+			if (!Validador.isCnpj(Formatador.clearDoc(cnpj))) {
+				msgErro.append("O cliente deve possuir um CNPJ válido.<br>");
+				temErro = true;
+			}
+			
+			if (!Validador.isTelefone(Formatador.clearFone(contatoPrincipal))) {
+				msgErro.append("O cliente deve possuir um Telefone válido.<br>");
+				temErro = true;
+			}
+			
+			if (!Validador.isEmail(emailContato)) {
+				msgErro.append("O cliente deve possuir um E-mail válido.<br>");
+				temErro = true;
+			}
+			
+			if (temErro) {
+				
+				request.setAttribute("msgErro", msgErro);
+				
+				buscarClientePorCnpj(request, response);
+				
+			} else {
+				
+				clienteService.atualizarCliente(cnpjOriginal, cnpj, nomeEmpresa, contatoPrincipal, emailContato);
+				
+				request.getSession().setAttribute("msgSucesso", "Cliente atualizado com sucesso!");
+				
+				buscarClientePorCnpj(request, response);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void deletarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String cnpj = request.getParameter("cnpj");
+		
+		clienteService.deletarCliente(cnpj);
+		
+		response.sendRedirect(request.getContextPath() + "/ListarClientes");
+		
+	}
+	
 	protected void buscarClientePorCnpj(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("UTF-8");
@@ -133,7 +198,10 @@ public class ClienteController extends HttpServlet {
 		
 		Cliente cliente = clienteService.buscarClientePorCnpj(cnpj);
 		
+		List<Venda> listaVendas = vendaService.buscarVendaPorCliente(cnpj);
+		
 		request.setAttribute("cliente", cliente);
+		request.setAttribute("listaVendas", listaVendas);
 		
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/detalheCliente.jsp");
 		

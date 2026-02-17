@@ -38,7 +38,7 @@
         
         <section class="card">
             <h2>Dados do Cliente</h2>
-            <form id="editClientForm" onsubmit="handleSave(event)">
+            <form id="editClientForm" action="${pageContext.request.contextPath}/AtualizarCliente" method="POST"> <!-- onsubmit="handleSave(event)" -->
                 
                 <input type="hidden" name="cnpj" id="cnpj" value="${not empty cliente ? cliente.cnpj : ''}">
                 
@@ -66,10 +66,10 @@
                 </div>
 
                 <div style="display: flex; align-items: center;">
-                    <button type="submit" id="btnSave" class="btn-save" disabled>
+                    <button type=button id="btnSave" class="btn-save" disabled onclick="handleSave(event)">
                         Salvar Alterações
                     </button>
-                    <span id="feedback-msg">Alterações salvas com sucesso!</span>
+                    <!-- <span id="feedback-msg">Alterações salvas com sucesso!</span> -->
                 </div>
             </form>
         </section>
@@ -84,59 +84,48 @@
                 </tr>
             </thead>
             <tbody>
+            
+            	<c:forEach items="${listaVendas}" var="venda">
+            		<tr>
+            			<td><a href="DetalharVenda?id=${venda.id}" class="sale-link">#${String.format("%04d", venda.id)}</a></td>
+            			<td>${venda.dtVenda}</td>
+            			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
+            		</tr>
+            	</c:forEach>
+            	
+            	<!-- 
                 <tr>
                     <td><a href="DetalharVenda?id=1020" class="sale-link">#1020</a></td>
                     <td>10/01/2026</td>
                     <td>R$ 4.500,00</td>
                 </tr>
-                <tr>
-                    <td><a href="DetalharVenda?id=1015" class="sale-link">#1015</a></td>
-                    <td>05/12/2025</td>
-                    <td>R$ 1.250,50</td>
-                </tr>
-                <tr>
-                    <td><a href="DetalharVenda?id=0998" class="sale-link">#0998</a></td>
-                    <td>20/11/2025</td>
-                    <td>R$ 10.000,00</td>
-                </tr>
+                
+                 -->
+                 
             </tbody>
         </table>
 
         <div class="danger-zone">
-            <span style="margin-right: 15px; color: #666; font-size: 0.9rem;">Deseja remover este registro permanentemente?</span>
-            <button class="btn-delete" onclick="deleteClient()">Excluir Cliente</button>
+        	<form id="formDeletar" action="${pageContext.request.contextPath}/DeletarCliente" method="POST">
+  
+				<input type="hidden" name="cnpj" value="${not empty cliente ? cliente.cnpj : ''}">
+      	
+	            <span style="margin-right: 15px; color: #666; font-size: 0.9rem;">Deseja remover este registro permanentemente?</span>
+	            <button type="button" class="btn-delete" onclick="deleteClient()">Excluir Cliente</button>
+        	</form>
         </div>
 
     </main>
 
     <script>
-        /* --- JavaScript: Lógica --- */
-
-        // 1. Mock Data (Simulando dados vindos do Back-end)
-    	/*    
-    	const clientData = {
-            cnpj: "12.345.678/0001-90",
-            name: "Supermercados Horizonte Ltda",
-            contact: "Maria Oliveira",
-            email: "compras@horizonte.com.br"
-        };
-		*/
+        
         // Elementos do DOM
         const form = document.getElementById('editClientForm');
         const inputs = form.querySelectorAll('input');
         const btnSave = document.getElementById('btnSave');
         const feedbackMsg = document.getElementById('feedback-msg');
 
-        // 2. Preencher formulário ao carregar
-        /*
-        window.onload = function() {
-            document.getElementById('cnpjEdit').value = clientData.cnpj;
-            document.getElementById('companyName').value = clientData.name;
-            document.getElementById('contact').value = clientData.contact;
-            document.getElementById('email').value = clientData.email;
-        };
-		*/
-		
+        
         // 3. Lógica de Ativação do Botão
         // "O botão... fica inativo até que algum dos campos seja clicado."
         inputs.forEach(input => {
@@ -167,25 +156,17 @@
                 return;
             }
 
-            // Simula salvamento
-            feedbackMsg.style.display = 'block';
+            form.submit();
             
-            // Oculta msg após 3 seg
-            setTimeout(() => {
-                feedbackMsg.style.display = 'none';
-                // Opcional: Desativar botão novamente até nova edição
-                btnSave.disabled = true; 
-            }, 3000);
         }
 
         // 5. Excluir Cliente
         function deleteClient() {
-            const companyName = document.getElementById('companyName').value;
-            const confirmed = confirm(`ATENÇÃO:\n\nTem certeza que deseja excluir o cliente "${companyName}"?\nIsso apagará o histórico de vendas associado.`);
+            //const companyName = document.getElementById('companyName').value;
+            const confirmed = confirm(`ATENÇÃO:\n\nTem certeza que deseja excluir o cliente "\${document.getElementById('companyName').value}"?\nIsso apagará o histórico de vendas associado.`);
 
             if (confirmed) {
-                alert("Cliente excluído com sucesso.");
-                window.location.href = "${pageContext.request.contextPath}/ListarClientes"; // Redireciona para a lista
+                document.getElementById('formDeletar').submit();
             }
         }
 

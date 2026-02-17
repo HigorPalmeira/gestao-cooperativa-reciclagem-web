@@ -90,6 +90,50 @@ public class VendaDAO {
 		
 	}
 	
+	public List<Venda> listarVendasPorCliente(Cliente clienteBuscado) {
+		
+		List<Venda> listaVenda = new ArrayList<>();
+		
+		String select = "select * from info_venda where cnpj_cliente = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setString(1, clienteBuscado.getCnpj());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idVenda = rset.getInt("id_venda");
+				Date dtVenda = rset.getDate("dtVenda_venda");
+				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				
+				String cnpjCliente = rset.getString("cnpj_cliente");
+				String nomeEmpresa = rset.getString("nome_empresa_cliente");
+				String contatoPrincipal = rset.getString("contato_principal_cliente");
+				String emailCliente = rset.getString("email_contato_cliente");
+				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+				
+				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
+				
+				listaVenda.add(new Venda(idVenda, dtVenda, valorTotalVenda, cliente));
+				
+			}
+			
+			rset.close();
+			pst.close();
+			conexao.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaVenda;
+		
+	}
+	
 	public void buscarVendaPorId(Venda venda) {
 	
 		String select = "select * from info_venda where id_venda = ?";
@@ -130,6 +174,8 @@ public class VendaDAO {
 		}
 		
 	}
+	
+	
 	
 	public void atualizarVenda(Venda venda) {
 		

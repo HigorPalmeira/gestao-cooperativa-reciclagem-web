@@ -9,6 +9,8 @@ import com.gestaocooperativareciclagem.dao.VendaDAO;
 import com.gestaocooperativareciclagem.model.Cliente;
 import com.gestaocooperativareciclagem.model.ItemVenda;
 import com.gestaocooperativareciclagem.model.Venda;
+import com.gestaocooperativareciclagem.utils.Formatador;
+import com.gestaocooperativareciclagem.utils.Validador;
 
 public class VendaService {
 	
@@ -128,6 +130,21 @@ public class VendaService {
 		vendaDao.buscarVendaPorId(venda);
 		
 		return venda;
+		
+	}
+	
+	public List<Venda> buscarVendaPorCliente(String cnpjCliente) {
+		
+		String cnpj = Formatador.clearDoc(cnpjCliente);
+		
+		if (!Validador.isCnpj(cnpj)) {
+			
+		}
+		
+		Cliente cliente = new Cliente();
+		cliente.setCnpj(cnpj);
+		
+		return vendaDao.listarVendasPorCliente(cliente);
 		
 	}
 
