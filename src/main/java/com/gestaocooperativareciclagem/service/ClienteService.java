@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.ClienteDAO;
 import com.gestaocooperativareciclagem.model.Cliente;
+import com.gestaocooperativareciclagem.utils.Formatador;
 
 public class ClienteService {
 	
@@ -15,7 +16,7 @@ public class ClienteService {
 	
 	public void inserirCliente(String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) {
 		
-		Cliente cliente = new Cliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato);
+		Cliente cliente = new Cliente(Formatador.clearDoc(cnpj), nomeEmpresa, Formatador.clearFone(contatoPrincipal), emailContato);
 		
 		clienteDao.inserirCliente(cliente);
 		
@@ -25,7 +26,7 @@ public class ClienteService {
 		
 		Cliente clienteOriginal = buscarClientePorCnpj(cnpjOriginal);
 		
-		Cliente clienteAtualizado = new Cliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato);
+		Cliente clienteAtualizado = new Cliente(Formatador.clearDoc(cnpj), nomeEmpresa, Formatador.clearFone(contatoPrincipal), emailContato);
 		
 		if (cnpj == null || cnpj.isBlank()) {
 			clienteAtualizado.setCnpj(clienteOriginal.getCnpj());
@@ -53,7 +54,7 @@ public class ClienteService {
 			throw new RuntimeException("CNPJ inválido! É necessário informar um 'CNPJ' para realizar a remoção.");
 		}
 		
-		clienteDao.deletarCliente(cnpj);
+		clienteDao.deletarCliente(Formatador.clearDoc(cnpj));
 		
 	}
 
@@ -80,7 +81,7 @@ public class ClienteService {
 		}
 		
 		Cliente cliente = new Cliente();
-		cliente.setCnpj(cnpj);
+		cliente.setCnpj(Formatador.clearDoc(cnpj));
 		
 		clienteDao.buscarClientePorCnpj(cliente);
 		
@@ -110,7 +111,7 @@ public class ClienteService {
 		}
 		
 		Cliente cliente = new Cliente();
-		cliente.setContatoPrincipal(contatoPrincipal);
+		cliente.setContatoPrincipal(Formatador.clearFone(contatoPrincipal));
 		
 		clienteDao.buscarClientePorContatoPrincipal(cliente);
 		

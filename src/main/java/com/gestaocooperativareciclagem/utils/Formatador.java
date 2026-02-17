@@ -10,4 +10,12 @@ public class Formatador {
 		
 	}
 	
+	public static String clearFone(String fone) {
+		
+		if (fone == null) return fone;
+		
+		return fone.replaceAll("\\D", "");
+		
+	}
+	
 }

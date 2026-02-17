@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Clientes</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
      
 </head>
 <body>
@@ -18,8 +18,8 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
-            <a href="ListarVendas">Vendas</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarVendas">Vendas</a>
             <a href="#">Relatórios</a>
         </div>
     </nav>
@@ -82,12 +82,14 @@
         /* --- JavaScript: Lógica de Interação --- */
 
         // Banco de dados simulado
+        /*
         const clientsDatabase = [
             { id: 1, cnpj: '12.345.678/0001-90', name: 'Supermercados Horizonte Ltda', email: 'compras@horizonte.com.br', date: '10/01/2024' },
             { id: 2, cnpj: '98.765.432/0001-15', name: 'Auto Peças Silva', email: 'financeiro@silvauto.com', date: '15/02/2024' },
             { id: 3, cnpj: '45.123.789/0001-22', name: 'Restaurante Sabor Caseiro', email: 'contato@saborcaseiro.com', date: '22/03/2024' },
             { id: 4, cnpj: '11.222.333/0001-44', name: 'Tech Inovação S.A.', email: 'admin@techinovacao.com', date: '05/04/2024' },
         ];
+		*/
 
         function searchClients() {
             // 1. Obter valores

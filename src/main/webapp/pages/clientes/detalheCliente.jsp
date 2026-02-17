@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Cliente</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -17,31 +17,51 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System &rsaquo; Cliente</div>
         <div>
-            <a href="ListarClientes">Voltar para Gestão</a>
+            <a href="${pageContext.request.contextPath}/ListarClientes">Voltar para Gestão</a>
         </div>
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty msgErro}">
+    		<div style="background-color: #f8d7a; color: #721c24; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${msgErro}
+    		</div>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
         
         <section class="card">
             <h2>Dados do Cliente</h2>
             <form id="editClientForm" onsubmit="handleSave(event)">
+                
+                <input type="hidden" name="cnpj" id="cnpj" value="${not empty cliente ? cliente.cnpj : ''}">
+                
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="cnpj">CNPJ</label>
-                        <input type="text" id="cnpj" required>
+                        <label for="cnpjEdit">CNPJ</label>
+                        <input type="text" id="cnpjEdit" name="cnpjEdit" required 
+                        	value="${not empty cliente ? cliente.cnpj : ''}">
                     </div>
                     <div class="form-group">
                         <label for="companyName">Nome da Empresa</label>
-                        <input type="text" id="companyName" required>
+                        <input type="text" id="companyName" name="companyName" required
+                        	value="${not empty cliente ? cliente.nomeEmpresa : ''}">
                     </div>
                     <div class="form-group">
                         <label for="contact">Contato Principal</label>
-                        <input type="text" id="contact" required>
+                        <input type="text" id="contact" name="contact" required
+                        	value="${not empty cliente ? cliente.contatoPrincipal : ''}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" required>
+                        <input type="email" id="email" name="email" required
+                        	value="${not empty cliente ? cliente.emailContato : ''}">
                     </div>
                 </div>
 
@@ -93,13 +113,14 @@
         /* --- JavaScript: Lógica --- */
 
         // 1. Mock Data (Simulando dados vindos do Back-end)
-        const clientData = {
+    	/*    
+    	const clientData = {
             cnpj: "12.345.678/0001-90",
             name: "Supermercados Horizonte Ltda",
             contact: "Maria Oliveira",
             email: "compras@horizonte.com.br"
         };
-
+		*/
         // Elementos do DOM
         const form = document.getElementById('editClientForm');
         const inputs = form.querySelectorAll('input');
@@ -107,13 +128,15 @@
         const feedbackMsg = document.getElementById('feedback-msg');
 
         // 2. Preencher formulário ao carregar
+        /*
         window.onload = function() {
-            document.getElementById('cnpj').value = clientData.cnpj;
+            document.getElementById('cnpjEdit').value = clientData.cnpj;
             document.getElementById('companyName').value = clientData.name;
             document.getElementById('contact').value = clientData.contact;
             document.getElementById('email').value = clientData.email;
         };
-
+		*/
+		
         // 3. Lógica de Ativação do Botão
         // "O botão... fica inativo até que algum dos campos seja clicado."
         inputs.forEach(input => {
@@ -162,7 +185,7 @@
 
             if (confirmed) {
                 alert("Cliente excluído com sucesso.");
-                window.location.href = "ListarClientes"; // Redireciona para a lista
+                window.location.href = "${pageContext.request.contextPath}/ListarClientes"; // Redireciona para a lista
             }
         }
 
