@@ -48,7 +48,7 @@
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
             <!-- KPI 1 -->
-            <div class="kpi-card kpi-blue" onclick="window.location.href='ListarLotesBrutos'"> <!-- pages/lote_bruto/lotesBrutos.jsp -->
+            <div class="kpi-card kpi-blue" onclick="window.location.href='ListarLotesBruto'"> <!-- pages/lote_bruto/lotesBrutos.jsp -->
                 <div class="kpi-title">Lotes Brutos Recebidos (Hoje)</div>
                 <div class="kpi-value">12</div>
                 <div class="kpi-desc">Total de 4.500 Kg</div>
@@ -90,7 +90,7 @@
             <div class="dashboard-card">
                 <div class="card-header">Ações Rápidas</div>
                 <div class="quick-actions-list">
-                    <a href="pages/lotes/novoLoteBruto.jsp" class="btn-action action-batch">
+                    <a href="pages/lotes_bruto/novoLoteBruto.jsp" class="btn-action action-batch">
                         + Novo Lote Bruto
                     </a>
                     <a href="pages/venda/novaVenda.jsp" class="btn-action action-sale">

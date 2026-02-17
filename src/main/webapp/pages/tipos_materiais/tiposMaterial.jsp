@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Tipos de Materiais</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -19,7 +19,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
         </div>
     </nav>
 
@@ -83,13 +83,16 @@
             </div>
 
             <form id="modalForm" onsubmit="handleFormSubmit(event)">
+                
+                <input type="text" id="modalId" name="modalId" style="display: none;">
+                
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label for="modalName">Nome <span style="color: red">*</span></label>
-                    <input type="text" id="modalName" required>
+                    <input type="text" id="modalName" name="modalName" required>
                 </div>
                 <div class="form-group">
                     <label for="modalDesc">Descrição <span style="color: red">*</span></label>
-                    <textarea id="modalDesc" rows="4" required></textarea>
+                    <textarea id="modalDesc" name="modalDesc" rows="4" required></textarea>
                 </div>
 
                 <!-- Botões do Rodapé (Visibilidade controlada por JS) -->
@@ -114,18 +117,8 @@
     </div>
 
     <script>
-        /* --- Lógica da Aplicação --- */
-
-        // 1. Dados Simulados (Mock Data)
-        /*
-        let materialsDB = [
-            { id: 1, name: "Plástico PET", desc: "Polietileno Tereftalato, comumente usado em garrafas de bebidas e embalagens." },
-            { id: 2, name: "Plástico HDPE", desc: "Polietileno de Alta Densidade, resistente, usado em frascos de detergente e tubos." },
-            { id: 3, name: "Alumínio", desc: "Metal leve e reciclável, proveniente de latas de bebidas e esquadrias." },
-            { id: 4, name: "Papelão", desc: "Papel de alta gramagem, proveniente de caixas de transporte e embalagens." },
-            { id: 5, name: "Cobre", desc: "Metal condutor avermelhado, proveniente de fios elétricos e tubagens." }
-        ];
-        */
+    
+    	const ctx = "${pageContext.request.contextPath}";
 
         // Estado Atual
         let currentEditId = null;
@@ -134,6 +127,8 @@
         const tableBody = document.getElementById('tableBody');
         const modal = document.getElementById('materialModal');
         const modalTitle = document.getElementById('modalTitle');
+        const modalForm = document.getElementById('modalForm');
+        const inpId = document.getElementById('modalId');
         const inpName = document.getElementById('modalName');
         const inpDesc = document.getElementById('modalDesc');
         
@@ -141,9 +136,6 @@
         const btnDelete = document.getElementById('btnDelete');
         const btnSave = document.getElementById('btnSave');
         const btnCreate = document.getElementById('btnCreate');
-
-        // Inicializar tabela
-        // window.onload = () => renderTable(materialsDB);
 
         // 2. Renderizar Tabela
         function renderTable(data) {
@@ -169,13 +161,15 @@
         }
 
         // 3. Abrir Modal (Lógica Central)
-        function openModal(mode, item = null) { // id = null
+        function openModal(mode, item = null) {
             modal.style.display = 'flex';
             currentEditId = !item ? null : item.id;
 
             if (mode === 'new') {
                 // MODO: NOVO TIPO
                 modalTitle.innerText = "Novo Tipo";
+            	modalForm.action = ctx + "/InserirTipoMaterial";
+            	modalForm.method = "POST";
                 inpName.value = "";
                 inpDesc.value = "";
                 
@@ -186,10 +180,12 @@
 
             } else if (mode === 'edit') {
                 // MODO: EDITAR TIPO
-                // const item = materialsDB.find(m => m.id === id);
                 if (!item) return;
 
                 modalTitle.innerText = "Editar Tipo";
+                modalForm.action = "";
+            	modalForm.method = "POST";
+            	inpId.value = item.id;
                 inpName.value = item.name;
                 inpDesc.value = item.desc;
 
@@ -202,9 +198,11 @@
 
         // 4. Fechar Modal
         function closeModal() {
+        	inpId.value = "";
         	inpName.value = "";
             inpDesc.value = "";
             modal.style.display = 'none';
+            modalForm.action = "";
             currentEditId = null;
         }
 
@@ -221,28 +219,16 @@
             const newDesc = inpDesc.value.trim();
 
             if (currentEditId) {
-                // Lógica de ATUALIZAR (Salvar Alterações)
-                const index = 0; // materialsDB.findIndex(m => m.id === currentEditId);
-                if (index !== -1) {
-                	/*
-                    materialsDB[index].name = newName;
-                    materialsDB[index].desc = newDesc;
-                    */
-                    alert("CRIAR REQUISIÇÃO DE ATUALIZAÇÃO.");
-                }
+            	
+            	modalForm.action = ctx + "/AtualizarTipoMaterial";
+            	modalForm.submit();
+                
             } else {
-                // Lógica de CRIAR (Cadastrar)
-                const newId = materialsDB.length > 0 ? Math.max(...materialsDB.map(m => m.id)) + 1 : 1;
-                materialsDB.push({
-                    id: newId,
-                    name: newName,
-                    desc: newDesc
-                });
-                alert("Novo tipo de material cadastrado com sucesso!");
+                
+                modalForm.submit();
+                
             }
 
-            // Atualiza interface
-            renderTable(materialsDB);
             closeModal();
         }
 
@@ -253,10 +239,10 @@
             const confirmDelete = confirm("Tem a certeza que deseja excluir este tipo de material?\nEsta ação não pode ser desfeita.");
             
             if (confirmDelete) {
-                materialsDB = materialsDB.filter(m => m.id !== currentEditId);
-                alert("Tipo de material excluído.");
-                renderTable(materialsDB);
-                closeModal();
+            	
+            	modalForm.action = ctx + "/DeletarTipoMaterial";
+            	modalForm.submit();
+            	
             }
         }
 
@@ -280,7 +266,7 @@
                 return matchName && matchDesc;
             });
 
-            renderTable(filtered);
+            // renderTable(filtered);
         }
 
     </script>
