@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Categorias de Processamento</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -19,7 +19,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
         </div>
     </nav>
 
@@ -85,13 +85,16 @@
             </div>
 
             <form id="modalForm" onsubmit="handleFormSubmit(event)">
+                
+                <input type="hidden" id="modalId" name="modalId">
+                
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label for="modalName">Nome <span style="color: red">*</span></label>
-                    <input type="text" id="modalName" required>
+                    <input type="text" id="modalName" name="modalName" required>
                 </div>
                 <div class="form-group">
                     <label for="modalDesc">Descrição <span style="color: red">*</span></label>
-                    <textarea id="modalDesc" rows="4" required></textarea>
+                    <textarea id="modalDesc" name="modalDesc" rows="4" required></textarea>
                 </div>
 
                 <!-- Botões do Rodapé (Visibilidade controlada por JS) -->
@@ -116,19 +119,9 @@
     </div>
 
     <script>
-        /* --- Lógica da Aplicação --- */
 
-        // 1. Dados Simulados
-/*
-        let categoriesDB = [
-            { id: 1, name: "Triagem", desc: "Separação inicial de materiais recicláveis por tipo e remoção de contaminantes grosseiros." },
-            { id: 2, name: "Lavagem", desc: "Processo de limpeza com água e soluções químicas para remover sujidade e rótulos." },
-            { id: 3, name: "Trituração", desc: "Redução do material em pequenos fragmentos ou flakes para processamento posterior." },
-            { id: 4, name: "Extrusão", desc: "Derretimento e moldagem do plástico em novos formatos ou pellets." },
-            { id: 5, name: "Prensagem", desc: "Compactação do material para facilitar o transporte e armazenamento." }
-        ];
-*/
-        
+    	const ctx = "${pageContext.request.contextPath}";
+
         // Estado Atual
         let currentEditId = null;
 
@@ -136,6 +129,8 @@
         const tableBody = document.getElementById('tableBody');
         const modal = document.getElementById('categoryModal');
         const modalTitle = document.getElementById('modalTitle');
+        const modalForm = document.getElementById('modalForm');
+        const inpId = document.getElementById('modalId');
         const inpName = document.getElementById('modalName');
         const inpDesc = document.getElementById('modalDesc');
         
@@ -143,11 +138,6 @@
         const btnDelete = document.getElementById('btnDelete');
         const btnSave = document.getElementById('btnSave');
         const btnCreate = document.getElementById('btnCreate');
-
-        // Inicializar tabela
-/*        
-        window.onload = () => renderTable(categoriesDB);
-*/
 
         // 2. Renderizar Tabela
         function renderTable(data) {
@@ -175,11 +165,13 @@
         // 3. Abrir Modal (Lógica Central)
         function openModal(mode, cat = null) { // id = null
             modal.style.display = 'flex';
-            currentEditId = cat.id;
+            currentEditId = !cat ? null : cat.id;
 
             if (mode === 'new') {
                 // MODO: NOVA CATEGORIA
                 modalTitle.innerText = "Nova Categoria";
+            	modalForm.action = ctx + "/InserirCategoriaProcessamento";
+            	modalForm.method = "POST";
                 inpName.value = "";
                 inpDesc.value = "";
                 
@@ -194,6 +186,9 @@
                 if (!cat) return;
 
                 modalTitle.innerText = "Editar Categoria";
+                modalForm.action = "";
+                modalForm.method = "POST";
+                inpId.value = cat.id;
                 inpName.value = cat.name;
                 inpDesc.value = cat.desc;
 
@@ -206,7 +201,11 @@
 
         // 4. Fechar Modal
         function closeModal() {
+        	inpId.value = "";
+        	inpName.value = "";
+        	inpDesc.value = "";
             modal.style.display = 'none';
+            modalForm.action = "";
             currentEditId = null;
         }
 
@@ -223,28 +222,16 @@
             const newDesc = inpDesc.value.trim();
 
             if (currentEditId) {
-                // Lógica de ATUALIZAR (Salvar Alterações)
-                const index = categoriesDB.findIndex(c => c.id === currentEditId);
-                if (index !== -1) {
-                	/*
-                    categoriesDB[index].name = newName;
-                    categoriesDB[index].desc = newDesc;
-                    */
-                    alert("CRIAR REQUISIÇÃO DE ATUALIZAÇÃO");
-                }
+
+            	modalForm.action = ctx + "/AtualizarCategoriaProcessamento";
+            	modalForm.submit();
+
             } else {
-                // Lógica de CRIAR (Cadastrar)
-                const newId = categoriesDB.length > 0 ? Math.max(...categoriesDB.map(c => c.id)) + 1 : 1;
-                categoriesDB.push({
-                    id: newId,
-                    name: newName,
-                    desc: newDesc
-                });
-                alert("Nova categoria cadastrada com sucesso!");
+                
+            	modalForm.submit();
+            	
             }
 
-            // Atualiza interface
-            renderTable(categoriesDB);
             closeModal();
         }
 
@@ -255,10 +242,9 @@
             const confirmDelete = confirm("Tem a certeza que deseja excluir esta categoria?\nEsta ação não pode ser desfeita.");
             
             if (confirmDelete) {
-                categoriesDB = categoriesDB.filter(c => c.id !== currentEditId);
-                alert("Categoria excluída.");
-                renderTable(categoriesDB);
-                closeModal();
+
+				modalForm.action = ctx + "/DeletarCategoriaProcessamento";
+				modalForm.submit();
             }
         }
 
@@ -282,7 +268,7 @@
                 return matchName && matchDesc; // Lógica E, pode ser alterada para OU se preferir
             });
 
-            renderTable(filtered);
+            // renderTable(filtered);
         }
 
     </script>

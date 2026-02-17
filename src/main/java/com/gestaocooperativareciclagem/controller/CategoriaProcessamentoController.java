@@ -19,7 +19,9 @@ import com.gestaocooperativareciclagem.service.CategoriaProcessamentoService;
 /**
  * Servlet implementation class CategoriaProcessamentoController
  */
-@WebServlet({ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", "/DetalharCategoriaProcessamento" })
+@WebServlet({ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", 
+	"/DetalharCategoriaProcessamento", "/InserirCategoriaProcessamento",
+	"/DeletarCategoriaProcessamento", "/AtualizarCategoriaProcessamento"})
 public class CategoriaProcessamentoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
@@ -75,8 +77,70 @@ public class CategoriaProcessamentoController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+
+		String path = request.getServletPath();
+		
+		try {
+			
+			switch(path) {
+				case "/InserirCategoriaProcessamento":
+					inserirCategoriaProcessamento(request, response);
+					break;
+					
+				case "/AtualizarCategoriaProcessamento":
+					atualizarCategoriaProcessamento(request, response);
+					break;
+					
+				case "/DeletarCategoriaProcessamento":
+					deletarCategoriaProcessamento(request, response);
+					break;
+					
+				default:
+					listarCategoriasProcessamento(request, response);
+					break;
+			}
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
+	protected void inserirCategoriaProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		String nome = request.getParameter("modalName");
+		String descricao = request.getParameter("modalDesc");
+		
+		categoriaProcessamentoService.inserirCategoriaProcessamento(nome, descricao);
+		
+		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+		
+	}
+	
+	protected void atualizarCategoriaProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		int id = Integer.parseInt(request.getParameter("modalId"));
+		String nome = request.getParameter("modalName");
+		String descricao = request.getParameter("modalDesc");
+		
+		categoriaProcessamentoService.atualizarCategoriaProcessamento(id, nome, descricao);
+		
+		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+		
+	}
+	
+	protected void deletarCategoriaProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int id = Integer.parseInt(request.getParameter("modalId"));
+		
+		categoriaProcessamentoService.deletarCategoriaProcessamento(id);
+		
+		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+		
 	}
 
 	protected void listarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

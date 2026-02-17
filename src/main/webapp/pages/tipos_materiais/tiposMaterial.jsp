@@ -84,7 +84,7 @@
 
             <form id="modalForm" onsubmit="handleFormSubmit(event)">
                 
-                <input type="text" id="modalId" name="modalId" style="display: none;">
+                <input type="hidden" id="modalId" name="modalId" style="display: none;">
                 
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label for="modalName">Nome <span style="color: red">*</span></label>
