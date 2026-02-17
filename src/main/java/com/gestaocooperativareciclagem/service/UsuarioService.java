@@ -25,7 +25,15 @@ public class UsuarioService {
 		
 		Usuario usuarioOriginal = buscarUsuarioPorId(id);
 		
-		Usuario usuarioAtualizado = new Usuario(nome, email, senha, papel);
+		String senhaFinal = (senha == null || senha.isBlank()) 
+				? usuarioOriginal.getSenha() 
+				: senha;
+		
+		Usuario usuarioAtualizado = new Usuario(id, 
+				nome,
+				email,
+				senhaFinal,
+				papel);
 		
 		if (nome == null || nome.isBlank()) {
 			usuarioAtualizado.setNome(usuarioOriginal.getNome());
@@ -33,10 +41,6 @@ public class UsuarioService {
 		
 		if (email == null || email.isBlank()) {
 			usuarioAtualizado.setEmail(usuarioOriginal.getEmail());
-		}
-		
-		if (senha == null || senha.isBlank()) {
-			usuarioAtualizado.setSenha(usuarioOriginal.getSenha());
 		}
 		
 		if (papel == null || papel.isBlank()) {

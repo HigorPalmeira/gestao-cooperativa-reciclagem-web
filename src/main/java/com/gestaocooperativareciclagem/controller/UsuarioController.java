@@ -16,11 +16,14 @@ import com.gestaocooperativareciclagem.dao.UsuarioDAO;
 import com.gestaocooperativareciclagem.model.Usuario;
 import com.gestaocooperativareciclagem.service.UsuarioService;
 import com.gestaocooperativareciclagem.utils.Criptografia;
+import com.gestaocooperativareciclagem.utils.Validador;
 
 /**
  * Servlet implementation class UsuarioController
  */
-@WebServlet(urlPatterns = {"/UsuarioController", "/ListarUsuarios", "/DetalharUsuario"})
+@WebServlet(urlPatterns = {"/UsuarioController", "/ListarUsuarios", 
+		"/DetalharUsuario", "/InserirUsuario",
+		"/AtualizarUsuario", "/DeletarUsuario"})
 public class UsuarioController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -72,27 +75,26 @@ public class UsuarioController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String action = request.getParameter("action");
+		String path = request.getServletPath();
 		
 		try {
 			
-			switch (action) {
-				case "criar":
+			switch(path) {
+				case "/InserirUsuario":
 					inserirUsuario(request, response);
 					break;
 					
-				case "editar":
+				case "/AtualizarUsuario":
 					atualizarUsuario(request, response);
 					break;
 					
-				case "deletar":
+				case "/DeletarUsuario":
 					deletarUsuario(request, response);
 					break;
 					
 				default:
 					listarUsuarios(request, response);
 					break;
-				
 			}
 			
 		} catch (Exception e) {
@@ -103,20 +105,31 @@ public class UsuarioController extends HttpServlet {
 	
 	protected void inserirUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String nome = request.getParameter("nome");
-		String email = request.getParameter("email");
+		request.setCharacterEncoding("UTF-8");
+		
+		String nome = request.getParameter("userName");
+		String email = request.getParameter("userEmail");
 		String senha = null;
-		String papel = request.getParameter("papel");
+		String confirmSenha = null;
+		String papel = request.getParameter("userRole");
+		
+		boolean senhaCorresponde = false;
 		
 		try {
-			senha = Criptografia.criptografar(request.getParameter("senha"));
+			senha = Criptografia.criptografar(request.getParameter("userPass"));
+			confirmSenha = Criptografia.criptografar(request.getParameter("userPassConfirm"));
+			
+			senhaCorresponde = senha.equals(confirmSenha);
+					
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
-		usuarioService.inserirUsuario(nome, email, senha, papel);
+		if (senhaCorresponde) {
+			usuarioService.inserirUsuario(nome, email, senha, papel);
+		}
 		
 		response.sendRedirect("ListarUsuarios");
 		
@@ -124,29 +137,68 @@ public class UsuarioController extends HttpServlet {
 	
 	protected void atualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt( request.getParameter("id") );
-		String nome = request.getParameter("nome");
-		String email = request.getParameter("email");
-		String senha = null;
-		String papel = request.getParameter("papel");
+		int id = Integer.parseInt( request.getParameter("userId") );
+		String nome = request.getParameter("userName").trim();
+		String email = request.getParameter("userEmail").trim();
+		String papel = request.getParameter("userRole").trim();
 		
+		String senhaBruta = request.getParameter("newPass").trim();
+		String confirmSenhaBruta = request.getParameter("confirmPass").trim();
+		String senhaCriptografada = null;
+
+		StringBuilder msgErro = new StringBuilder("Erro: ");
+		boolean temErro = false;
+
 		try {
-			senha = Criptografia.criptografar(request.getParameter("senha"));
-		} catch (NoSuchAlgorithmException e) {
+			
+			if (senhaBruta != null && !senhaBruta.isEmpty()) {
+				
+				if (senhaBruta.equals(confirmSenhaBruta)) {
+					senhaCriptografada = Criptografia.criptografar(senhaBruta);
+				} else {
+					msgErro.append("As senhas não coincidem.<br>");
+					temErro = true;
+				}
+				
+			}
+			
+			if (!Validador.isEmail(email)) {
+				msgErro.append("O usuário deve possuir um e-mail válido.<br>");
+				temErro = true;
+			}
+			
+			if (papel == null || papel.isBlank()) {
+				msgErro.append("O usuário deve possuir um papel válido.<br>");
+				temErro = true;
+			}
+			
+			if (temErro) {
+				
+				request.setAttribute("msgErro", msgErro.toString());
+				
+				buscarUsuarioPorId(request, response);
+				
+			} else {
+				
+				usuarioService.atualizarUsuario(id, nome, email, senhaCriptografada, papel);
+
+				request.getSession().setAttribute("msgSucesso", "Usuário atualizado com sucesso!");
+				
+				response.sendRedirect(request.getContextPath() + "/DetalharUsuario?userId=" + id);
+				
+			}
+			
+			
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			throw new ServletException(e);
 		}
-		
-		usuarioService.atualizarUsuario(id, nome, email, senha, papel);
-		
-		response.sendRedirect("ListarUsuarios");
 		
 	}
 	
 	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
+		int id = Integer.parseInt(request.getParameter("userId"));
 		usuarioService.deletarUsuario(id);
 		
 		response.sendRedirect("ListarUsuarios");
@@ -192,7 +244,7 @@ public class UsuarioController extends HttpServlet {
 	
 	protected void buscarUsuarioPorId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
+		int id = Integer.parseInt(request.getParameter("userId"));
 		
 		Usuario usuario = usuarioService.buscarUsuarioPorId(id);
 		

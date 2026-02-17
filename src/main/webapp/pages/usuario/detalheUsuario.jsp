@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -15,35 +16,55 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="ListarUsuarios">Voltar para Gestão de Usuários</a>
+            <a href="${pageContext.request.contextPath}/ListarUsuarios">Voltar para Gestão de Usuários</a>
         </div>
     </nav>
 
     <main class="container">
         
+        <c:if test="${not empty msgErro}">
+        	<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+        		<strong>Erro:</strong> ${msgErro}
+        	</div>
+        </c:if>
+        
+        <c:if test="${not empty sessionScope.msgSucesso}">
+        	<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+        		${sessionScope.msgSucesso}
+        	</div>
+        	<% session.removeAttribute("msgSucesso"); %>
+        </c:if>    
+     
         <section class="card">
             <h1>Editar Usuário</h1>
             
-            <form id="editUserForm" onsubmit="handleSave(event)">
+            <form id="editUserForm" action="${pageContext.request.contextPath}/AtualizarUsuario" method="POST" onsubmit="return handleSave(event)">
+                
+                <input type="hidden" name="userId" id="userId" value="${not empty usuario ? usuario.id : ''}">
+                
                 <div class="form-grid">
                     
                     <div class="form-group">
                         <label for="userName">Nome Completo</label>
-                        <input type="text" id="userName" required>
+                        <input type="text" id="userName" name="userName"
+                         value="${not empty usuario ? usuario.nome : ''}"
+                         required>
                     </div>
 
                     <div class="form-group">
                         <label for="userRole">Papel</label>
-                        <select id="userRole">
-                            <option value="Administrador">Administrador</option>
-                            <option value="Gerente">Gerente</option>
-                            <option value="Operador">Operador</option>
+                        <select id="userRole" name="userRole">
+                            <option value="Administrador" ${usuario.papel == 'Administrador' ? 'selected' : ''}>Administrador</option>
+                            <option value="Gerente" ${usuario.papel == 'Gerente' ? 'selected' : ''}>Gerente</option>
+                            <option value="Operador" ${usuario.papel == 'Operador' ? 'selected' : ''}>Operador</option>
                         </select>
                     </div>
 
                     <div class="form-group full-width">
                         <label for="userEmail">Email</label>
-                        <input type="email" id="userEmail" required>
+                        <input type="email" id="userEmail" name="userEmail"
+                         value="${not empty usuario ? usuario.email : ''}"
+                         required>
                     </div>
 
                     <div class="password-section form-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 0;">
@@ -52,11 +73,11 @@
                         </div>
                         <div class="form-group">
                             <label for="newPass">Nova Senha</label>
-                            <input type="password" id="newPass" placeholder="******">
+                            <input type="password" id="newPass" name="newPass" placeholder="******">
                         </div>
                         <div class="form-group">
                             <label for="confirmPass">Repetir Nova Senha</label>
-                            <input type="password" id="confirmPass" placeholder="******">
+                            <input type="password" id="confirmPass" name="confirmPass" placeholder="******">
                         </div>
                     </div>
 
@@ -72,25 +93,22 @@
         </section>
 
         <div class="danger-zone">
-            <p style="float: left; color: #666; margin: 5px 0 0 0; font-size: 0.9rem;">
-                Atenção: Esta ação é irreversível.
-            </p>
-            <button class="btn-delete" onclick="deleteUser()">Excluir Usuário</button>
+        	<form id="formDeletar" action="${pageContext.request.contextPath}/DeletarUsuario" method="POST">
+        		
+        		<input type="hidden" name="userId" value="${not empty usuario ? usuario.id : ''}">
+	            
+	            <p style="float: left; color: #666; margin: 5px 0 0 0; font-size: 0.9rem;">
+	                Atenção: Esta ação é irreversível.
+	            </p>
+	            <button type="button" class="btn-delete" onclick="deleteUser()">Excluir Usuário</button>
+        	
+        	</form>
         </div>
 
     </main>
 
     <script>
-        /* --- JavaScript: Lógica de Edição --- */
-
-        // 1. Dados Simulados (Carregados do Banco)
-        const userData = {
-            id: 1,
-            name: "Carlos Eduardo",
-            email: "carlos.edu@empresa.com",
-            role: "Administrador"
-        };
-
+       
         // Elementos DOM
         const form = document.getElementById('editUserForm');
         const nameInput = document.getElementById('userName');
@@ -100,13 +118,6 @@
         const confirmPassInput = document.getElementById('confirmPass');
         const btnSave = document.getElementById('btnSave');
         const feedbackMsg = document.getElementById('feedback-msg');
-
-        // 2. Inicialização: Preencher campos
-        window.onload = function() {
-            nameInput.value = userData.name;
-            emailInput.value = userData.email;
-            roleInput.value = userData.role;
-        };
 
         // 3. Detecção de Alterações (Dirty State)
         // O botão 'Salvar' fica inativo até que algum campo seja alterado/clicado
@@ -124,25 +135,21 @@
 
         // 4. Lógica de Salvamento e Validação
         function handleSave(event) {
-            event.preventDefault();
-
             // Validação de Senha (apenas se o campo de nova senha tiver conteúdo)
             if (newPassInput.value.length > 0) {
                 if (newPassInput.value !== confirmPassInput.value) {
+                	event.preventDefault();
+                	
                     showFeedback("As senhas não coincidem.", "error");
                     confirmPassInput.style.borderColor = "var(--danger-color)";
-                    return; // Para a execução
+                    return false; // Para a execução
                 }
             }
 
             // Se chegou aqui, está válido
             confirmPassInput.style.borderColor = "var(--border-color)";
+            return true;
             
-            // Simula envio ao servidor
-            showFeedback("Alterações salvas com sucesso!", "success");
-            
-            // Opcional: Desativar botão novamente até nova edição
-            // btnSave.disabled = true; 
         }
 
         function showFeedback(text, type) {
@@ -160,8 +167,7 @@
         function deleteUser() {
             const confirmed = confirm(`Tem certeza que deseja remover o acesso de "${nameInput.value}"?\n\nEsta ação não pode ser desfeita.`);
             if (confirmed) {
-                alert("Usuário excluído.");
-                window.location.href = "ListarUsuarios";
+            	document.getElementById('formDeletar').submit();
             }
         }
 

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Usuários</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -18,7 +18,7 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
             <a href="#">Relatórios</a>
             <a href="#">Configurações</a>
         </div>
@@ -66,7 +66,7 @@
                 	<c:forEach items="${listaUsuarios}" var="usuario">
                 		
                 		<tr>
-                			<td><a href="DetalharUsuario?id=${usuario.id}">${usuario.nome}</a></td>
+                			<td><a href="DetalharUsuario?userId=${usuario.id}">${usuario.nome}</a></td>
                 			<td>${usuario.email}</td>
                 			<td><span class="role-badge">${usuario.papel}</span></td>
                 		</tr>
@@ -81,15 +81,6 @@
 
     <script>
         /* --- JavaScript: Lógica --- */
-
-        // Dados simulados (Mock Data)
-        const usersDatabase = [
-            { id: 1, name: 'Carlos Eduardo', email: 'carlos.edu@empresa.com', role: 'Administrador' },
-            { id: 2, name: 'Ana Souza', email: 'ana.souza@empresa.com', role: 'Gerente' },
-            { id: 3, name: 'Roberto Dias', email: 'roberto.dias@empresa.com', role: 'Operador' },
-            { id: 4, name: 'Fernanda Lima', email: 'fernanda.lima@empresa.com', role: 'Operador' },
-            { id: 5, name: 'Marcos Paulo', email: 'marcos.paulo@empresa.com', role: 'Gerente' }
-        ];
 
         function searchUsers() {
             const nameInput = document.getElementById('searchName').value.trim().toLowerCase();

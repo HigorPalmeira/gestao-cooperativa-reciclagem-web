@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Usuário</title>
     
-    <link rel="stylesheet" href="../../assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -24,21 +24,21 @@
                 <p class="subtitle">Adicione um novo operador ou administrador ao sistema.</p>
             </div>
 
-            <form id="createUserForm" onsubmit="handleRegister(event)">
+            <form id="createUserForm" action="${pageContext.request.contextPath}/InserirUsuario" method="POST">
                 
                 <div class="form-group">
                     <label for="userName">Nome Completo *</label>
-                    <input type="text" id="userName" placeholder="Ex: João Silva" required>
+                    <input type="text" id="userName"  name="userName" placeholder="Ex: João Silva" required>
                 </div>
 
                 <div class="form-group">
                     <label for="userEmail">Email Corporativo *</label>
-                    <input type="email" id="userEmail" placeholder="nome@empresa.com" required>
+                    <input type="email" id="userEmail" name="userEmail" placeholder="nome@empresa.com" required>
                 </div>
 
                 <div class="form-group">
                     <label for="userRole">Papel (Permissões) *</label>
-                    <select id="userRole" required>
+                    <select id="userRole" name="userRole" required>
                         <option value="">Selecione...</option>
                         <option value="Administrador">Administrador</option>
                         <option value="Gerente">Gerente</option>
@@ -48,12 +48,12 @@
 
                 <div class="form-group">
                     <label for="userPass">Senha *</label>
-                    <input type="password" id="userPass" placeholder="******" required>
+                    <input type="password" id="userPass" name="userPass" placeholder="******" required>
                 </div>
 
                 <div class="form-group">
                     <label for="userPassConfirm">Repetir Senha *</label>
-                    <input type="password" id="userPassConfirm" placeholder="******" required>
+                    <input type="password" id="userPassConfirm" name="userPassConfirm" placeholder="******" required>
                     <div id="passwordError" class="password-match-error">As senhas não coincidem.</div>
                 </div>
 
@@ -61,7 +61,7 @@
                     <button type="submit" id="btnSubmit" class="btn-submit" disabled>
                         Cadastrar
                     </button>
-                    <a href="../../ListarUsuarios" class="btn-cancel">Cancelar</a>
+                    <a href="${pageContext.request.contextPath}/ListarUsuarios" class="btn-cancel">Cancelar</a>
                 </div>
 
             </form>
@@ -115,13 +115,6 @@
             // Para o select, usamos 'change' também
             if(input.tagName === 'SELECT') input.addEventListener('change', checkFormValidity);
         });
-
-        // 4. Envio do Formulário
-        function handleRegister(event) {
-            event.preventDefault();
-            alert(`Usuário ${nameInput.value} criado com sucesso!\nPapel: ${roleInput.value}`);
-            window.location.href = '../../ListarUsuarios';
-        }
 
     </script>
 </body>

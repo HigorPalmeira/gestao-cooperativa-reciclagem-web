@@ -85,7 +85,7 @@ public class Usuario {
 
 	public void setEmail(String email) {
 
-		if (!Validador.isEmail(this.email)) {
+		if (!Validador.isEmail(email)) {
 			throw new RuntimeException("E-mail inválido!");
 		}
 
