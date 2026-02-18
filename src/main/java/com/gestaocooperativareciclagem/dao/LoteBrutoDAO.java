@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,27 +16,20 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class LoteBrutoDAO {
 	
-	public void inserirLoteBruto(LoteBruto loteBruto) {
+	public void inserirLoteBruto(LoteBruto loteBruto) throws SQLException {
 		
 		String insert = "insert into lote_bruto (peso_entrada_kg_lotebruto, dtEntrada_lotebruto, status_lotebruto, fornecedor) values (?, ?, ?, ?)";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(insert);
 			pst.setDouble(1, loteBruto.getPesoEntradaKg());
 			pst.setDate(2, loteBruto.getDtEntrada());
 			pst.setString(3, loteBruto.getStatus().name());
 			pst.setString(4, loteBruto.getFornecedor().getDocumento());
 			
 			pst.executeUpdate();
-
-			pst.close();
-			conexao.close();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
@@ -57,7 +51,7 @@ public class LoteBrutoDAO {
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
@@ -101,7 +95,7 @@ public class LoteBrutoDAO {
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
@@ -145,7 +139,7 @@ public class LoteBrutoDAO {
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
@@ -190,7 +184,7 @@ public class LoteBrutoDAO {
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
@@ -234,7 +228,7 @@ public class LoteBrutoDAO {
 				loteBruto.setPesoEntradaKg( rset.getDouble("peso_entrada_kg_lotebruto") );
 				loteBruto.setDtEntrada( rset.getDate("dtEntrada_lotebruto") );
 				
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				loteBruto.setStatus(statusLoteBruto);
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
@@ -257,15 +251,13 @@ public class LoteBrutoDAO {
 		
 	}
 	
-	public void atualizarLoteBruto(LoteBruto loteBruto) {
+	public void atualizarLoteBruto(LoteBruto loteBruto) throws SQLException {
 		
 		String update = "update lote_bruto set peso_entrada_kg_lotebruto=?, status_lotebruto=?, fornecedor=? where id_lotebruto=?";
 		
-		try {
-			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(update);
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update)) {
+		
 			pst.setDouble(1, loteBruto.getPesoEntradaKg());
 			pst.setString(2, loteBruto.getStatus().name());
 			pst.setString(3, loteBruto.getFornecedor().getDocumento());
@@ -273,12 +265,13 @@ public class LoteBrutoDAO {
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
+			// pst.close();
+			// conexao.close();
 			
-		} catch (Exception e) {
+		} 
+		/*catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 	

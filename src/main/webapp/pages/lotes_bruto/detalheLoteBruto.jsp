@@ -6,16 +6,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Lote Bruto #LB-101</title>
+    <title>Detalhes do Lote Bruto ${String.format("#LB-%03d",loteBruto.id)}</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
 
+	<c:set var="isProcessado" value="${loteBruto.status == 'PROCESSADO'}" />
+	
+	<c:set var="temPagamentoPago" value="false" />
+	<c:forEach items="${listaTransacoesCompra}" var="transacao">
+		<c:if test="${transacao.status == 'PAGO'}">
+			<c:set var="temPagamentoPago" value="true" />
+		</c:if>
+	</c:forEach>
+	
+	<c:set var="bloquearFornecedor" value="${isProcessado or temPagamentoPago}" />
+	
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Lote Bruto #LB-101</div>
+        <div class="brand">ERP System &rsaquo; Lote Bruto ${String.format("#LB-%03d",loteBruto.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Voltar para Gestão</a>
         </div>
@@ -35,68 +46,111 @@
     		</div>
     		<% session.removeAttribute("msgSucesso"); %>
     	</c:if>
+    	
+    	<c:if test="${isProcessado}">
+    		<div class="info-msg" style="display: block; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;">
+    			<strong>Aviso:</strong> Este lote está "Processado", a edição está restrita.
+    		</div>
+    	</c:if>
         
-        <!-- Aviso de Bloqueio (Dinâmico) -->
-        <div id="lockMessage" class="info-msg" style="display: none;">
-            <strong>Aviso:</strong> Este lote está "Processado", portanto a edição está bloqueada.
-        </div>
+		
+		<form id="mainForm" action="${pageContext.request.contextPath}/AtualizarLoteBruto" method="POST">
+		
+			<input type="hidden" name="id" id="id" value="${loteBruto.id}">
+			
+        	<h2>Dados do Lote</h2>
+			<section class="card">
+				
+				<div class="form-grid">
+				
+					<div class="form-group">
+						<label>ID</label>
+						<input type="text" value="${String.format('#LB-%03d', loteBruto.id)}" readonly>
+					</div>
+					
+					<div class="form-goup">
+						<label>Data de Entrada</label>
+						<input type="text" value="${loteBruto.dtEntrada}" readonly>
+					</div>
+					
+					<div class="form-goup">
+						<label for="entryWeight">Peso de Entrada (Kg)</label>
+						<input type="number" id="entryWeight" name="entryWeight" step="0.01"
+								value="${loteBruto.pesoEntradaKg}"
+								${isProcessado ? 'readonly' : ''}>
+					</div>
+					
+					<div class="form-goup">
+						<label for="batchStatus">Status</label>
+						<c:choose>
+							<c:when test="${isProcessado}">
+								<input type="text" value="Processado" readonly class="form-control-plaintext">
+								<input type="hidden" name="batchStatus" value="PROCESSADO">
+							</c:when>
+							<c:otherwise>
+								<select id="batchStatus" name="batchStatus">
+									<option value="Recebido" ${loteBruto.status == 'RECEBIDO' ? 'selected' : ''}>Recebido</option>
+									<option value="Em Triagem" ${loteBruto.status == 'EM_TRIAGEM' ? 'selected' : ''}>Em Triagem</option>
+									<option value="Processado" ${loteBruto.status == 'PROCESSADO' ? 'selected' : ''}>Processado</option>
+								</select>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				
+				</div>
+				
+			</section>
+			
+			<h2>Fornecedor Associado</h2>
+			<section class="card">
+			
+				<c:if test="${bloquearFornecedor}">
+					<div class="error-msg" style="display: block; margin-bottom: 10px;">
+						A edição do fornecedor está bloqueada (Lote processado ou pagamentos realizados).
+					</div>
+				</c:if>
+				
+				<div class="form-grid">
+				
+					<div class="form-goup">
+						<label for="supplierDoc">Documento (CPF/CNPJ)</label>
+						
+						<div style="display: flex; gap: 10px;">
+							
+							<input type="text" id="supplierDoc" name="supplierDoc"
+									value="${loteBruto.fornecedor.documento}"
+									${bloquearFornecedor ? 'readonly' : ''}>
+									
+							<c:if test="${not bloquearFornecedor}">
+								<button type="submit"
+										formaction="${pageContext.request.contextPath}/BuscarFornecedorLote" 
+										formmethod="GET"
+										class="btn-search"
+										title="Buscar Nome do Fornecedor">
+									?
+								</button>
+							</c:if>
+						</div>
+					</div>
+					
+					<div class="form-goup">
+						<label for="supplierName">Nome do Fornecedor</label>
+						<input type="text" id="supplierName" name="supplierName" readonly
+								value="${loteBruto.fornecedor.nome}">
+					</div>
+				
+				</div>
+				
+				<div style="margin-top: 20px;">
+					<button type="submit" class="btn-save" ${isProcessado ? 'disabled' : ''}>
+						Salvar Alterações
+					</button>
+				</div>
+			
+			</section>
+		
+		</form>
 
-        <!-- 1. Formulário de Edição do Lote -->
-        <h2>Dados do Lote</h2>
-        <section class="card">
-            <form id="batchForm" onsubmit="saveBatch(event)">
-            	
-            	<input type="hidden" name="id" id="id" value="${not empty loteBruto ? loteBruto.id : ''}">
-            
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="batchId">ID</label>
-                        <input type="text" id="batchId" name="batchId" value="${String.format("#LB-%03d",loteBruto.id)}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="entryDate">Data de Entrada</label>
-                        <input type="text" id="entryDate" name="entryDate" value="${not empty loteBruto ? loteBruto.dtEntrada : ''}" readonly> <!-- Somente leitura conforme regra -->
-                    </div>
-                    <div class="form-group">
-                        <label for="entryWeight">Peso de Entrada (Kg)</label>
-                        <input type="number" id="entryWeight" name="entryWeight" step="0.01" value="${not empty loteBruto ? loteBruto.pesoEntradaKg : '' }">
-                    </div>
-                    <div class="form-group">
-                        <label for="batchStatus">Status</label>
-                        <select id="batchStatus" name="batchStatus" onchange="checkStatusLock()">
-                            <option value="Recebido" ${loteBruto.status == 'RECEBIDO' ? 'selected' : ''}>Recebido</option>
-                            <option value="Em Triagem" ${loteBruto.status == 'EM_TRIAGEM' ? 'selected' : ''}>Em Triagem</option>
-                            <option value="Processado" ${loteBruto.status == 'PROCESSADO' ? 'selected' : ''}>Processado</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Botão Salvar -->
-                <div>
-                    <button type="submit" id="btnSave" class="btn-save">Salvar Alterações</button>
-                </div>
-            </form>
-        </section>
-
-        <!-- 2. Formulário do Fornecedor -->
-        <h2>Fornecedor Associado</h2>
-        <section class="card">
-            <div id="supplierLockMsg" class="error-msg" style="display: none; margin-bottom: 10px;">
-                A edição do fornecedor está bloqueada pois existem pagamentos confirmados ("Pago").
-            </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="supplierDoc">Documento do Fornecedor (CPF/CNPJ)</label>
-                    <input type="text" id="supplierDoc" name="supplierDoc" onblur="fetchSupplier()"
-                    	value="${loteBruto.fornecedor.documento}">
-                    <span id="supplierError" class="error-msg">Erro: Fornecedor não encontrado.</span>
-                </div>
-                <div class="form-group">
-                    <label for="supplierName">Nome do Fornecedor</label>
-                    <input type="text" id="supplierName" name="supplierName" readonly
-                    	value="${loteBruto.fornecedor.nome}">
-                </div>
-            </div>
-        </section>
 
         <!-- 3. Tabela de Lotes Processados -->
         <h2>Lotes Processados Derivados</h2>
@@ -111,7 +165,16 @@
                     </tr>
                 </thead>
                 <tbody id="processedTableBody">
-                    <!-- Preenchido via JS -->
+                    
+                    <c:forEach items="${listaLotesProcessados}" var="loteProcessado">
+                    	<tr>
+                    		<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}" class="table-link">${String.format("LP-%03d", loteProcessado.id)}</a></td>
+                    		<td>${String.format("%.2f", loteProcessado.pesoAtualKg)}</td>
+                    		<td>${loteProcessado.tipoMaterial.nome}</td>
+                    		<td><span class="badge badge-info">FAZER REQUISIÇÃO!!!</span></td>
+                    	</tr>
+                    </c:forEach>
+
                 </tbody>
             </table>
         </section>
@@ -129,187 +192,50 @@
                     </tr>
                 </thead>
                 <tbody id="transactionsTableBody">
-                    <!-- Preenchido via JS -->
+                    
+                    <c:forEach items="${listaTransacoesCompra}" var="transacaoCompra">
+                    	<tr>
+                    		<td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=${transacaoCompra.id}" class="table-link">#${transacaoCompra.id}</a></td>
+                    		<td>${not empty transacaoCompra.dtPagamento ? transacaoCompra.dtPagamento : '---'}</td>
+                    		<td>${String.format("R$ %.2f", transacaoCompra.valorTotal)}</td>
+                    		<td><span class="badge ${transacaoCompra.status == 'PAGO' ? 'badge-success' : 'badge-warning'}">${transacaoCompra.status}</span></td>
+                    	</tr>
+                    </c:forEach>
+
                 </tbody>
             </table>
         </section>
 
         <!-- 5. Excluir (Rodapé) -->
         <div class="danger-zone">
-            <span style="color: #666; font-size: 0.9rem; margin-right: 15px;">Ação irreversível:</span>
-            <button id="btnDelete" class="btn-delete" onclick="deleteBatch()">Excluir Lote Bruto</button>
+        
+        	<form action="${pageContext.request.contextPath}/DeletarLoteBruto" method="POST" onsubmit="return confirmDelete()">
+        	
+        		<input type="hidden" name="id" value="${loteBruto.id}">
+        		<span style="color: #666; margin-right: 15px;">Ação irreversível:</span>
+        		<button type="submit" class="btn-delete" ${isProcessado ? 'disabled' : ''}>Excluir Lote Bruto</button>
+        	
+        	</form>
+            
         </div>
 
     </main>
 
     <script>
-        /* --- Lógica de Negócio e Dados Mockados --- */
-
-        // 1. Dados do Lote (Mock Data)
-        // Mude o status para 'Processado' para testar o bloqueio total
-        const batchData = {
-            id: "LB-101",
-            entryDate: "12/01/2026",
-            weight: 500.00,
-            status: "Em Processamento", // Opções: 'Recebido', 'Em Processamento', 'Processado'
-            supplier: {
-                doc: "55123456000100",
-                name: "Indústrias Metalurgicas Aço"
-            }
-        };
-
-        // 2. Dados Relacionados (Tabelas)
-        const processedBatches = [
-            { id: "LP-201", weight: 200.00, type: "Alumínio", stage: "Triagem" },
-            { id: "LP-202", weight: 280.00, type: "Plástico Misto", stage: "Lavagem" }
-        ];
-
-        // Mude o status para 'Pago' para testar o bloqueio do fornecedor
-        const transactions = [
-            { id: "TR-555", date: "15/01/2026", value: 1500.00, status: "Pendente" }, 
-            { id: "TR-556", date: "-", value: 500.00, status: "Agendado" }
-        ];
-
-        // 3. Base de Fornecedores para Busca
-        const suppliersDB = {
-            "55123456000100": "Indústrias Metalurgicas Aço",
-            "99888777000122": "Transportadora Rápida"
-        };
-
-        // Elementos DOM
-        const weightInput = document.getElementById('entryWeight');
-        const statusSelect = document.getElementById('batchStatus');
-        const supplierDocInput = document.getElementById('supplierDoc');
-        const supplierNameInput = document.getElementById('supplierName');
-        const btnSave = document.getElementById('btnSave');
-        const btnDelete = document.getElementById('btnDelete');
-
-        // Inicialização
+    
+    	function confirmDelete() {
+    		return confirm("Tem certeza que deseja excluir este Lote Bruto e todos os vínculos?\nEsta ação não pode ser desfeita.");
+    	}
+    	
+    	const statusSelect = document.getElementById('batchStatus');
+    	if (statusSelect) {
+    		statusSelect.addEventListener('change', function() {
+    			if (this.value === 'PROCESSADO') {
+    				alert("ATENÇÃO: Ao salvar como 'Processado', o lote será fechado para edições.");
+    			}
+    		});
+    	}
         
-        window.onload = function() {
-        //    loadBatchData();
-        //    renderTables();
-            applyBusinessRules(); // Aplica bloqueios
-        };
-
-        function loadBatchData() {
-            document.getElementById('entryDate').value = batchData.entryDate;
-            weightInput.value = batchData.weight;
-            statusSelect.value = batchData.status;
-            supplierDocInput.value = batchData.supplier.doc;
-            supplierNameInput.value = batchData.supplier.name;
-        }
-
-        // --- Regras de Negócio e Bloqueios ---
-
-        function applyBusinessRules() {
-            const isProcessed = statusSelect.value === 'Processado';
-            
-            // REGRA 1: Se Status = 'Processado', nada pode ser alterado no Lote.
-            if (isProcessed) {
-                document.getElementById('lockMessage').style.display = 'block';
-                weightInput.disabled = true;
-                statusSelect.disabled = true;
-                btnSave.disabled = true;
-                btnDelete.disabled = true; // Geralmente não se exclui lotes já processados
-            } else {
-                document.getElementById('lockMessage').style.display = 'none';
-                weightInput.disabled = false;
-                statusSelect.disabled = false;
-                btnSave.disabled = false;
-                btnDelete.disabled = false;
-            }
-
-            // REGRA 2: Bloqueio do Fornecedor se houver pagamento 'Pago'
-            // Verifica se existe ALGUMA transação com status 'Pago'
-            const hasPaidTransaction = transactions.some(t => t.status === 'Pago');
-
-            if (hasPaidTransaction || isProcessed) {
-                // Bloqueia edição do documento
-                supplierDocInput.disabled = true;
-                if(hasPaidTransaction) {
-                    document.getElementById('supplierLockMsg').style.display = 'block';
-                }
-            } else {
-                supplierDocInput.disabled = false;
-                document.getElementById('supplierLockMsg').style.display = 'none';
-            }
-        }
-
-        // Monitora mudança de status em tempo real para avisar o utilizador
-        function checkStatusLock() {
-            if (statusSelect.value === 'Processado') {
-                alert("Atenção: Ao mudar para 'Processado' e salvar, o registo ficará bloqueado para futuras edições.");
-            }
-        }
-
-        // --- Busca de Fornecedor ---
-
-        function fetchSupplier() {
-            const doc = supplierDocInput.value.replace(/\D/g, "");
-            const errorSpan = document.getElementById('supplierError');
-
-            if (suppliersDB[doc]) {
-                supplierNameInput.value = suppliersDB[doc];
-                errorSpan.style.display = 'none';
-                supplierDocInput.style.borderColor = 'var(--border-color)';
-            } else {
-                if (doc.length > 0) {
-                    errorSpan.style.display = 'block';
-                    supplierDocInput.style.borderColor = 'var(--danger-color)';
-                    supplierNameInput.value = ""; // Limpa nome se não achar
-                }
-            }
-        }
-
-        // --- Renderização de Tabelas ---
-
-        function renderTables() {
-            // Tabela Processados
-            const procBody = document.getElementById('processedTableBody');
-            processedBatches.forEach(item => {
-                procBody.innerHTML += `
-                    <tr>
-                        <td><a href="DetalharLoteProcessado?id=${item.id}" class="table-link">#${item.id}</a></td>
-                        <td>${item.weight.toFixed(2)}</td>
-                        <td>${item.type}</td>
-                        <td><span class="badge badge-info">${item.stage}</span></td>
-                    </tr>
-                `;
-            });
-
-            // Tabela Transações
-            const transBody = document.getElementById('transactionsTableBody');
-            transactions.forEach(item => {
-                let badgeClass = item.status === 'Pago' ? 'badge-success' : 'badge-warning';
-                
-                transBody.innerHTML += `
-                    <tr>
-                        <td><a href="DetalharTransacaoCompra?id=${item.id}" class="table-link">#${item.id}</a></td>
-                        <td>${item.date}</td>
-                        <td>R$ ${item.value.toFixed(2)}</td>
-                        <td><span class="badge ${badgeClass}">${item.status}</span></td>
-                    </tr>
-                `;
-            });
-        }
-
-        // --- Ações de Botões ---
-
-        function saveBatch(event) {
-            event.preventDefault();
-            alert("Alterações guardadas com sucesso na base de dados.");
-            // Recarregar regras caso o status tenha mudado para Processado
-            applyBusinessRules();
-        }
-
-        function deleteBatch() {
-            if (confirm("Tem a certeza que deseja excluir este Lote Bruto e todos os vínculos?\nEsta ação não pode ser desfeita.")) {
-                alert("Lote excluído.");
-                window.location.href = 'ListarLotesBrutos';
-            }
-        }
-
     </script>
 </body>
 </html>

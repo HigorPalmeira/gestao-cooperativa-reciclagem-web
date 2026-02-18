@@ -91,13 +91,13 @@
                     		<td>
                     			<c:choose>
                     				<c:when test="${loteBruto.status == 'RECEBIDO'}">
-			                    		<span class="status-badge status-recebido">${loteBruto.status}</span>
+			                    		<span class="status-badge status-recebido">Recebido</span>
                     				</c:when>
                     				<c:when test="${loteBruto.status == 'EM_TRIAGEM'}">
-			                    		<span class="status-badge status-processamento">${loteBruto.status}</span>
+			                    		<span class="status-badge status-processamento">Em Triagem</span>
                     				</c:when>
                     				<c:otherwise> <!-- otherwise -->
-			                    		<span class="status-badge status-concluido">${loteBruto.status}</span>
+			                    		<span class="status-badge status-concluido">Processado</span>
                     				</c:otherwise>
                     			</c:choose>
 	                    	</td>

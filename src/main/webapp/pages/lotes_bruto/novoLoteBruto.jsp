@@ -93,13 +93,6 @@
 
         const ctx = "${pageContext.request.contextPath}";
         
-        // 1. Base de Dados Simulada (Fornecedores)
-        const suppliersDB = {
-            "55123456000100": { name: "Indústrias Metalurgicas Aço", type: "Matéria-prima" },
-            "99888777000122": { name: "Transportadora Rápida", type: "Logística" },
-            "12345678909": { name: "João Coletor Autônomo", type: "Fornecedor Pessoa Física" }
-        };
-
         // Elementos DOM
         const form = document.getElementById('createBatchForm');
         
@@ -121,18 +114,12 @@
             const isValidLength = rawDoc.length === 11 || rawDoc.length === 14;
 
             if (isValidLength/* && suppliersDB[rawDoc]*/) {
-                // SUCESSO: Encontrou
                 
-                form.action = ctx + "/VerificarFornecedor";
+            	form.action = ctx + "/VerificarFornecedor";
             	form.method = "GET";
             	
             	form.submit();
-                
-                //nameInput.value = suppliersDB[rawDoc].name;
-                //typeInput.value = suppliersDB[rawDoc].type;
-                
-                //docError.style.display = 'none';
-                //docInput.style.borderColor = 'var(--success-color)';
+            	
                 isSupplierValid = true;
             } else {
                 // ERRO: Não encontrou ou formato inválido
@@ -178,18 +165,6 @@
             
             form.submit();
             
-            // Dados automáticos
-            // const currentDate = new Date().toLocaleDateString('pt-BR');
-            // const defaultStatus = "Recebido";
-
-            //const supplierName = nameInput.value;
-            //const weight = weightInput.value;
-
-            // Feedback visual
-            //alert(`Lote Cadastrado com Sucesso!\n\nFornecedor: ${supplierName}\nPeso: ${weight} Kg\nData de Entrada: ${currentDate}\nStatus: ${defaultStatus}`);
-
-            // Opcional: Redirecionar
-            //window.location.href = '${pageContext.request.contextPath}/ListarLotesBruto';
         }
 
     </script>

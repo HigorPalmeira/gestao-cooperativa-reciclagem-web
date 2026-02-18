@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
@@ -16,7 +17,7 @@ public class LoteBrutoService {
 		this.loteBrutoDao = loteBrutoDao;
 	}
 	
-	public void inserirLoteBruto(double pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
+	public void inserirLoteBruto(double pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
 		
 		LoteBruto loteBruto = new LoteBruto(pesoEntradaKg, dtEntrada, status, fornecedor);
 		
@@ -24,7 +25,7 @@ public class LoteBrutoService {
 		
 	}
 	
-	public void atualizarLoteBruto(int idLoteBruto, double pesoEntradaKg, StatusLoteBruto status, Fornecedor fornecedor) {
+	public void atualizarLoteBruto(int idLoteBruto, double pesoEntradaKg, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
 		
 		LoteBruto loteBruto = buscarLoteBrutoPorId(idLoteBruto);
 		
@@ -33,9 +34,17 @@ public class LoteBrutoService {
 		}
 		
 		// adicionar verificação no model
-		loteBruto.setPesoEntradaKg(pesoEntradaKg);
-		loteBruto.setStatus(status);
-		loteBruto.setFornecedor(fornecedor);
+		if (fornecedor != null) {
+			loteBruto.setFornecedor(fornecedor);
+		}
+		
+		if (status != null) {
+			loteBruto.setStatus(status);
+		}
+		
+		if (pesoEntradaKg > 0) {
+			loteBruto.setPesoEntradaKg(pesoEntradaKg);			
+		}
 		
 		loteBrutoDao.atualizarLoteBruto(loteBruto);
 		
