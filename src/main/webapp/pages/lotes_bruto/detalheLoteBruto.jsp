@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Lote Bruto #LB-101</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -16,11 +17,24 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Lote Bruto #LB-101</div>
         <div>
-            <a href="ListarLotesBrutos">Voltar para Gestão</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Voltar para Gestão</a>
         </div>
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${msgErro}
+    		</div>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
         
         <!-- Aviso de Bloqueio (Dinâmico) -->
         <div id="lockMessage" class="info-msg" style="display: none;">
@@ -31,25 +45,28 @@
         <h2>Dados do Lote</h2>
         <section class="card">
             <form id="batchForm" onsubmit="saveBatch(event)">
+            	
+            	<input type="hidden" name="id" id="id" value="${not empty loteBruto ? loteBruto.id : ''}">
+            
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="batchId">ID</label>
-                        <input type="text" id="batchId" value="#LB-101" readonly>
+                        <input type="text" id="batchId" name="batchId" value="${String.format("#LB-%03d",loteBruto.id)}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="entryDate">Data de Entrada</label>
-                        <input type="text" id="entryDate" readonly> <!-- Somente leitura conforme regra -->
+                        <input type="text" id="entryDate" name="entryDate" value="${not empty loteBruto ? loteBruto.dtEntrada : ''}" readonly> <!-- Somente leitura conforme regra -->
                     </div>
                     <div class="form-group">
                         <label for="entryWeight">Peso de Entrada (Kg)</label>
-                        <input type="number" id="entryWeight" step="0.01">
+                        <input type="number" id="entryWeight" name="entryWeight" step="0.01" value="${not empty loteBruto ? loteBruto.pesoEntradaKg : '' }">
                     </div>
                     <div class="form-group">
                         <label for="batchStatus">Status</label>
-                        <select id="batchStatus" onchange="checkStatusLock()">
-                            <option value="Recebido">Recebido</option>
-                            <option value="Em Processamento">Em Processamento</option>
-                            <option value="Processado">Processado</option>
+                        <select id="batchStatus" name="batchStatus" onchange="checkStatusLock()">
+                            <option value="Recebido" ${loteBruto.status == 'RECEBIDO' ? 'selected' : ''}>Recebido</option>
+                            <option value="Em Triagem" ${loteBruto.status == 'EM_TRIAGEM' ? 'selected' : ''}>Em Triagem</option>
+                            <option value="Processado" ${loteBruto.status == 'PROCESSADO' ? 'selected' : ''}>Processado</option>
                         </select>
                     </div>
                 </div>
@@ -69,12 +86,14 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="supplierDoc">Documento do Fornecedor (CPF/CNPJ)</label>
-                    <input type="text" id="supplierDoc" onblur="fetchSupplier()">
+                    <input type="text" id="supplierDoc" name="supplierDoc" onblur="fetchSupplier()"
+                    	value="${loteBruto.fornecedor.documento}">
                     <span id="supplierError" class="error-msg">Erro: Fornecedor não encontrado.</span>
                 </div>
                 <div class="form-group">
                     <label for="supplierName">Nome do Fornecedor</label>
-                    <input type="text" id="supplierName" readonly>
+                    <input type="text" id="supplierName" name="supplierName" readonly
+                    	value="${loteBruto.fornecedor.nome}">
                 </div>
             </div>
         </section>
@@ -166,9 +185,10 @@
         const btnDelete = document.getElementById('btnDelete');
 
         // Inicialização
+        
         window.onload = function() {
-            loadBatchData();
-            renderTables();
+        //    loadBatchData();
+        //    renderTables();
             applyBusinessRules(); // Aplica bloqueios
         };
 

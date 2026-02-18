@@ -10,7 +10,7 @@
     <!-- Importação do Chart.js para o gráfico -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -20,25 +20,25 @@
         <div class="brand">ERP Reciclagem</div>
         <div class="nav-links">
             <!-- Funcionalidades Core -->
-            <a href="ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
-            <a href="ListarLotesBruto">Lotes Brutos</a>
-            <a href="ListarLotesProcessados">Lotes Processados</a>
-            <a href="ListarVendas">Vendas</a>
-            <a href="ListarClientes">Clientes</a>
-            <a href="ListarTransacoesCompra">Financeiro</a>
+            <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
+            <a href="${pageContext.request.contextPath}/ListarVendas">Vendas</a>
+            <a href="${pageContext.request.contextPath}/ListarClientes">Clientes</a>
+            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Financeiro</a>
             
             <!-- Dropdown para Cadastros Básicos -->
             <div class="dropdown">
                 <a href="#">Configurações &#9662;</a>
                 <div class="dropdown-content">
-                    <a href="ListarCategoriasProcessamento">Categorias de Processamento</a>
-                    <a href="ListarTiposMateriais">Tipos de Materiais</a>
-                    <a href="ListarPrecosMateriais">Preços de Materiais</a>
-                    <a href="ListarUsuarios">Usuários (Admin)</a>
+                    <a href="${pageContext.request.contextPath}/ListarCategoriasProcessamento">Categorias de Processamento</a>
+                    <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
+                    <a href="${pageContext.request.contextPath}/ListarPrecosMateriais">Preços de Materiais</a>
+                    <a href="${pageContext.request.contextPath}/ListarUsuarios">Usuários (Admin)</a>
                 </div>
             </div>
             
-            <a href="pages/login/login.jsp" style="margin-left: 15px; color: #ffcccc;">Sair</a>
+            <a href="${pageContext.request.contextPath}/pages/login/login.jsp" style="margin-left: 15px; color: #ffcccc;">Sair</a>
         </div>
     </nav>
 
@@ -55,21 +55,21 @@
             </div>
 
             <!-- KPI 2 -->
-            <div class="kpi-card kpi-green" onclick="window.location.href='pages/venda/vendas.jsp'">
+            <div class="kpi-card kpi-green" onclick="window.location.href='ListarVendas'">
                 <div class="kpi-title">Vendas do Mês (R$)</div>
                 <div class="kpi-value">R$ 45.200</div>
                 <div class="kpi-desc">+15% vs mês anterior</div>
             </div>
 
             <!-- KPI 3 -->
-            <div class="kpi-card kpi-yellow" onclick="window.location.href='pages/transacoes_compra/transacoesCompra.jsp'">
+            <div class="kpi-card kpi-yellow" onclick="window.location.href='ListarTransacoesCompra'">
                 <div class="kpi-title">Pagamentos Pendentes</div>
                 <div class="kpi-value">5</div>
                 <div class="kpi-desc">Valor Total: R$ 3.150</div>
             </div>
 
             <!-- KPI 4 -->
-            <div class="kpi-card kpi-info" onclick="window.location.href='pages/lote_processado/lotesProcessados.jsp'">
+            <div class="kpi-card kpi-info" onclick="window.location.href='ListarLotesProcessados'">
                 <div class="kpi-title">Estoque Processado</div>
                 <div class="kpi-value">1.200 Kg</div>
                 <div class="kpi-desc">Pronto para venda</div>
@@ -90,13 +90,13 @@
             <div class="dashboard-card">
                 <div class="card-header">Ações Rápidas</div>
                 <div class="quick-actions-list">
-                    <a href="pages/lotes_bruto/novoLoteBruto.jsp" class="btn-action action-batch">
+                    <a href="${pageContext.request.contextPath}/pages/lotes_bruto/novoLoteBruto.jsp" class="btn-action action-batch">
                         + Novo Lote Bruto
                     </a>
-                    <a href="pages/venda/novaVenda.jsp" class="btn-action action-sale">
+                    <a href="${pageContext.request.contextPath}/pages/venda/novaVenda.jsp" class="btn-action action-sale">
                         + Nova Venda
                     </a>
-                    <a href="pages/fornecedor/novoFornecedor.jsp" class="btn-action action-supplier">
+                    <a href="${pageContext.request.contextPath}/pages/fornecedor/novoFornecedor.jsp" class="btn-action action-supplier">
                         + Novo Fornecedor
                     </a>
                 </div>

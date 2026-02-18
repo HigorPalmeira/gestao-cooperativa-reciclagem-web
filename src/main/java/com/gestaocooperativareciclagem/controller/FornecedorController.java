@@ -28,7 +28,9 @@ import com.gestaocooperativareciclagem.utils.Formatador;
  * Servlet implementation class FornecedorController
  */
 @WebServlet(urlPatterns={"/FornecedorController", "/ListarFornecedores", 
-		"/DetalharFornecedor", "/InserirFornecedor", "/AtualizarFornecedor", "/DeletarFornecedor"})
+		"/DetalharFornecedor", "/InserirFornecedor", 
+		"/AtualizarFornecedor", "/DeletarFornecedor",
+		"/VerificarFornecedor"})
 public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -69,6 +71,10 @@ public class FornecedorController extends HttpServlet {
 					buscarFornecedorPorDocumento(request, response);
 					break;
 					
+				case "/VerificarFornecedor":
+					verificarFornecedor(request, response);
+					break;
+					
 				default:
 					listarFornecedores(request, response);
 					break;
@@ -102,6 +108,8 @@ public class FornecedorController extends HttpServlet {
 				case "/DeletarFornecedor":
 					deletarFornecedor(request, response);
 					break;
+					
+				
 					
 				default:
 					listarFornecedores(request, response);
@@ -266,6 +274,31 @@ public class FornecedorController extends HttpServlet {
 		fornecedorService.deletarFornecedor(documento);
 		
 		response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
+		
+	}
+	
+	protected void verificarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String documento = request.getParameter("supplierDoc");
+		String origem = request.getParameter("origem");
+		
+		try {
+			
+			Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
+			
+			request.getSession().setAttribute("fornecedorEncontrado", fornecedor);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Fornecedor não encontrado!");
+			
+		}
+		
+		if (origem == null || origem.isEmpty()) {
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		} else {
+			response.sendRedirect(request.getContextPath() + origem);
+		}
 		
 	}
 }
