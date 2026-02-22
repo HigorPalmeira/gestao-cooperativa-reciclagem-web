@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Lote Processado #LP-201</title>
+    <title>Detalhes do Lote Processado ${String.format("#LP-%03d", loteProcessado.id)}</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
@@ -15,7 +15,7 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Lote Processado #LP-201</div>
+        <div class="brand">ERP System &rsaquo; Lote Processado ${String.format("#LP-%03d", loteProcessado.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Voltar para Gestão</a>
         </div>
@@ -27,26 +27,37 @@
         <h1>Dados do Lote Processado</h1>
         <section class="card">
             <form id="processedForm" onsubmit="saveChanges(event)">
+            
+            	<input type="hidden" id="id" name="id" value="${loteProcessado.id}">
+            	
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="currentWeight">Peso Atual (Kg) *</label>
                         <!-- Habilitado para edição -->
-                        <input type="number" id="currentWeight" step="0.01">
+                        <input type="number" id="currentWeight" name="currentWeight" step="0.01"
+                        	value="${loteProcessado.pesoAtualKg}">
                     </div>
                     <div class="form-group">
                         <label for="materialType">Tipo de Material *</label>
                         <!-- Habilitado para edição -->
-                        <select id="materialType">
+                        <select id="materialType" name="materialType">
+                        	<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                        		<option value="${tipoMaterial.id}" ${tipoMaterial.id == loteProcessado.tipoMaterial.id ? 'selected' : ''}>${tipoMaterial.nome}</option>
+                        	</c:forEach>
+                            
+                            <!-- 
                             <option value="Plástico PET">Plástico PET</option>
                             <option value="Plástico HDPE">Plástico HDPE</option>
                             <option value="Alumínio">Alumínio</option>
                             <option value="Papelão">Papelão</option>
+                             -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="creationDate">Data de Criação</label>
                         <!-- Readonly (não editável) -->
-                        <input type="text" id="creationDate" readonly>
+                        <input type="text" id="creationDate" name="creationDate" readonly
+                        	value="${loteProcessado.dtCriacao}">
                     </div>
                 </div>
                 <button type="submit" class="btn-save">Salvar Alterações</button>
@@ -60,20 +71,24 @@
                 <div class="form-group">
                     <label for="rawBatchId">ID do Lote Bruto *</label>
                     <!-- Único campo editável nesta seção -->
-                    <input type="text" id="rawBatchId" onblur="fetchRawBatch()" placeholder="Ex: LB-101">
+                    <input type="text" id="rawBatchId" name="rawBatchId" onblur="fetchRawBatch()" placeholder="Ex: LB-101"
+                    	value="${loteProcessado.loteBruto.id}">
                     <span id="rawBatchError" class="error-msg">Lote bruto não encontrado.</span>
                 </div>
                 <div class="form-group">
                     <label for="rawEntryWeight">Peso de Entrada (Kg)</label>
-                    <input type="text" id="rawEntryWeight" readonly>
+                    <input type="text" id="rawEntryWeight" name="rawEntryWeight" readonly
+                    	value="${loteProcessado.loteBruto.pesoEntradaKg}">
                 </div>
                 <div class="form-group">
                     <label for="rawEntryDate">Data de Entrada</label>
-                    <input type="text" id="rawEntryDate" readonly>
+                    <input type="text" id="rawEntryDate" name="rawEntryDate" readonly
+                    	value="${loteProcessado.loteBruto.dtEntrada}">
                 </div>
                 <div class="form-group">
                     <label for="rawStatus">Status</label>
-                    <input type="text" id="rawStatus" readonly>
+                    <input type="text" id="rawStatus" name="rawStatus" readonly
+                    	value="${loteProcessado.loteBruto.status.descricao}">
                 </div>
             </div>
         </section>
@@ -91,9 +106,23 @@
                 </thead>
                 <tbody id="stagesTableBody">
                     <!-- Conteúdo Mock -->
+                    
+                    <c:forEach items="${listaEtapasProcessamento}" var="etapaProcessamento">
+                    	<tr>
+                    		<td>
+                    			<span class="category-link" onclick="openStageModal({name: '${etapaProcessamento.categoriaProcessamento.nome}', desc: '${etapaProcessamento.categoriaProcessamento.descricao}', status: '${etapaProcessamento.status}'})">${etapaProcessamento.categoriaProcessamento.nome}</span>
+                    		</td>
+                    		<td>${etapaProcessamento.dtProcessamento}</td>
+                    		<td>
+                    			<span class="badge ">${etapaProcessamento.status}</span>
+                    			<!-- badge-success & badge-warning -->
+                    		</td>
+                    	</tr>
+                    </c:forEach>
+                    
+                    <!-- 
                     <tr>
                         <td>
-                            <!-- Clique abre Pop-up -->
                             <span class="category-link" onclick="openStageModal('Triagem')">Triagem</span>
                         </td>
                         <td>20/01/2026</td>
@@ -113,6 +142,8 @@
                         <td>22/01/2026</td>
                         <td><span class="badge badge-warning">Em Andamento</span></td>
                     </tr>
+                     -->
+                     
                 </tbody>
             </table>
         </section>
@@ -184,18 +215,6 @@
         const rawError = document.getElementById('rawBatchError');
         const modal = document.getElementById('stageModal');
 
-        // Inicialização
-        window.onload = function() {
-            // Preencher Formulário Principal
-            document.getElementById('currentWeight').value = processedBatchData.weight;
-            document.getElementById('materialType').value = processedBatchData.material;
-            document.getElementById('creationDate').value = processedBatchData.date;
-            
-            // Preencher ID do Lote Bruto e buscar dados
-            rawBatchInput.value = processedBatchData.rawBatchId;
-            fetchRawBatch(); // Trigger inicial para preencher os readonly
-        };
-
         // --- Função de Busca de Lote Bruto ---
         function fetchRawBatch() {
             const id = rawBatchInput.value.trim().toUpperCase();
@@ -224,16 +243,14 @@
         }
 
         // --- Lógica do Modal ---
-        function openStageModal(category) {
+        function openStageModal(category = null) {
             const contentDiv = document.getElementById('modalBodyContent');
-            const info = stageDetails[category];
 
-            if (info) {
+            if (category) {
                 contentDiv.innerHTML = `
-                    <p><strong>Categoria:</strong> ${category}</p>
-                    <p><strong>Descrição:</strong> ${info.desc}</p>
-                    <p><strong>Responsável:</strong> ${info.responsable}</p>
-                    <p><strong>Notas:</strong> ${info.notes}</p>
+                    <p><strong>Categoria:</strong> \${category.name}</p>
+                    <p><strong>Descrição:</strong> \${category.desc}</p>
+                    <p><strong>Status:</strong> \${category.status}</p>
                 `;
             } else {
                 contentDiv.innerHTML = `<p>Informações detalhadas não disponíveis para esta etapa.</p>`;

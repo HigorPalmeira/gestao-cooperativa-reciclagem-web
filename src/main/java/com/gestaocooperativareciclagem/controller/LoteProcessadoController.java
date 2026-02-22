@@ -18,6 +18,7 @@ import com.gestaocooperativareciclagem.dao.PrecoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
+import com.gestaocooperativareciclagem.model.EtapaProcessamento;
 import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
 import com.gestaocooperativareciclagem.model.TipoMaterial;
@@ -44,6 +45,7 @@ public class LoteProcessadoController extends HttpServlet {
 	private LoteBrutoService loteBrutoService;
 	private TipoMaterialService tipoMaterialService;
 	private CategoriaProcessamentoService categoriaProcessamentoService;
+	private EtapaProcessamentoService etapaProcessamentoService;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -56,15 +58,16 @@ public class LoteProcessadoController extends HttpServlet {
     public void init() throws ServletException {
 		try {
 			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
+			etapaProcessamentoService = new EtapaProcessamentoService(new EtapaProcessamentoDAO());
 			loteProcessadoService = new LoteProcessadoService(
 					new LoteProcessadoDAO(), 
 					new TransacaoCompraService(new TransacaoCompraDAO()), 
 					new PrecoMaterialService(new PrecoMaterialDAO(), tipoMaterialService),
-					new EtapaProcessamentoService(new EtapaProcessamentoDAO()));
+					etapaProcessamentoService);
 			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService", e);
+			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService e/ou EtapaProcessamentoService", e);
 		}
 	}
 
@@ -79,7 +82,7 @@ public class LoteProcessadoController extends HttpServlet {
 			
 			switch(path) {
 				case "/DetalharLoteProcessado":
-					System.out.println("Sem implementação...");
+					buscarLoteProcessado(request, response);
 					break;
 					
 				case "/NovoLoteProcessado":
@@ -150,6 +153,29 @@ public class LoteProcessadoController extends HttpServlet {
 			loteProcessadoService.inserirLoteProcessado(pesoAtualKg, tipoMaterial, categoriaProcessamento, loteBruto);
 			
 			response.sendRedirect(request.getContextPath() + "/ListarLotesProcessados");
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
+	protected void buscarLoteProcessado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("id"));
+			
+			LoteProcessado loteProcessado = loteProcessadoService.buscarLoteProcessadoPorId(id);
+			List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+			List<EtapaProcessamento> listaEtapasProcessamento = etapaProcessamentoService.listarEtapasProcessamentoPorLoteProcessado(loteProcessado.getId());
+			
+			request.setAttribute("loteProcessado", loteProcessado);
+			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+			request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/detalheLoteProcessado.jsp");
+			reqDis.forward(request, response);
 			
 		} catch (Exception e) {
 			throw new ServletException(e);

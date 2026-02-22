@@ -74,14 +74,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
@@ -132,14 +132,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
@@ -163,7 +163,7 @@ public class EtapaProcessamentoDAO {
 		
 		List<EtapaProcessamento> listaEtapaProcessamento = new ArrayList<>();
 		
-		String select = "select * from info_etapa_processamento where lote_processado = ?";
+		String select = "select * from info_etapa_processamento where id_loteprocessado = ?";
 		
 		try {
 			
@@ -190,14 +190,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
@@ -248,14 +248,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
@@ -307,14 +307,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
@@ -365,14 +365,14 @@ public class EtapaProcessamentoDAO {
 
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao( rset.getString("tipo_fornecedor") );
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao( rset.getString("status_lotebruto") );
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
