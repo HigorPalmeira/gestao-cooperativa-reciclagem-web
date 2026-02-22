@@ -160,6 +160,35 @@ public class LoteProcessadoController extends HttpServlet {
 		
 	}
 	
+	protected void atualizarLoteProcessado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		try {
+			
+			int idLoteProcessado = Integer.parseInt(request.getParameter("id"));
+			int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
+			int idLoteBruto = Integer.parseInt(request.getParameter("rawBatchId"));
+			
+			double pesoAtualKg = Double.parseDouble(request.getParameter("currentWeight"));
+			
+			TipoMaterial tipoMaterial = tipoMaterialService.buscarTipoMaterialPorId(idTipoMaterial);
+			LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(idLoteBruto);
+			
+			loteProcessadoService.atualizarLoteProcessado(idLoteProcessado, pesoAtualKg, tipoMaterial, loteBruto);
+			
+			request.getSession().setAttribute("msgSucesso", "Lote Processado atualizado com sucesso!");
+			
+		} catch (Exception e) {
+			
+			request.setAttribute("msgErro", "Ocorreu um erro na atualização do Lote Bruto! Se o erro persistir contate o administrador do sistema.<br>Erro: " + e.getMessage());
+		
+		}
+		
+		buscarLoteProcessado(request, response);
+		
+	}
+	
 	protected void buscarLoteProcessado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
