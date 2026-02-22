@@ -4,7 +4,6 @@
 <%@ page import="com.gestaocooperativareciclagem.model.LoteProcessado" %>
 <%@ page import="com.gestaocooperativareciclagem.model.TipoMaterial" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Lotes Processados</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -22,9 +21,9 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação segura -->
-            <a href="index.jsp">Início</a>
-            <a href="ListarLotesBruto">Lotes Brutos</a>
-            <a href="ListarTiposMateriais">Tipos de Materiais</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
+            <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
         </div>
     </nav>
 
@@ -34,7 +33,7 @@
         <div class="page-header">
             <h1>Gestão de Lotes Processados</h1>
             <!-- Botão Novo Lote -->
-            <button class="btn-new" onclick="window.location.href='pages/lotes_processados/novoLoteProcessado.jsp'">
+            <button class="btn-new" onclick="window.location.href='${pageContext.request.contextPath}/NovoLoteProcessado'"> <!-- pages/lotes_processados/novoLoteProcessado.jsp -->
                 + Novo Lote Processado
             </button>
         </div>
@@ -103,7 +102,7 @@
                 
                 	<c:forEach items="${listaLotesProcessados}" var="loteProcessado">
                 		<tr>
-                			<td><a href="DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
                 			<td>${loteProcessado.pesoAtualKg}</td>
                 			<td>${loteProcessado.dtCriacao}</td>
                 			<td>${loteProcessado.tipoMaterial.nome}</td>

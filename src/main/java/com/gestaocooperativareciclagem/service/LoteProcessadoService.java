@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.LoteProcessadoDAO;
+import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
 import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
 import com.gestaocooperativareciclagem.model.PrecoMaterial;
@@ -17,11 +18,13 @@ public class LoteProcessadoService {
 	private LoteProcessadoDAO loteProcessadoDao;
 	private TransacaoCompraService transacaoCompraService;
 	private PrecoMaterialService precoMaterialService;
+	private EtapaProcessamentoService etapaProcessamentoService;
 	
-	public LoteProcessadoService(LoteProcessadoDAO loteProcessadoDao, TransacaoCompraService transacaoCompraService, PrecoMaterialService precoMaterialService) {
+	public LoteProcessadoService(LoteProcessadoDAO loteProcessadoDao, TransacaoCompraService transacaoCompraService, PrecoMaterialService precoMaterialService, EtapaProcessamentoService etapaProcessamentoService) {
 		this.loteProcessadoDao = loteProcessadoDao;
 		this.transacaoCompraService = transacaoCompraService;
 		this.precoMaterialService = precoMaterialService;
+		this.etapaProcessamentoService = etapaProcessamentoService;
 	}
 
 	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, double pesoKg) {
@@ -30,11 +33,11 @@ public class LoteProcessadoService {
 		
 		double valorTotalCalculado = precoMaterial.getPrecoCompra() * pesoKg;
 		
-		transacaoCompraService.inserirTransacaoCompra(valorTotalCalculado, StatusPagamentoTransacaoCompra.AGUARDANDO_PAGAMENTO, Date.valueOf(LocalDate.now()), loteBruto);
+		transacaoCompraService.inserirTransacaoCompra(valorTotalCalculado, StatusPagamentoTransacaoCompra.PENDENTE, Date.valueOf(LocalDate.now()), loteBruto);
 		
 	}
 	
-	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
+	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, CategoriaProcessamento categoriaProcessamento, LoteBruto loteBruto) {
 		
 		if (pesoAtualKg <= 0) {
 			throw new RuntimeException("O peso do lote processado é inválido! Para registrar o lote processado informe um peso (em Kg) válido.");
@@ -44,6 +47,10 @@ public class LoteProcessadoService {
 			throw new RuntimeException("O tipo de material é inválido! É necessário informar um tipo de material válido para registrar o lote processado.");
 		}
 		
+		if (categoriaProcessamento == null) {
+			throw new RuntimeException("A categoria de processamento é inválida! É necessário informar uma categoria de processamento válida para registrar o lote processado.");
+		}
+		
 		if (loteBruto == null || loteBruto.getStatus().equals(StatusLoteBruto.PROCESSADO)) {
 			throw new RuntimeException("O lote bruto é inválido! É necessário informar corretamente o lote bruto para registrar o lote processado.");
 		}
@@ -51,9 +58,10 @@ public class LoteProcessadoService {
 		LoteProcessado loteProcessado = new LoteProcessado(pesoAtualKg, tipoMaterial, loteBruto);
 		
 		loteProcessadoDao.inserirLoteProcessado(loteProcessado);
+		etapaProcessamentoService.inserirEtapaProcessamentoService(loteProcessado.getId(), categoriaProcessamento.getId(), Date.valueOf(LocalDate.now()), "Em Andamento");
 
 		gerarTransacaoCompra(loteBruto, tipoMaterial, loteProcessado.getPesoAtualKg());
-		
+				
 	}
 	
 	public void atualizarLoteProcessado(int idLoteProcessado, double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {

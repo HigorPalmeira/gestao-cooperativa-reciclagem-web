@@ -62,18 +62,18 @@ public class TransacaoCompraDAO {
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
 				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
-						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
@@ -113,18 +113,18 @@ public class TransacaoCompraDAO {
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
 				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
-						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
@@ -164,18 +164,18 @@ public class TransacaoCompraDAO {
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
 				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
-						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
@@ -215,7 +215,7 @@ public class TransacaoCompraDAO {
 				transacaoCompra.setValorTotalCalculado( rset.getDouble("valor_total_calculado_transacaocompra") );
 				
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
-						.fromDescricao(rset.getString("status_pagamento_transacaocompra"));
+						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				transacaoCompra.setStatus(statusPagamento);
 				
 				transacaoCompra.setDtCalculo( rset.getDate("dtCalculo_transacaocompra") );
@@ -224,11 +224,11 @@ public class TransacaoCompraDAO {
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);

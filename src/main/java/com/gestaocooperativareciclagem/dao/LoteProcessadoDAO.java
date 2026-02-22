@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +27,22 @@ public class LoteProcessadoDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			
-			PreparedStatement pst = conexao.prepareStatement(insert);
+			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			pst.setDouble(1, loteProcessado.getPesoAtualKg());
 			pst.setDate(2, loteProcessado.getDtCriacao());
 			pst.setInt(3, loteProcessado.getTipoMaterial().getId());
 			pst.setInt(4, loteProcessado.getLoteBruto().getId());
 			
-			pst.executeUpdate();
+			int linhasAfetadas = pst.executeUpdate();
+			
+			if (linhasAfetadas > 0) {
+				ResultSet rset = pst.getGeneratedKeys();
+				if (rset.next()) {
+					loteProcessado.setId(rset.getInt(1));
+				}
+				
+				rset.close();
+			}
 			
 			pst.close();
 			conexao.close();
@@ -68,14 +78,14 @@ public class LoteProcessadoDAO {
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
@@ -121,14 +131,14 @@ public class LoteProcessadoDAO {
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
@@ -174,14 +184,14 @@ public class LoteProcessadoDAO {
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
@@ -228,14 +238,14 @@ public class LoteProcessadoDAO {
 				
 				String documentoFornecedor = rset.getString("documento_fornecedor");
 				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
 				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
 				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.fromDescricao(rset.getString("status_lotebruto"));
+				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				loteProcessado.setLoteBruto(loteBruto);

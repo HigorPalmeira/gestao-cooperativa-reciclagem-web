@@ -99,7 +99,7 @@
                 			<td class="text-right">${String.format("R$ %.2f", transacaoCompra.valorTotalCalculado)}</td>
                 			<td>
                 				<c:choose>
-                					<c:when test="${transacaoCompra.status == 'AGUARDANDO_PAGAMENTO'}">
+                					<c:when test="${transacaoCompra.status == 'PENDENTE'}">
                 						<span class="status-badge status-pendente">${transacaoCompra.status}</span>
                 					</c:when>
                 					<c:otherwise>

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gestaocooperativareciclagem.dao.EtapaProcessamentoDAO;
 import com.gestaocooperativareciclagem.dao.FornecedorDAO;
 import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
 import com.gestaocooperativareciclagem.dao.LoteProcessadoDAO;
@@ -25,6 +26,7 @@ import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
 import com.gestaocooperativareciclagem.model.TransacaoCompra;
 import com.gestaocooperativareciclagem.model.enums.StatusLoteBruto;
+import com.gestaocooperativareciclagem.service.EtapaProcessamentoService;
 import com.gestaocooperativareciclagem.service.FornecedorService;
 import com.gestaocooperativareciclagem.service.LoteBrutoService;
 import com.gestaocooperativareciclagem.service.LoteProcessadoService;
@@ -67,7 +69,8 @@ public class LoteBrutoController extends HttpServlet {
 											new LoteProcessadoDAO(), 
 											transacaoCompraService, 
 											new PrecoMaterialService(new PrecoMaterialDAO(), 
-													new TipoMaterialService(new TipoMaterialDAO())));
+													new TipoMaterialService(new TipoMaterialDAO())),
+											new EtapaProcessamentoService(new EtapaProcessamentoDAO()));
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou FornecedorService e/ou LoteProcessadoService", e);
 		}

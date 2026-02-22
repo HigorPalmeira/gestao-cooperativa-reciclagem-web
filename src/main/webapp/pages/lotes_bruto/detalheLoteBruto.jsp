@@ -197,7 +197,7 @@
                     	<tr>
                     		<td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=${transacaoCompra.id}" class="table-link">#${transacaoCompra.id}</a></td>
                     		<td>${not empty transacaoCompra.dtPagamento ? transacaoCompra.dtPagamento : '---'}</td>
-                    		<td>${String.format("R$ %.2f", transacaoCompra.valorTotal)}</td>
+                    		<td>${String.format("R$ %.2f", transacaoCompra.valorTotalCalculado)}</td>
                     		<td><span class="badge ${transacaoCompra.status == 'PAGO' ? 'badge-success' : 'badge-warning'}">${transacaoCompra.status}</span></td>
                     	</tr>
                     </c:forEach>

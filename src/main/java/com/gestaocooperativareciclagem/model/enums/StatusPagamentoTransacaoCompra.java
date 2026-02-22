@@ -2,7 +2,7 @@ package com.gestaocooperativareciclagem.model.enums;
 
 public enum StatusPagamentoTransacaoCompra {
 	
-	AGUARDANDO_PAGAMENTO("Aguardando Pagamento"),
+	PENDENTE("Pendente"),
 	PAGO("Pago");
 	
 	private String descricao;
