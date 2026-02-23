@@ -8,6 +8,7 @@ import com.gestaocooperativareciclagem.dao.ItemVendaDAO;
 import com.gestaocooperativareciclagem.dao.VendaDAO;
 import com.gestaocooperativareciclagem.model.Cliente;
 import com.gestaocooperativareciclagem.model.ItemVenda;
+import com.gestaocooperativareciclagem.model.TipoMaterial;
 import com.gestaocooperativareciclagem.model.Venda;
 import com.gestaocooperativareciclagem.utils.Formatador;
 import com.gestaocooperativareciclagem.utils.Validador;
@@ -55,7 +56,7 @@ public class VendaService {
 		
 	}
 	
-	public void inserirItemVenda(ItemVenda itemVenda) {
+	private void inserirItemVenda(ItemVenda itemVenda) {
 	
 		if (itemVenda == null) {
 			throw new RuntimeException("Item da Venda inválido! O item da venda não pode estar vazio.");
@@ -73,7 +74,7 @@ public class VendaService {
 		
 	}
 	
-	public void inserirListaItensVenda(List<ItemVenda> listaItensVenda) {
+	private void inserirListaItensVenda(List<ItemVenda> listaItensVenda) {
 		
 		if (listaItensVenda == null || listaItensVenda.size() == 0) {
 			throw new RuntimeException("A lista de itens da venda é inválida! É necessário pelo menos um item na venda para ser cadastrado.");
@@ -145,6 +146,26 @@ public class VendaService {
 		cliente.setCnpj(cnpj);
 		
 		return vendaDao.listarVendasPorCliente(cliente);
+		
+	}
+	
+	public List<ItemVenda> listarItensVendaPorVenda(Venda venda) {
+		
+		if (venda == null) {
+			throw new RuntimeException("Venda inválida! Informe uma venda válida para buscar seus itens.");
+		}
+		
+		return itemVendaDao.listarItensVendaPorVenda(venda);
+		
+	}
+	
+	public List<ItemVenda> listarItensVendaPorTipoMaterial(TipoMaterial tipoMaterial) {
+		
+		if (tipoMaterial == null) {
+			throw new RuntimeException("Tipo de Material inválido! Informe um tipo de material válido para buscar itens de venda do material");
+		}
+		
+		return itemVendaDao.listarItensVendaPorTipoMaterial(tipoMaterial);
 		
 	}
 
