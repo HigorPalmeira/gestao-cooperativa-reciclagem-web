@@ -66,10 +66,6 @@
 		                    	value="${not empty sessionScope.clienteEncontrado ? sessionScope.clienteEncontrado.contatoPrincipal : '' }">
 		                </div>
 					</div>
-					
-					<c:if test="${not empty sessionScope.clienteEncontrado}">
-						<% session.removeAttribute("clienteEncontrado"); %>
-					</c:if>
 				
 				</section>
 				
@@ -114,39 +110,39 @@
 				
 				<input type="hidden" id="itensVendaJson" name="itensVendaJson">
 			
+		        <table id="itemsTable">
+		            <thead>
+		                <tr>
+		                    <th>Tipo de Material</th>
+		                    <th>Peso (Kg)</th>
+		                    <th>Preço Unit. (R$)</th>
+		                    <th>Valor Total (R$)</th>
+		                    <th style="width: 150px;">Ações</th>
+		                </tr>
+		            </thead>
+		            <tbody id="itemsTableBody">
+		                <tr id="emptyRow">
+		                    <td colspan="5" style="text-align: center; color: #999; padding: 2rem;">
+		                        Nenhum item adicionado à venda.
+		                    </td>
+		                </tr>
+		            </tbody>
+		        </table>
+	
+		        <div style="text-align: right; margin-top: 1rem; font-size: 1.2rem; font-weight: bold; color: #2c3e50;">
+		            Total da Venda: <span id="grandTotal">R$ 0,00</span>
+		        </div>
+	
+		        <div class="footer-actions">
+		            <button type="submit" id="btnSubmit" class="btn-submit" disabled > <!-- onclick="registerSale()" -->
+		                Cadastrar Venda
+		            </button>
+		            <a href="${pageContext.request.contextPath}/ListarVendas" class="btn-cancel">Cancelar</a>
+		        </div>
 			</form>
 		
+
 		</section>
-
-        <table id="itemsTable">
-            <thead>
-                <tr>
-                    <th>Tipo de Material</th>
-                    <th>Peso (Kg)</th>
-                    <th>Preço Unit. (R$)</th>
-                    <th>Valor Total (R$)</th>
-                    <th style="width: 150px;">Ações</th>
-                </tr>
-            </thead>
-            <tbody id="itemsTableBody">
-                <tr id="emptyRow">
-                    <td colspan="5" style="text-align: center; color: #999; padding: 2rem;">
-                        Nenhum item adicionado à venda.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="text-align: right; margin-top: 1rem; font-size: 1.2rem; font-weight: bold; color: #2c3e50;">
-            Total da Venda: <span id="grandTotal">R$ 0,00</span>
-        </div>
-
-        <div class="footer-actions">
-            <button id="btnSubmit" class="btn-submit" disabled > <!-- onclick="registerSale()" -->
-                Cadastrar Venda
-            </button>
-            <a href="${pageContext.request.contextPath}/ListarVendas" class="btn-cancel">Cancelar</a>
-        </div>
 
     </main>
 
@@ -230,14 +226,26 @@
 
         function addItemToTable() {
             // Pegar valores
-            const type = itemTypeInput.value;
+            const materialId = parseInt(itemType.value);
+            const materialName = itemTypeInput.options[itemTypeInput.selectedIndex].text;
             const weight = parseFloat(itemWeightInput.value);
             const price = parseFloat(itemPriceInput.value);
             const total = weight * price;
-            const id = Date.now(); // ID temporário único
+            const idJs = Date.now(); // ID temporário único
 
             // Adicionar ao array de estado
-            saleItems.push({ id, type, weight, price, total });
+            saleItems.push({
+            	idJs: idJs,
+            	tipoMaterial: {
+            		id: materialId,
+            		nome: materialName
+            	},
+            	venda: null,
+            	pesoVendidoKg: weight,
+            	precoUnitarioKg: price,
+            	total: total
+            });
+            // saleItems.push({ id, type, weight, price, total });
 
             // Limpar inputs
             itemTypeInput.value = "";
@@ -269,13 +277,13 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>\${item.type}</td>
-                    <td>\${item.weight.toFixed(2)}</td>
-                    <td>R$ \${item.price.toFixed(2)}</td>
+                    <td>\${item.tipoMaterial.nome}</td>
+                    <td>\${item.pesoVendidoKg.toFixed(2)}</td>
+                    <td>R$ \${item.precoUnitarioKg.toFixed(2)}</td>
                     <td><strong>R$ \${item.total.toFixed(2)}</strong></td>
                     <td class="actions-col">
-                        <button class="btn-edit" onclick="editItem(\${item.id})">Editar</button>
-                        <button class="btn-remove" onclick="removeItem(\${item.id})">Remover</button>
+                        <button class="btn-edit" onclick="editItem(\${item.idJs})">Editar</button>
+                        <button class="btn-remove" onclick="removeItem(\${item.idJs})">Remover</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -289,22 +297,22 @@
 
         /* --- 3. AÇÕES DA TABELA --- */
 
-        function removeItem(id) {
-            saleItems = saleItems.filter(item => item.id !== id);
+        function removeItem(idJs) {
+            saleItems = saleItems.filter(item => item.idJs !== idJs);
             renderTable();
         }
 
-        function editItem(id) {
+        function editItem(idJs) {
             // Encontrar item
-            const item = saleItems.find(i => i.id === id);
+            const item = saleItems.find(i => i.idJs === idJs);
             
             // Devolver valores ao formulário
-            itemTypeInput.value = item.type;
-            itemWeightInput.value = item.weight;
-            itemPriceInput.value = item.price;
+            itemTypeInput.value = item.tipoMaterial.id;
+            itemWeightInput.value = item.pesoVendidoKg;
+            itemPriceInput.value = item.precoUnitarioKg;
 
             // Remover da lista (para que o usuário adicione novamente atualizado)
-            removeItem(id);
+            removeItem(idJs);
             
             // Focar no primeiro campo para edição rápida
             itemTypeInput.focus();
@@ -331,7 +339,7 @@
         		return;
         	}
         	
-        	const jsonItens = JSON.strigify(saleItems);
+        	const jsonItens = JSON.stringify(saleItems);
         	
         	document.getElementById("itensVendaJson").value = jsonItens;
         	
@@ -345,5 +353,10 @@
         window.onload = checkMainButton();
 
     </script>
+    
+    <c:if test="${not empty sessionScope.clienteEncontrado}">
+		<% session.removeAttribute("clienteEncontrado"); %>
+	</c:if>
+					
 </body>
 </html>

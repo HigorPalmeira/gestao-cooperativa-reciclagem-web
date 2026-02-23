@@ -77,7 +77,7 @@ public class VendaController extends HttpServlet {
 			
 			switch(path) {
 				case "/DetalharVenda":
-					System.out.println("Sem implementação...");
+					buscarVenda(request, response);
 					break;
 					
 				case "/NovaVenda":
@@ -106,7 +106,7 @@ public class VendaController extends HttpServlet {
 			
 			switch(path) {
 				case "/InserirVenda":
-					System.out.println("Sem implementação...");
+					inserirVenda(request, response);
 					break;
 					
 				case "/AtualizarVenda":
@@ -137,6 +137,8 @@ public class VendaController extends HttpServlet {
 	
 	protected void inserirVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		request.setCharacterEncoding("UTF-8");
+		
 		try {
 			
 			String cnpj = request.getParameter("clientCnpj");
@@ -164,7 +166,10 @@ public class VendaController extends HttpServlet {
 			
 			Venda venda = vendaService.buscarVendaPorId(idVenda);
 			
+			List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+			
 			request.setAttribute("venda", venda);
+			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
 			
 			RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/detalheVenda.jsp");
 			reqDis.forward(request, response);

@@ -75,7 +75,7 @@
                 
                 	<c:forEach items="${listaVendas}" var="venda">
                 		<tr>
-                			<td><a href="${pageContext.request.contextPath}/DetalharVenda?id=${venda.id}">${venda.id}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharVenda?id=${venda.id}">${String.format("#VD-%03d", venda.id)}</a></td>
                 			<td>${venda.dtVenda}</td>
                 			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
                 		</tr>

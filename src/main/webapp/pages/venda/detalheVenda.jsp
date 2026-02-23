@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,174 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Venda #1020</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --disabled-color: #95a5a6;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a { color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.9; margin-left: 20px;}
-        nav.main-nav a:hover { text-decoration: underline; opacity: 1; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            padding-bottom: 5rem;
-        }
-
-        h1 { color: #2c3e50; margin-bottom: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        h2 { font-size: 1.1rem; color: #555; margin-bottom: 1rem; margin-top: 0; }
-
-        /* Cartões de Conteúdo */
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        /* Layout de Grid para Formulários */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            align-items: end;
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #444; }
-        
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Inputs Readonly */
-        .form-group input[readonly] { background-color: #e9ecef; color: #6c757d; }
-
-        /* Botão Adicionar (Pequeno) */
-        .btn-add {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            height: 42px; /* Altura igual ao input */
-        }
-        .btn-add:disabled { background-color: var(--disabled-color); cursor: default; }
-        .btn-add:hover:not(:disabled) { background-color: #004494; }
-
-        /* Botão Salvar (Principal da Seção Superior) */
-        .btn-save {
-            background-color: var(--success-color);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-        .btn-save:hover { background-color: #218838; }
-
-        /* Tabela */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; font-size: 0.9rem; }
-        
-        /* Ações da Tabela */
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-right: 10px;
-        }
-        .text-edit { color: var(--primary-color); }
-        .text-remove { color: var(--danger-color); }
-        .text-edit:hover, .text-remove:hover { text-decoration: underline; }
-
-        /* Rodapé com Botão Excluir */
-        .danger-zone {
-            margin-top: 4rem;
-            border-top: 1px solid #ddd;
-            padding-top: 1.5rem;
-            text-align: right;
-        }
-
-        .btn-delete {
-            background-color: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 10px 25px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-delete:hover { background-color: var(--danger-color); color: white; }
-
-        /* Mensagens de Erro */
-        .error-msg { color: var(--danger-color); font-size: 0.85rem; margin-top: 5px; display: none; }
-        
-    </style>
-     -->
 </head>
 <body>
 
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Venda #1020</div>
         <div>
-            <a href="ListarVendas">Voltar para Gestão</a>
+            <a href="${pageContext.request.contextPath}/ListarVendas">Voltar para Gestão</a>
         </div>
     </nav>
 
@@ -187,16 +29,19 @@
             <div class="form-grid" style="margin-bottom: 2rem;">
                 <div class="form-group">
                     <label for="clientCnpj">CNPJ *</label>
-                    <input type="text" id="clientCnpj" onblur="fetchClientData()">
+                    <input type="text" id="clientCnpj" name="clientCnpj" onblur="fetchClientData()"
+                    	value="${venda.cliente.cnpj}">
                     <span id="cnpjError" class="error-msg">Cliente não encontrado.</span>
                 </div>
                 <div class="form-group">
                     <label for="clientName">Nome da Empresa</label>
-                    <input type="text" id="clientName">
+                    <input type="text" id="clientName" name="clientName"
+                    	value="${venda.cliente.nomeEmpresa}">
                 </div>
                 <div class="form-group">
                     <label for="clientEmail">E-mail</label>
-                    <input type="email" id="clientEmail">
+                    <input type="email" id="clientEmail" name="clientEmail"
+                    	value="${venda.cliente.emailContato}">
                 </div>
             </div>
 
@@ -206,21 +51,28 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="itemType">Tipo de Material</label>
-                    <select id="itemType">
+                    <select id="itemType" name="itemType">
                         <option value="">Selecione...</option>
-                        <option value="Plástico PET">Plástico PET</option>
-                        <option value="Alumínio">Alumínio</option>
-                        <option value="Papelão">Papelão</option>
-                        <option value="Cobre">Cobre</option>
+                        
+                        <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                        	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
+                        </c:forEach>
+                        
+                        <!-- 
+	                        <option value="Plástico PET">Plástico PET</option>
+	                        <option value="Alumínio">Alumínio</option>
+	                        <option value="Papelão">Papelão</option>
+	                        <option value="Cobre">Cobre</option>
+                         -->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="itemWeight">Peso Vendido (Kg)</label>
-                    <input type="number" id="itemWeight" placeholder="0.00" step="0.01">
+                    <input type="number" id="itemWeight" name="itemWeight" placeholder="0.00" step="0.01">
                 </div>
                 <div class="form-group">
                     <label for="itemPrice">Preço Unitário (R$)</label>
-                    <input type="number" id="itemPrice" placeholder="0.00" step="0.01">
+                    <input type="number" id="itemPrice" name="itemPrice" placeholder="0.00" step="0.01">
                 </div>
             </div>
             
@@ -296,12 +148,12 @@
         // 3. Inicialização
         window.onload = function() {
             // Preencher form de cliente
-            cnpjInput.value = initialClient.cnpj;
-            nameInput.value = initialClient.name;
-            emailInput.value = initialClient.email;
+            // cnpjInput.value = initialClient.cnpj;
+            // nameInput.value = initialClient.name;
+            // emailInput.value = initialClient.email;
 
             // Renderizar tabela inicial
-            renderTable();
+            // renderTable();
         };
 
         // 4. Lógica de Busca de Cliente (Mock)
