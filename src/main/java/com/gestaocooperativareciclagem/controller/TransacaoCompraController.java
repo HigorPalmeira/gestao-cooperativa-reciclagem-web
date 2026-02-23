@@ -1,6 +1,8 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,12 +16,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.model.TransacaoCompra;
+import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 
 /**
  * Servlet implementation class TransacaoCompraController
  */
-@WebServlet({ "/TransacaoCompraController", "/ListarTransacoesCompra", "/DetalharTransacaoCompra" })
+@WebServlet({ "/TransacaoCompraController", "/ListarTransacoesCompra", 
+	"/DetalharTransacaoCompra", "/AtualizarTransacaoCompra",
+	"/DeletarTransacaoCompra"})
 public class TransacaoCompraController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -58,8 +63,8 @@ public class TransacaoCompraController extends HttpServlet {
 		try {
 			
 			switch(path) {
-				case "DetalharTransacaoCompra":
-					System.out.println("Sem implementação...");
+				case "/DetalharTransacaoCompra":
+					buscarTransacaoCompra(request, response);
 					break;
 					
 				default:
@@ -77,8 +82,86 @@ public class TransacaoCompraController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		String path = request.getContextPath();
+		
+		try {
+			
+			switch(path) {
+				case "/AtualizarTransacaoCompra":
+					atualizarTransacaoCompra(request, response);
+					break;
+					
+				case "/DeletarTransacaoCompra":
+					deletarTransacaoCompra(request, response);
+					break;
+					
+				default:
+					listarTransacoesCompra(request, response);
+					break;
+			}
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
+	protected void atualizarTransacaoCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idTransacao = Integer.parseInt(request.getParameter("id"));
+			String statusTexto = request.getParameter("paymentStatus");
+			
+			StatusPagamentoTransacaoCompra status = StatusPagamentoTransacaoCompra.valueOf(statusTexto);
+			
+			transacaoCompraService.atualizarTransacaoCompra(idTransacao, 0, status, null, Date.valueOf(LocalDate.now()), null);
+			
+			request.getSession().setAttribute("msgSucesso", "Transação de Compra atualizada com sucesso!");
+			
+		} catch (Exception e) {
+			request.setAttribute("msgErro", "Ocorreu um erro na atualização da Transação de Compra. Error: " + e.getMessage());
+		}
+		
+		buscarTransacaoCompra(request, response);
+		
+	}
+	
+	protected void deletarTransacaoCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idTransacao = Integer.parseInt(request.getParameter("id"));
+			
+			transacaoCompraService.deletarTransacaoCompra(idTransacao);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarTransacoesCompra");
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
+	protected void buscarTransacaoCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idTransacao = Integer.parseInt(request.getParameter("id"));
+			
+			TransacaoCompra transacaoCompra = transacaoCompraService.buscarTransacaoCompraPorId(idTransacao);
+			
+			request.setAttribute("transacaoCompra", transacaoCompra);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/transacoes_compra/detalheTransacaoCompra.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
 	}
 	
 	protected void listarTransacoesCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

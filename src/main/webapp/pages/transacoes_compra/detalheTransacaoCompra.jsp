@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -5,191 +6,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transação de Compra #TR-555</title>
+    <title>Transação de Compra ${String.format("#TR-%03d", transacaoCompra.id)}</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --text-color: #333;
-            --disabled-bg: #e9ecef;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; }
-        nav.main-nav a { 
-            color: #fff; text-decoration: none; font-size: 0.9rem; margin-left: 20px; cursor: pointer; opacity: 0.9;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            padding-bottom: 5rem;
-        }
-
-        /* Cabeçalhos */
-        h1 { color: #2c3e50; margin-bottom: 0.5rem; }
-        h2 { 
-            font-size: 1.1rem; 
-            color: #555; 
-            margin-bottom: 1rem; 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 0.5rem; 
-            margin-top: 2.5rem;
-        }
-
-        /* Cartões (Cards) */
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Grids de Formulário */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #444; }
-        
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Inputs de Leitura (Read-only/Disabled) */
-        input:read-only, input:disabled, select:disabled {
-            background-color: var(--disabled-bg);
-            color: #6c757d;
-            cursor: not-allowed;
-            border-color: #ced4da;
-        }
-
-        /* Botão Salvar */
-        .btn-save {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1.5rem;
-        }
-        .btn-save:hover:not(:disabled) { background-color: #004494; }
-        .btn-save:disabled { background-color: #95a5a6; cursor: not-allowed; opacity: 0.7; }
-
-        /* Tabelas */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 1rem;
-        }
-
-        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; font-size: 0.9rem; }
-        
-        /* Links de Navegação (Azul e Negrito) */
-        .nav-link { 
-            color: var(--primary-color); 
-            font-weight: bold; 
-            text-decoration: none; 
-            cursor: pointer; 
-        }
-        .nav-link:hover { text-decoration: underline; }
-
-        /* Rodapé com Exclusão */
-        .danger-zone {
-            margin-top: 4rem;
-            border-top: 1px solid #ddd;
-            padding-top: 1.5rem;
-            text-align: right;
-        }
-        .btn-delete {
-            background-color: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 10px 25px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-delete:hover:not(:disabled) { background-color: var(--danger-color); color: white; }
-        .btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Mensagens Informativas */
-        .info-msg { 
-            background-color: #cce5ff; 
-            color: #004085; 
-            padding: 10px; 
-            border-radius: 4px; 
-            margin-bottom: 15px; 
-            border: 1px solid #b8daff; 
-            font-size: 0.9rem; 
-            display: none;
-        }
-
-    </style>
-    
-     -->
 </head>
 <body>
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Transação #TR-555</div>
+        <div class="brand">ERP System &rsaquo; Transação ${String.format("#TR-%03d", transacaoCompra.id)}</div>
         <div>
-            <a href="ListarTransacoesCompra">Voltar para Gestão</a>
+            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Voltar para Gestão</a>
         </div>
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${msgErro}
+    		</div>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
         
         <!-- Aviso de Bloqueio (Dinâmico) -->
         <div id="lockMessage" class="info-msg">
@@ -199,34 +44,40 @@
         <!-- SEÇÃO 1: Formulário de Edição -->
         <h1>Dados da Transação</h1>
         <section class="card">
-            <form id="transactionForm" onsubmit="saveChanges(event)">
+            <form id="transactionForm" action="${pageContext.request.contextPath}/AtualizarTransacaoCompra" method="POST"> <!-- onsubmit="saveChanges(event)" -->
+                
+                <input type="hidden" id="id" name="id" value="${transacaoCompra.id}">
+                
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="totalValue">Valor Total (R$)</label>
                         <!-- Readonly conforme regra: apenas Status é editável -->
-                        <input type="text" id="totalValue" readonly>
+                        <input type="text" id="totalValue" name="totalValue" readonly
+                        	value="${transacaoCompra.valorTotalCalculado}">
                     </div>
                     
                     <div class="form-group">
                         <label for="calcDate">Data de Cálculo</label>
                          <!-- Readonly conforme regra -->
-                        <input type="text" id="calcDate" readonly>
+                        <input type="text" id="calcDate" name="calcDate" readonly
+                        	value="${transacaoCompra.dtCalculo}">
                     </div>
 
                     <div class="form-group">
                         <label for="payDate">Data de Pagamento</label>
                          <!-- Readonly conforme regra -->
-                        <input type="text" id="payDate" readonly placeholder="--/--/----">
+                        <input type="text" id="payDate" name="payDate" readonly placeholder="--/--/----"
+                        	value="${not empty transacaoCompra.dtPagamento ? transacaoCompra.dtPagamento : '--/--/----'}">
                     </div>
 
                     <div class="form-group">
                         <label for="paymentStatus">Status de Pagamento</label>
                         <!-- Único campo editável (se não for Pago) -->
-                        <select id="paymentStatus" onchange="handleStatusChange()">
-                            <option value="Pendente">Pendente</option>
-                            <option value="Agendado">Agendado</option>
-                            <option value="Pago">Pago</option>
-                            <option value="Cancelado">Cancelado</option>
+                        <select id="paymentStatus" name="paymentStatus" onchange="handleStatusChange()">
+                            <option value="PENDENTE" ${transacaoCompra.status == 'PENDENTE' ? 'selected' : ''}>Pendente</option>
+                            <option value="AGENDADO">Agendado</option>
+                            <option value="PAGO" ${transacaoCompra.status == 'PAGO' ? 'selected' : ''}>Pago</option>
+                            <option value="CANCELADO">Cancelado</option>
                         </select>
                     </div>
                 </div>
@@ -249,7 +100,19 @@
                     </tr>
                 </thead>
                 <tbody id="rawBatchTableBody">
-                    <!-- Preenchido via JS -->
+                    
+					<tr>
+						<td>
+							<a class="id-link" href="${pageContext.request.contextPath}/DetalharLoteBruto?id=${transacaoCompra.loteBruto.id}">
+								${String.format("#LB-%03d", transacaoCompra.loteBruto.id)}
+							</a>
+						</td>
+						<td>${transacaoCompra.loteBruto.pesoEntradaKg}</td>
+						<td>${transacaoCompra.loteBruto.dtEntrada}</td>
+						<td>${transacaoCompra.loteBruto.status}</td>
+						<td>${transacaoCompra.loteBruto.fornecedor.nome}</td>
+					</tr>
+
                 </tbody>
             </table>
         </section>
@@ -273,37 +136,22 @@
 
         <!-- Rodapé: Excluir -->
         <div class="danger-zone">
-            <span style="color: #666; font-size: 0.9rem; margin-right: 15px;">Deseja remover este registo permanentemente?</span>
-            <button id="btnDelete" class="btn-delete" onclick="deleteTransaction()">Excluir Transação</button>
+        
+        	<form action="${pageContext.request.contextPath}/DeletarTransacaoCompra" method="POST" onsubmit="return confirmDelete()">
+        	
+        		<input type="hidden" name="id" value="${transacaoCompra.id}">
+	            <span style="color: #666; font-size: 0.9rem; margin-right: 15px;">Deseja remover este registo permanentemente?</span>
+	            <button type="submit" id="btnDelete" class="btn-delete">Excluir Transação</button>
+        	
+        	</form>
+        
         </div>
 
     </main>
 
     <script>
-        /* --- JavaScript: Lógica de Negócio --- */
-
-        // 1. Dados Simulados (Mock Data)
-        const transactionData = {
-            id: "TR-555",
-            value: 1500.00,
-            calcDate: "15/01/2026",
-            payDate: "", // Vazio inicialmente
-            status: "Pendente" // Tente mudar para 'Pago' para ver o bloqueio ao carregar
-        };
-
-        const relatedRawBatch = {
-            id: "LB-101",
-            weight: 500.00,
-            date: "12/01/2026",
-            status: "Processado",
-            supplier: "Indústrias Metalurgicas Aço"
-        };
-
-        const relatedPrice = {
-            price: 3.00,
-            validity: "01/01/2026",
-            material: "Alumínio"
-        };
+        
+    
 
         // Elementos DOM
         const statusSelect = document.getElementById('paymentStatus');
@@ -314,8 +162,6 @@
 
         // Inicialização
         window.onload = function() {
-            renderForm();
-            renderTables();
             checkBusinessRules(); // Verifica se já começa bloqueado
         };
 
@@ -328,33 +174,7 @@
             statusSelect.value = transactionData.status;
         }
 
-        function renderTables() {
-            // Tabela Lote Bruto
-            const rbBody = document.getElementById('rawBatchTableBody');
-            rbBody.innerHTML = `
-                <tr>
-                    <td><a href="DetalharLoteBruto?id=${relatedRawBatch.id}" class="nav-link">#${relatedRawBatch.id}</a></td>
-                    <td>${relatedRawBatch.weight.toFixed(2)}</td>
-                    <td>${relatedRawBatch.date}</td>
-                    <td>${relatedRawBatch.status}</td>
-                    <td><a href="DetalharFornecedor?name=${relatedRawBatch.supplier}" class="nav-link">${relatedRawBatch.supplier}</a></td>
-                </tr>
-            `;
-
-            // Tabela Preço
-            const priceBody = document.getElementById('priceTableBody');
-            const formattedPrice = relatedPrice.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + "/Kg";
-            
-            priceBody.innerHTML = `
-                <tr>
-                    <td><a href="ListarPrecosMateriais?price=${relatedPrice.price}&validity=${relatedPrice.validity}&material=${relatedPrice.material}" class="nav-link">${formattedPrice}</a></td>
-                    <td>${relatedPrice.validity}</td>
-                    <td><a href="ListarTiposMateriais?name=${relatedPrice.material}" class="nav-link">${relatedPrice.material}</a></td>
-                </tr>
-            `;
-        }
-
-        // --- Regras de Negócio ---
+		// --- Regras de Negócio ---
 
         function checkBusinessRules() {
             const currentStatus = statusSelect.value;
@@ -396,11 +216,8 @@
             alert("Transação atualizada com sucesso!");
         }
 
-        function deleteTransaction() {
-            if (confirm("Tem a certeza que deseja excluir esta transação?\nEsta ação é irreversível.")) {
-                alert("Registo excluído.");
-                window.location.href = 'ListarTransacoesCompra';
-            }
+        function confirmDelete() {
+        	return confirm("Tem certeza que deseja excluir esta Transação de Compra e todos os vínculos?\nEsta ação não pode ser desfeita.");
         }
 
     </script>

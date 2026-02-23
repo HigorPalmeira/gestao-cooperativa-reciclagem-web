@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Transações de Compra</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -20,7 +20,7 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação -->
-            <a href="index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
             <a href="#" onclick="alert('Navegar para Relatórios')">Relatórios Financeiros</a>
         </div>
     </nav>
@@ -94,7 +94,7 @@
                 	
                 	<c:forEach items="${listaTransacoesCompra}" var="transacaoCompra">
                 		<tr>
-                			<td><a href="DetalharTransacaoCompra?id=${transacaoCompra.id}" class="id-link">#TR-${String.format("%03d", transacaoCompra.id)}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharTransacaoCompra?id=${transacaoCompra.id}" class="id-link">#TR-${String.format("%03d", transacaoCompra.id)}</a></td>
                 			<td>${ (transacaoCompra.dtPagamento != null ? transacaoCompra.dtPagamento : "---") }</td>
                 			<td class="text-right">${String.format("R$ %.2f", transacaoCompra.valorTotalCalculado)}</td>
                 			<td>
