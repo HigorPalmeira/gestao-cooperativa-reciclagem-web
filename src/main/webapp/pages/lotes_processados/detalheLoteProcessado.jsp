@@ -54,11 +54,15 @@
 					
 					<div class="form-group">
 						<label for="materialType">Tipo de Material *</label>
+						<input type="text" id="materialType" name="materialType" readonly 
+							value="${loteProcessado.tipoMaterial.nome}">
+							<!-- 
 						<select id="materialType" name="materialType">
 							<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
                         		<option value="${tipoMaterial.id}" ${tipoMaterial.id == loteProcessado.tipoMaterial.id ? 'selected' : ''}>${tipoMaterial.nome}</option>
                         	</c:forEach>
 						</select>
+						 -->
 					</div>
 					
 					<div class="form-group">
@@ -66,6 +70,14 @@
                         <input type="text" id="creationDate" name="creationDate" readonly
                         	value="${loteProcessado.dtCriacao}">
                     </div>
+				
+				</div>
+
+				<div style="margin-top: 20px;">
+				
+					<button type="submit" class="btn-save">
+						Salvar Alterações
+					</button>
 				
 				</div>
 				
@@ -81,8 +93,9 @@
 						
 						<div style="display: flex; gap: 10px;">
 		                    <input type="text" id="rawBatchId" name="rawBatchId" placeholder="Ex: LB-101"
-		                    	value="${loteProcessado.loteBruto.id}"> <!-- onblur="fetchRawBatch()" -->
+		                    	value="${String.format('LB-%03d', loteProcessado.loteBruto.id)}" readonly> <!-- onblur="fetchRawBatch()" -->
 							
+							<!-- 
 							<button type="submit"
 									formaction="${pageContext.request.contextPath}/BuscarLoteBrutoProcessado"
 									formmethod="GET"
@@ -90,7 +103,8 @@
 									title="Buscar Lote Bruto do Lote Processado">
 								?
 							</button>
-							
+							 -->
+							 
 						</div>
 						
 	                    <span id="rawBatchError" class="error-msg">Lote bruto não encontrado.</span>
@@ -113,14 +127,6 @@
 	                    <input type="text" id="rawStatus" name="rawStatus" readonly
 	                    	value="${loteProcessado.loteBruto.status.descricao}">
 	                </div>
-				
-				</div>
-				
-				<div style="margin-top: 20px;">
-				
-					<button type="submit" class="btn-save">
-						Salvar Alterações
-					</button>
 				
 				</div>
 			
@@ -150,7 +156,7 @@
                     		</td>
                     		<td>${etapaProcessamento.dtProcessamento}</td>
                     		<td>
-                    			<span class="badge ">${etapaProcessamento.status}</span>
+                    			<span class="badge badge-info">${etapaProcessamento.status}</span>
                     			<!-- badge-success & badge-warning -->
                     		</td>
                     	</tr>

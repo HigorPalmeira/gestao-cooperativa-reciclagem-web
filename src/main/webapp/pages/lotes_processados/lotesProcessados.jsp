@@ -100,15 +100,18 @@
                 </thead>
                 <tbody id="resultsTableBody">
                 
-                	<c:forEach items="${listaLotesProcessados}" var="loteProcessado">
-                		<tr>
-                			<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
-                			<td>${loteProcessado.pesoAtualKg}</td>
-                			<td>${loteProcessado.dtCriacao}</td>
-                			<td>${loteProcessado.tipoMaterial.nome}</td>
-                			<td><span class="stage-badge">Sem isso ainda :(</span></td>
-                		</tr>
-                	</c:forEach>
+	                	<c:forEach items="${listaLotesProcessados}" var="loteProcessado" varStatus="status">
+	                		
+	                		<c:set var="etapaProcessamento" value="${listaEtapasProcessamento[status.index]}"/>
+	                		
+	                		<tr>
+	                			<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
+	                			<td>${loteProcessado.pesoAtualKg}</td>
+	                			<td>${loteProcessado.dtCriacao}</td>
+	                			<td>${loteProcessado.tipoMaterial.nome}</td>
+	                			<td><span class="stage-badge badge-info">${etapaProcessamento.categoriaProcessamento.nome}</span></td>
+	                		</tr>
+	                	</c:forEach>
                 
                     <!-- Conteúdo inicial (Mock) -->
                     <!--

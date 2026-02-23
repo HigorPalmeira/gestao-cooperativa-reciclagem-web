@@ -1,11 +1,13 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.LoteProcessadoDAO;
 import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
+import com.gestaocooperativareciclagem.model.EtapaProcessamento;
 import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
 import com.gestaocooperativareciclagem.model.PrecoMaterial;
@@ -19,12 +21,16 @@ public class LoteProcessadoService {
 	private TransacaoCompraService transacaoCompraService;
 	private PrecoMaterialService precoMaterialService;
 	private EtapaProcessamentoService etapaProcessamentoService;
+	private LoteBrutoService loteBrutoService;
 	
-	public LoteProcessadoService(LoteProcessadoDAO loteProcessadoDao, TransacaoCompraService transacaoCompraService, PrecoMaterialService precoMaterialService, EtapaProcessamentoService etapaProcessamentoService) {
+	public LoteProcessadoService(LoteProcessadoDAO loteProcessadoDao, TransacaoCompraService transacaoCompraService, 
+			PrecoMaterialService precoMaterialService, EtapaProcessamentoService etapaProcessamentoService,
+			LoteBrutoService loteBrutoService) {
 		this.loteProcessadoDao = loteProcessadoDao;
 		this.transacaoCompraService = transacaoCompraService;
 		this.precoMaterialService = precoMaterialService;
 		this.etapaProcessamentoService = etapaProcessamentoService;
+		this.loteBrutoService = loteBrutoService;
 	}
 
 	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, double pesoKg) {
@@ -37,7 +43,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, CategoriaProcessamento categoriaProcessamento, LoteBruto loteBruto) {
+	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, CategoriaProcessamento categoriaProcessamento, LoteBruto loteBruto) throws SQLException {
 		
 		if (pesoAtualKg <= 0) {
 			throw new RuntimeException("O peso do lote processado é inválido! Para registrar o lote processado informe um peso (em Kg) válido.");
@@ -55,16 +61,34 @@ public class LoteProcessadoService {
 			throw new RuntimeException("O lote bruto é inválido! É necessário informar corretamente o lote bruto para registrar o lote processado.");
 		}
 		
+		
+		List<LoteProcessado> listaLotesProcessados = listarLotesProcessadoPorLoteBruto(loteBruto);
+		double pesoTotal = 0;
+		
+		for (LoteProcessado ltProcessado : listaLotesProcessados) {
+			pesoTotal += ltProcessado.getPesoAtualKg();
+		}
+		
+		// melhorar a comparação 
+		if (pesoTotal + pesoAtualKg > loteBruto.getPesoEntradaKg()) {
+			throw new RuntimeException("Não é possível cadastrar o lote processado com o peso atual. O peso máximo aceito para o lote é de: " + (loteBruto.getPesoEntradaKg() - pesoTotal));
+		}
+		
+		
 		LoteProcessado loteProcessado = new LoteProcessado(pesoAtualKg, tipoMaterial, loteBruto);
 		
 		loteProcessadoDao.inserirLoteProcessado(loteProcessado);
 		etapaProcessamentoService.inserirEtapaProcessamentoService(loteProcessado.getId(), categoriaProcessamento.getId(), Date.valueOf(LocalDate.now()), "Em Andamento");
 
 		gerarTransacaoCompra(loteBruto, tipoMaterial, loteProcessado.getPesoAtualKg());
-				
+			
+		if (pesoTotal + pesoAtualKg == loteBruto.getPesoEntradaKg()) {
+			loteBrutoService.atualizarLoteBruto(loteBruto.getId(), 0, StatusLoteBruto.PROCESSADO, null);
+		}
+		
 	}
 	
-	public void atualizarLoteProcessado(int idLoteProcessado, double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
+	public void atualizarLoteProcessado(int idLoteProcessado, double pesoAtualKg) {
 		
 		LoteProcessado loteProcessado = buscarLoteProcessadoPorId(idLoteProcessado);
 		
@@ -77,23 +101,34 @@ public class LoteProcessadoService {
 				: loteProcessado.getPesoAtualKg()
 				);
 		
-		loteProcessadoAtualizado.setTipoMaterial(
-				tipoMaterial != null
-				? tipoMaterial
-				: loteProcessado.getTipoMaterial()
-				);
-		
-		loteProcessadoAtualizado.setLoteBruto(
-				loteBruto != null
-				? loteBruto
-				: loteProcessado.getLoteBruto()
-				);
-		
 		loteProcessadoDao.atualizarLoteProcessado(loteProcessadoAtualizado);
 		
 	}
 	
 	public void deletarLoteProcessado(int id) {
+		
+		LoteProcessado loteProcessado = new LoteProcessado();
+		loteProcessado.setId(id);
+		
+		loteProcessadoDao.buscarLoteProcessadoPorId(loteProcessado);
+		
+		if (loteProcessado.getDtCriacao() != null) {
+
+			EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(id);
+			
+			if (etapa.getCategoriaProcessamento() != null) {
+
+				if (etapa.getCategoriaProcessamento().getNome().equalsIgnoreCase("Finalizado")) {
+					throw new RuntimeException("O Lote Processado não pode ser deletado. O lote já foi finalizado e está pronto para venda.");
+				}
+				
+				if (etapa.getCategoriaProcessamento().getNome().equalsIgnoreCase("Vendido")) {
+					throw new RuntimeException("O Lote Processado não pode ser deletado. O lote já foi vendido.");
+				}
+				
+			}
+
+		}
 		
 		loteProcessadoDao.deletarLoteProcessado(id);
 		

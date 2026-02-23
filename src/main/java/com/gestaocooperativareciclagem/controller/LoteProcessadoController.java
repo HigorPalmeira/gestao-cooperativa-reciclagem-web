@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -59,12 +60,13 @@ public class LoteProcessadoController extends HttpServlet {
 		try {
 			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
 			etapaProcessamentoService = new EtapaProcessamentoService(new EtapaProcessamentoDAO());
+			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			loteProcessadoService = new LoteProcessadoService(
 					new LoteProcessadoDAO(), 
 					new TransacaoCompraService(new TransacaoCompraDAO()), 
 					new PrecoMaterialService(new PrecoMaterialDAO(), tipoMaterialService),
-					etapaProcessamentoService);
-			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
+					etapaProcessamentoService,
+					loteBrutoService);
 			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService e/ou EtapaProcessamentoService", e);
@@ -115,11 +117,11 @@ public class LoteProcessadoController extends HttpServlet {
 					break;
 					
 				case "/AtualizarLoteProcessado":
-					System.out.println("Sem implementação...");
+					atualizarLoteProcessado(request, response);
 					break;
 					
 				case "/DeletarLoteProcessado":
-					System.out.println("Sem implementação...");
+					deletarLoteProcessado(request, response);
 					break;
 					
 				default:
@@ -167,15 +169,15 @@ public class LoteProcessadoController extends HttpServlet {
 		try {
 			
 			int idLoteProcessado = Integer.parseInt(request.getParameter("id"));
-			int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
-			int idLoteBruto = Integer.parseInt(request.getParameter("rawBatchId"));
+			// int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
+			// int idLoteBruto = Integer.parseInt(request.getParameter("rawBatchId"));
 			
 			double pesoAtualKg = Double.parseDouble(request.getParameter("currentWeight"));
 			
-			TipoMaterial tipoMaterial = tipoMaterialService.buscarTipoMaterialPorId(idTipoMaterial);
-			LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(idLoteBruto);
+			// TipoMaterial tipoMaterial = tipoMaterialService.buscarTipoMaterialPorId(idTipoMaterial);
+			// LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(idLoteBruto);
 			
-			loteProcessadoService.atualizarLoteProcessado(idLoteProcessado, pesoAtualKg, tipoMaterial, loteBruto);
+			loteProcessadoService.atualizarLoteProcessado(idLoteProcessado, pesoAtualKg);
 			
 			request.getSession().setAttribute("msgSucesso", "Lote Processado atualizado com sucesso!");
 			
@@ -186,6 +188,25 @@ public class LoteProcessadoController extends HttpServlet {
 		}
 		
 		buscarLoteProcessado(request, response);
+		
+	}
+	
+	protected void deletarLoteProcessado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idLoteProcessado = Integer.parseInt(request.getParameter("id"));
+			
+			loteProcessadoService.deletarLoteProcessado(idLoteProcessado);
+			response.sendRedirect(request.getContextPath() + "/ListarLotesProcessados");
+			
+		} catch (Exception e) {
+
+			request.setAttribute("msgErro", "Ocorreu um erro na remoção do Lote Processado! Se o erro persistir contate o administrador do sistema.<br>Erro: " + e.getMessage());
+			buscarLoteProcessado(request, response);
+
+		}
+		
 		
 	}
 	
@@ -232,8 +253,15 @@ public class LoteProcessadoController extends HttpServlet {
 	protected void listarLotesProcessados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessado();
+		List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
+		
+		for (LoteProcessado loteProcessado : listaLotesProcessados) {
+			EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
+			listaEtapasProcessamento.add(etapa);
+		}
 		
 		request.setAttribute("listaLotesProcessados", listaLotesProcessados);
+		request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/lotesProcessados.jsp");
 		
 		reqDis.forward(request, response);

@@ -99,6 +99,20 @@ public class EtapaProcessamentoService {
 		
 	}
 	
+	public EtapaProcessamento buscarEtapaProcessamentoAtualPorLoteProcessado(int idLoteProcessado) {
+		
+		LoteProcessado loteProcessado = new LoteProcessado();
+		loteProcessado.setId(idLoteProcessado);
+		
+		EtapaProcessamento etapaProcessamento = new EtapaProcessamento();
+		etapaProcessamento.setLoteProcessado(loteProcessado);
+		
+		etapaProcessamentoDao.buscarEtapaProcessamentoAtualPorLoteProcessado(etapaProcessamento);
+		
+		return etapaProcessamento;
+		
+	}
+	
 	public void atualizarEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
 		
 		EtapaProcessamento etapaProcessamentoOriginal = buscarEtapaProcessamentoPorLoteProcessadoECategoriaProcessamento(idLoteProcessado, idCategoriaProcessamento);

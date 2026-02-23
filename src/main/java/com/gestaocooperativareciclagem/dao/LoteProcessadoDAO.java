@@ -265,7 +265,7 @@ public class LoteProcessadoDAO {
 	public void atualizarLoteProcessado(LoteProcessado loteProcessado) {
 		
 		String update = "update lote_processado set peso_atual_kg_loteprocessado = ?, "
-				+ "tipo_material = ?, lote_bruto = ? where id_loteprocessado = ?";
+				+ "where id_loteprocessado = ?";
 		
 		try {
 			
@@ -273,9 +273,7 @@ public class LoteProcessadoDAO {
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setDouble(1, loteProcessado.getPesoAtualKg());
-			pst.setInt(2, loteProcessado.getTipoMaterial().getId());
-			pst.setInt(3, loteProcessado.getLoteBruto().getId());
-			pst.setInt(4, loteProcessado.getId());
+			pst.setInt(2, loteProcessado.getId());
 			
 			pst.executeUpdate();
 			

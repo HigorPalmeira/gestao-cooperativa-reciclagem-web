@@ -3,6 +3,7 @@ package com.gestaocooperativareciclagem.controller;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -21,6 +22,7 @@ import com.gestaocooperativareciclagem.dao.LoteProcessadoDAO;
 import com.gestaocooperativareciclagem.dao.PrecoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
+import com.gestaocooperativareciclagem.model.EtapaProcessamento;
 import com.gestaocooperativareciclagem.model.Fornecedor;
 import com.gestaocooperativareciclagem.model.LoteBruto;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
@@ -48,6 +50,7 @@ public class LoteBrutoController extends HttpServlet {
     private FornecedorService fornecedorService;
     private LoteProcessadoService loteProcessadoService;
     private TransacaoCompraService transacaoCompraService;
+    private EtapaProcessamentoService etapaProcessamentoService;
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -65,14 +68,16 @@ public class LoteBrutoController extends HttpServlet {
 			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			fornecedorService = new FornecedorService(new FornecedorDAO());
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
+			etapaProcessamentoService = new EtapaProcessamentoService(new EtapaProcessamentoDAO());
 			loteProcessadoService = new LoteProcessadoService(
 											new LoteProcessadoDAO(), 
 											transacaoCompraService, 
 											new PrecoMaterialService(new PrecoMaterialDAO(), 
 													new TipoMaterialService(new TipoMaterialDAO())),
-											new EtapaProcessamentoService(new EtapaProcessamentoDAO()));
+											etapaProcessamentoService,
+											loteBrutoService);
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou FornecedorService e/ou LoteProcessadoService", e);
+			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou FornecedorService e/ou LoteProcessadoService e/ou TransacaoCompraService e/ou EtapaProcessamentoService", e);
 		}
 	}
 
@@ -278,12 +283,19 @@ public class LoteBrutoController extends HttpServlet {
 	
 	private void carregarDependenciasDoLoteBruto(HttpServletRequest request, LoteBruto loteBruto) {
 		
-		List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessadoPorLoteBruto(loteBruto);
-		
 		List<TransacaoCompra> listaTransacoesCompra = transacaoCompraService.listarTransacoesCompraPorLoteBruto(loteBruto);
+
+		List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessadoPorLoteBruto(loteBruto);
+		List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
 		
-		request.setAttribute("listaLotesProcessados", listaLotesProcessados);
+		for (LoteProcessado loteProcessado : listaLotesProcessados) {
+			EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
+			listaEtapasProcessamento.add(etapa);
+		}
+		
 		request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
+		request.setAttribute("listaLotesProcessados", listaLotesProcessados);
+		request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
 		
 	}
 
