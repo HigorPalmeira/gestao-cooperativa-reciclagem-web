@@ -1,5 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<% String servletPath = (String) request.getAttribute("javax.servlet.forward.servlet_path"); %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,170 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Venda</title>
     
-    <link rel="stylesheet" href="../../assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --disabled-color: #95a5a6;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-        }
-        nav.main-nav .brand { font-weight: bold; font-size: 1.2rem; margin-right: 20px; }
-        nav.main-nav a { color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.8; }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            padding-bottom: 4rem;
-        }
-
-        /* Títulos de Seção */
-        .section-header {
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            color: #495057;
-            font-size: 1.2rem;
-            margin-top: 2rem;
-        }
-        .section-header:first-of-type { margin-top: 0; }
-
-        /* Cartões de Conteúdo */
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        /* Grids de Formulário */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.5rem;
-            align-items: end; /* Alinha inputs e botões na base */
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; color: #555; font-size: 0.9rem;}
-        
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        /* Inputs Readonly (Dados do cliente) */
-        .form-group input[readonly] {
-            background-color: #e9ecef;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        /* Botão Adicionar Item (Pequeno) */
-        .btn-add-item {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 11px 20px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            height: 42px; /* Altura igual aos inputs */
-        }
-        .btn-add-item:disabled { background-color: var(--disabled-color); cursor: default; opacity: 0.7;}
-        .btn-add-item:hover:not(:disabled) { background-color: #004494; }
-
-        /* Tabela de Itens */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; font-size: 0.9rem;}
-        td { font-size: 0.95rem; }
-        
-        .actions-col button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.85rem;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        .btn-edit { color: var(--primary-color); }
-        .btn-remove { color: var(--danger-color); }
-
-        /* Botão Final Cadastrar */
-        .footer-actions {
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-submit {
-            background-color: var(--success-color);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-        .btn-submit:disabled { background-color: var(--disabled-color); cursor: not-allowed; }
-        .btn-submit:hover:not(:disabled) { background-color: #218838; }
-
-        .btn-cancel { text-align: center; color: #666; text-decoration: none; font-size: 0.9rem; display: block;}
-        .btn-cancel:hover { text-decoration: underline; color: var(--danger-color); }
-
-        /* Mensagens de Feedback */
-        .error-msg { color: var(--danger-color); font-size: 0.85rem; margin-top: 5px; display: none; }
-
-    </style>
-     -->
 </head>
 <body>
 
@@ -180,57 +21,102 @@
     </nav>
 
     <main class="container">
-        <h1 style="color: #2c3e50; margin-bottom: 0.5rem;">Registrar Venda</h1>
-        <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">Preencha os dados do cliente e adicione os itens para finalizar a venda.</p>
-
-        <h2 class="section-header">1. Dados do Cliente</h2>
-        <section class="card">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="clientCnpj">CNPJ do Cliente *</label>
-                    <input type="text" id="clientCnpj" placeholder="Digite apenas números" onblur="fetchClientData()">
-                    <span id="cnpjError" class="error-msg">Cliente não encontrado. Verifique o CNPJ.</span>
-                </div>
-                <div class="form-group">
-                    <label for="clientName">Nome da Empresa</label>
-                    <input type="text" id="clientName" readonly tabindex="-1">
-                </div>
-                <div class="form-group">
-                    <label for="clientContact">Contato Principal</label>
-                    <input type="text" id="clientContact" readonly tabindex="-1">
-                </div>
-            </div>
-        </section>
-
-        <h2 class="section-header">2. Itens da Venda</h2>
-        <section class="card" style="padding-bottom: 0;">
-            <div class="form-grid" style="align-items: end;">
-                <div class="form-group">
-                    <label for="itemType">Tipo de Material</label>
-                    <select id="itemType">
-                        <option value="">Selecione...</option>
-                        <option value="Plástico PET">Plástico PET</option>
-                        <option value="Alumínio">Alumínio</option>
-                        <option value="Papelão">Papelão</option>
-                        <option value="Cobre">Cobre</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="itemWeight">Peso Vendido (Kg)</label>
-                    <input type="number" id="itemWeight" placeholder="0.00" step="0.01" min="0.1">
-                </div>
-                <div class="form-group">
-                    <label for="itemPrice">Preço Unitário (R$)</label>
-                    <input type="number" id="itemPrice" placeholder="0.00" step="0.01" min="0.01">
-                </div>
-            </div>
-            
-            <div style="margin-top: 15px; margin-bottom: 20px; text-align: right;">
-                <button type="button" id="btnAddItem" class="btn-add-item" disabled onclick="addItemToTable()">
-                    + Adicionar Item
-                </button>
-            </div>
-        </section>
+    
+    	<c:if test="${not empty sessionScope.msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+    	</c:if>
+    	
+    	<!-- 
+	        <h1 style="color: #2c3e50; margin-bottom: 0.5rem;">Registrar Venda</h1>
+	        <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">Preencha os dados do cliente e adicione os itens para finalizar a venda.</p>
+ 		-->
+		
+		<section class="form-card">
+		
+			<div class="form-header">
+				<h1 style="color: #2c3e50; margin-bottom: 0.5rem;">Registrar Venda</h1>
+		        <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">Preencha os dados do cliente e adicione os itens para finalizar a venda.</p>
+			</div>
+			
+			<form id="createSale" onsubmit="handleRegister(event)">
+			
+				<input type="hidden" name="origem" value="<%= servletPath %>"> <!-- ${pageContext.request.servletPath} -->
+				
+				<h2 class="section-header">1. Dados do Cliente</h2>
+				<section class="card">
+				
+					<div class="form-grid">
+						<div class="form-group">
+							<label for="clientCnpj">CNPJ do Cliente *</label>
+		                    <input type="text" id="clientCnpj" name="clientCnpj" placeholder="Digite apenas números" onblur="fetchClientData()"
+		                    	value="${not empty sessionScope.clienteEncontrado ? sessionScope.clienteEncontrado.cnpj : ''}">
+		                    <span id="cnpjError" class="error-msg">Cliente não encontrado. Verifique o CNPJ.</span>
+						</div>
+						<div class="form-group">
+		                    <label for="clientName">Nome da Empresa</label>
+		                    <input type="text" id="clientName" name="clientName" readonly tabindex="-1"
+		                    	value="${not empty sessionScope.clienteEncontrado ? sessionScope.clienteEncontrado.nomeEmpresa : ''}">
+		                </div>
+		                <div class="form-group">
+		                    <label for="clientContact">Contato Principal</label>
+		                    <input type="text" id="clientContact" name="clientContact" readonly tabindex="-1"
+		                    	value="${not empty sessionScope.clienteEncontrado ? sessionScope.clienteEncontrado.contatoPrincipal : '' }">
+		                </div>
+					</div>
+					
+					<c:if test="${not empty sessionScope.clienteEncontrado}">
+						<% session.removeAttribute("clienteEncontrado"); %>
+					</c:if>
+				
+				</section>
+				
+				<h2 class="section-header">2. Itens da Venda</h2>
+				<section class="card" style="padding-bottom: 0;">
+					
+					<div class="form-grid" style="align-items: end;">
+						<div class="form-group">
+		                    <label for="itemType">Tipo de Material</label>
+		                    <select id="itemType" name="itemType">
+		                        <option value="">Selecione...</option>
+		                        
+		                        <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+		                        	<option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+		                        </c:forEach>
+		                        
+		                        <!-- 
+			                        <option value="Plástico PET">Plástico PET</option>
+			                        <option value="Alumínio">Alumínio</option>
+			                        <option value="Papelão">Papelão</option>
+			                        <option value="Cobre">Cobre</option>
+		                         -->
+		                    </select>
+		                </div>
+		                <div class="form-group">
+		                    <label for="itemWeight">Peso Vendido (Kg)</label>
+		                    <input type="number" id="itemWeight" name="itemWeight" placeholder="0.00" step="0.01" min="0.1">
+		                </div>
+		                <div class="form-group">
+		                    <label for="itemPrice">Preço Unitário (R$)</label>
+		                    <input type="number" id="itemPrice" name="itemPrice" placeholder="0.00" step="0.01" min="0.01">
+		                </div>
+					</div>
+					
+					<div style="margin-top: 15px; margin-bottom: 20px; text-align: right;">
+		                <button type="button" id="btnAddItem" class="btn-add-item" disabled onclick="addItemToTable()">
+		                    + Adicionar Item
+		                </button>
+		            </div>
+					
+				</section>
+				
+				<input type="hidden" id="itensVendaJson" name="itensVendaJson">
+			
+			</form>
+		
+		</section>
 
         <table id="itemsTable">
             <thead>
@@ -256,10 +142,10 @@
         </div>
 
         <div class="footer-actions">
-            <button id="btnSubmit" class="btn-submit" disabled onclick="registerSale()">
+            <button id="btnSubmit" class="btn-submit" disabled > <!-- onclick="registerSale()" -->
                 Cadastrar Venda
             </button>
-            <a href="../../ListarVendas" class="btn-cancel">Cancelar</a>
+            <a href="${pageContext.request.contextPath}/ListarVendas" class="btn-cancel">Cancelar</a>
         </div>
 
     </main>
@@ -267,11 +153,14 @@
     <script>
         /* --- JavaScript: Lógica da Página --- */
 
+        const ctx = "${pageContext.request.contextPath}";
         // ESTADO GLOBAL
         let saleItems = [];
-        let isClientValid = false;
+        let isClientValid = ${not empty sessionScope.clienteEncontrado ? 'true' : 'false'};
 
         // ELEMENTOS DOM
+        const form = document.getElementById('createSale');
+        
         const cnpjInput = document.getElementById('clientCnpj');
         const nameInput = document.getElementById('clientName');
         const contactInput = document.getElementById('clientContact');
@@ -289,34 +178,34 @@
 
         /* --- 1. LÓGICA DE CLIENTE --- */
         
-        // Mock Database de Clientes
-        const mockClients = {
-            "12345678000190": { name: "Supermercados Horizonte Ltda", contact: "Maria Oliveira" },
-            "98765432000115": { name: "Auto Peças Silva", contact: "João Silva" }
-        };
-
+        
         function fetchClientData() {
             // Remove pontuação para busca
             const cleanCnpj = cnpjInput.value.replace(/\D/g, "");
             
-            if (mockClients[cleanCnpj]) {
-                // Sucesso
-                nameInput.value = mockClients[cleanCnpj].name;
-                contactInput.value = mockClients[cleanCnpj].contact;
-                cnpjError.style.display = 'none';
-                cnpjInput.style.borderColor = 'var(--success-color)';
-                isClientValid = true;
+            const isValidLength = cleanCnpj.length === 14;
+            
+            if (isValidLength) {
+            	
+            	form.action = ctx + "/VerificarCliente";
+            	form.method = "GET";
+            	
+            	form.submit();
+            	
             } else {
-                // Erro
-                if (cleanCnpj.length > 0) {
+            	
+            	if (cleanCnpj.length > 0) {
                     cnpjError.style.display = 'block';
                     cnpjInput.style.borderColor = 'var(--danger-color)';
                 }
-                nameInput.value = "";
+            	
+            	nameInput.value = "";
                 contactInput.value = "";
                 isClientValid = false;
             }
+            
             checkMainButton(); // Verifica se pode liberar o botão final
+
         }
 
         /* --- 2. LÓGICA DE ITENS --- */
@@ -380,13 +269,13 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${item.type}</td>
-                    <td>${item.weight.toFixed(2)}</td>
-                    <td>R$ ${item.price.toFixed(2)}</td>
-                    <td><strong>R$ ${item.total.toFixed(2)}</strong></td>
+                    <td>\${item.type}</td>
+                    <td>\${item.weight.toFixed(2)}</td>
+                    <td>R$ \${item.price.toFixed(2)}</td>
+                    <td><strong>R$ \${item.total.toFixed(2)}</strong></td>
                     <td class="actions-col">
-                        <button class="btn-edit" onclick="editItem(${item.id})">Editar</button>
-                        <button class="btn-remove" onclick="removeItem(${item.id})">Remover</button>
+                        <button class="btn-edit" onclick="editItem(\${item.id})">Editar</button>
+                        <button class="btn-remove" onclick="removeItem(\${item.id})">Remover</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -432,11 +321,28 @@
                 btnSubmit.disabled = true;
             }
         }
-
-        function registerSale() {
-            alert(`Sucesso!\nVenda registrada para: ${nameInput.value}\nTotal de Itens: ${saleItems.length}`);
-            window.location.href = '../../ListarVendas';
+        
+        function handleRegister(event) {
+        	
+        	event.preventDefault();
+        	
+        	if (saleItems.length === 0) {
+        		alert("Adicione pelo menos um item à venda.");
+        		return;
+        	}
+        	
+        	const jsonItens = JSON.strigify(saleItems);
+        	
+        	document.getElementById("itensVendaJson").value = jsonItens;
+        	
+        	form.action = ctx + "/InserirVenda";
+        	form.method = "POST";
+        	
+        	form.submit();
+        	
         }
+        
+        window.onload = checkMainButton();
 
     </script>
 </body>

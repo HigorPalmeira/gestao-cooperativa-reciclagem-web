@@ -109,7 +109,7 @@
 						</td>
 						<td>${transacaoCompra.loteBruto.pesoEntradaKg}</td>
 						<td>${transacaoCompra.loteBruto.dtEntrada}</td>
-						<td>${transacaoCompra.loteBruto.status}</td>
+						<td>${transacaoCompra.loteBruto.status.descricao}</td>
 						<td>${transacaoCompra.loteBruto.fornecedor.nome}</td>
 					</tr>
 

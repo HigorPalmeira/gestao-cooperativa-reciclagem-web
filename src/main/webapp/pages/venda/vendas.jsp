@@ -10,195 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Vendas</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Padrão ERP) --- */
-        :root {
-            --primary-color: #0056b3;
-            --background-color: #f4f6f9;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        /* Menu de Navegação */
-        nav.main-nav {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav.main-nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        nav.main-nav a:hover { opacity: 1; text-decoration: underline; }
-
-        /* Container Principal */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Cabeçalho e Botão Nova Venda */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 { margin: 0; font-size: 1.75rem; color: #2c3e50; }
-
-        .btn-new {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .btn-new:hover { background-color: #218838; }
-
-        /* --- Formulário de Pesquisa (Intervalos) --- */
-        .search-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-form {
-            display: flex;
-            gap: 2rem; /* Espaço maior entre os grupos de intervalo */
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        /* Grupo de campos (Ex: Intervalo de Datas) */
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .inputs-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .inputs-row input {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            width: 140px;
-        }
-        
-        /* Separador visual "até" */
-        .separator { color: #888; font-size: 0.9rem; }
-
-        .btn-search {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            height: 40px; /* Alinhar visualmente com inputs */
-            margin-left: auto; /* Empurra o botão para a direita se houver espaço */
-        }
-        .btn-search:hover { background-color: #004494; }
-
-        /* Mensagem de Validação */
-        #feedback-message {
-            margin-top: 15px;
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            display: none;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-
-        /* --- Tabela de Resultados --- */
-        .table-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
-        tr:hover { background-color: #f1f1f1; }
-
-        /* Link no ID */
-        .id-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-family: monospace;
-            font-size: 1.1rem;
-        }
-        .id-link:hover { text-decoration: underline; }
-
-        /* Alinhamento de valores monetários à direita */
-        .text-right { text-align: right; }
-
-    </style>
-     -->
 </head>
 <body>
 
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
-            <a href="ListarClientes">Clientes</a>
+            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarClientes">Clientes</a>
             <a href="#">Relatórios</a>
         </div>
     </nav>
@@ -207,7 +28,7 @@
         
         <div class="page-header">
             <h1>Gestão de Vendas</h1>
-            <button class="btn-new" onclick="window.location.href='pages/venda/novaVenda.jsp'">
+            <button class="btn-new" onclick="window.location.href='${pageContext.request.contextPath}/NovaVenda'">
                 + Nova Venda
             </button>
         </div>
@@ -254,7 +75,7 @@
                 
                 	<c:forEach items="${listaVendas}" var="venda">
                 		<tr>
-                			<td><a href="DetalharVenda?id=${venda.id}">${venda.id}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharVenda?id=${venda.id}">${venda.id}</a></td>
                 			<td>${venda.dtVenda}</td>
                 			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
                 		</tr>

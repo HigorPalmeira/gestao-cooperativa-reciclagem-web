@@ -1,6 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,19 +18,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gestaocooperativareciclagem.dao.ClienteDAO;
 import com.gestaocooperativareciclagem.dao.ItemVendaDAO;
+import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.VendaDAO;
+import com.gestaocooperativareciclagem.model.ItemVenda;
+import com.gestaocooperativareciclagem.model.TipoMaterial;
 import com.gestaocooperativareciclagem.model.Venda;
 import com.gestaocooperativareciclagem.service.ClienteService;
+import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.VendaService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Servlet implementation class VendaController
  */
-@WebServlet({ "/VendaController", "/ListarVendas", "/DetalharVenda" })
+@WebServlet({ "/VendaController", "/ListarVendas", 
+	"/DetalharVenda", "/NovaVenda", "/InserirVenda",
+	"/AtualizarVenda", "/DeletarVenda"})
 public class VendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private VendaService vendaService;
+	private TipoMaterialService tipoMaterialService;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,8 +59,9 @@ public class VendaController extends HttpServlet {
 					new VendaDAO(), 
 					new ItemVendaDAO(), 
 					new ClienteService(new ClienteDAO()));
+			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar VendaService", e);
+			throw new ServletException("Erro ao inicializar VendaService e/ou TipoMaterialService", e);
 		}
 		
 	}
@@ -66,6 +80,10 @@ public class VendaController extends HttpServlet {
 					System.out.println("Sem implementação...");
 					break;
 					
+				case "/NovaVenda":
+					pageNovaVenda(request, response);
+					break;
+					
 				default:
 					listarVendas(request, response);
 					break;
@@ -81,10 +99,82 @@ public class VendaController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		String path = request.getServletPath();
+		
+		try {
+			
+			switch(path) {
+				case "/InserirVenda":
+					System.out.println("Sem implementação...");
+					break;
+					
+				case "/AtualizarVenda":
+					System.out.println("Sem implementação...");
+					break;
+					
+				case "/DeletarVenda":
+					System.out.println("Sem implementação...");
+					break;
+			}
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+					
 	}
 
+	protected void pageNovaVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+		
+		request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+		
+		RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/novaVenda.jsp");
+		reqDis.forward(request, response);
+		
+	}
+	
+	protected void inserirVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			String cnpj = request.getParameter("clientCnpj");
+			String itensJson = request.getParameter("itensVendaJson");
+			
+			Gson gson = new Gson();
+			Type typeList = new TypeToken<ArrayList<ItemVenda>>() {}.getType();
+			List<ItemVenda> listaItensVenda = gson.fromJson(itensJson, typeList);
+			
+			vendaService.inserirVenda(Date.valueOf(LocalDate.now()), cnpj, listaItensVenda);
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+		response.sendRedirect(request.getContextPath() + "/ListarVendas");
+		
+	}
+	
+	protected void buscarVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idVenda = Integer.parseInt(request.getParameter("id"));
+			
+			Venda venda = vendaService.buscarVendaPorId(idVenda);
+			
+			request.setAttribute("venda", venda);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/detalheVenda.jsp");
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
 	protected void listarVendas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<Venda> listaVendas = vendaService.listarVendas();

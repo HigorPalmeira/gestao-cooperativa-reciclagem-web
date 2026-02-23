@@ -43,7 +43,7 @@
     </nav>
 
     <main class="container">
-        <h2 style="color: #444; margin-bottom: 20px;">Painel de Controlo</h2>
+        <h2 style="color: #444; margin-bottom: 20px;">Painel de Controle</h2>
 
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
@@ -93,7 +93,7 @@
                     <a href="${pageContext.request.contextPath}/pages/lotes_bruto/novoLoteBruto.jsp" class="btn-action action-batch">
                         + Novo Lote Bruto
                     </a>
-                    <a href="${pageContext.request.contextPath}/pages/venda/novaVenda.jsp" class="btn-action action-sale">
+                    <a href="${pageContext.request.contextPath}/NovaVenda" class="btn-action action-sale">
                         + Nova Venda
                     </a>
                     <a href="${pageContext.request.contextPath}/pages/fornecedor/novoFornecedor.jsp" class="btn-action action-supplier">

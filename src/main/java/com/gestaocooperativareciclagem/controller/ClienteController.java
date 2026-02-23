@@ -27,7 +27,8 @@ import com.gestaocooperativareciclagem.utils.Validador;
  */
 @WebServlet({ "/ClienteController", "/ListarClientes", 
 	"/DetalharCliente", "/InserirCliente",
-	"/AtualizarCliente", "/DeletarCliente"})
+	"/AtualizarCliente", "/DeletarCliente",
+	"/VerificarCliente"})
 public class ClienteController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
@@ -68,6 +69,10 @@ public class ClienteController extends HttpServlet {
 			switch(path) {
 				case "/DetalharCliente":
 					buscarClientePorCnpj(request, response);
+					break;
+					
+				case "/VerificarCliente":
+					verificarCliente(request, response);
 					break;
 					
 				default:
@@ -187,6 +192,31 @@ public class ClienteController extends HttpServlet {
 		clienteService.deletarCliente(cnpj);
 		
 		response.sendRedirect(request.getContextPath() + "/ListarClientes");
+		
+	}
+	
+	protected void verificarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String cnpj = request.getParameter("clientCnpj");
+		String origem = request.getParameter("origem");
+		
+		try {
+			
+			Cliente cliente = clienteService.buscarClientePorCnpj(cnpj);
+			
+			request.getSession().setAttribute("clienteEncontrado", cliente);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Cliente não encontrado!");
+			
+		}
+		
+		if (origem == null || origem.isEmpty()) {
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		} else {
+			response.sendRedirect(request.getContextPath() + origem);
+		}
 		
 	}
 	
