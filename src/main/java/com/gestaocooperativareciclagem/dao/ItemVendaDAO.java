@@ -17,7 +17,7 @@ public class ItemVendaDAO {
 	
 	public void inserirItemVenda(ItemVenda itemVenda) {
 		
-		String insert = "insert into item_venda (tipo_material, venda, peso_vendido_tipo_kg_itemvenda, preco_unitario_kg_itemvenda) "
+		String insert = "insert into item_venda (tipo_material, venda, peso_vendido_kg_itemvenda, preco_unitario_kg_itemvenda) "
 				+ "values (?, ?, ?, ?)";
 		
 		try {
@@ -89,7 +89,107 @@ public class ItemVendaDAO {
 		
 	}
 	
-	public void buscarItemVenda(ItemVenda itemVenda) {
+	public List<ItemVenda> listarItensVendaPorVenda(Venda vendaBuscada) {
+		
+		List<ItemVenda> listaItemVenda = new ArrayList<>();
+		
+		String select = "select * from info_item_venda where id_venda = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setInt(1, vendaBuscada.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idItemVenda = rset.getInt("id_itemvenda");
+				double pesoVendidoKgItemVenda = rset.getDouble("peso_vendido_kg_itemvenda");
+				double precoUnitarioKgItemVenda = rset.getDouble("preco_unitario_kg_itemvenda");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				int idVenda = rset.getInt("id_venda");
+				Date dtVenda = rset.getDate("dtVenda_venda");
+				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				
+				String cnpjCliente = rset.getString("cnpj_cliente");
+				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
+				String contatoPrincipalCliente = rset.getString("contato_principal_cliente");
+				String emailContatoCliente = rset.getString("email_contato_cliente");
+				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+				
+				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresaCliente, contatoPrincipalCliente, emailContatoCliente, dtCadastroCliente);
+				Venda venda = new Venda(idVenda, dtVenda, valorTotalVenda, cliente);
+				
+				listaItemVenda.add(new ItemVenda(idItemVenda, tipoMaterial, venda, pesoVendidoKgItemVenda, precoUnitarioKgItemVenda));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaItemVenda;
+		
+	}
+	
+	public List<ItemVenda> listarItensVendaPorTipoMaterial(TipoMaterial tipoMaterialBuscado) {
+		
+		List<ItemVenda> listaItemVenda = new ArrayList<>();
+		
+		String select = "select * from info_item_venda where id_tipomaterial = ?";
+		
+		try {
+			
+			Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(select);
+			pst.setInt(1, tipoMaterialBuscado.getId());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				
+				int idItemVenda = rset.getInt("id_itemvenda");
+				double pesoVendidoKgItemVenda = rset.getDouble("peso_vendido_kg_itemvenda");
+				double precoUnitarioKgItemVenda = rset.getDouble("preco_unitario_kg_itemvenda");
+				
+				int idTipoMaterial = rset.getInt("id_tipomaterial");
+				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+				
+				int idVenda = rset.getInt("id_venda");
+				Date dtVenda = rset.getDate("dtVenda_venda");
+				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				
+				String cnpjCliente = rset.getString("cnpj_cliente");
+				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
+				String contatoPrincipalCliente = rset.getString("contato_principal_cliente");
+				String emailContatoCliente = rset.getString("email_contato_cliente");
+				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+				
+				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresaCliente, contatoPrincipalCliente, emailContatoCliente, dtCadastroCliente);
+				Venda venda = new Venda(idVenda, dtVenda, valorTotalVenda, cliente);
+				
+				listaItemVenda.add(new ItemVenda(idItemVenda, tipoMaterial, venda, pesoVendidoKgItemVenda, precoUnitarioKgItemVenda));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaItemVenda;
+		
+	}
+	
+	public void buscarItemVendaPorId(ItemVenda itemVenda) {
 		
 		String select = "select * from info_item_venda where id_itemvenda = ?";
 		
