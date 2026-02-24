@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -38,12 +39,21 @@
                 </div>
             </div>
             
-            <a href="${pageContext.request.contextPath}/pages/login/login.jsp" style="margin-left: 15px; color: #ffcccc;">Sair</a>
+            <form id="formLogout" action="${pageContext.request.contextPath}/Logout" method="POST">
+	            <a style="margin-left: 15px; color: #ffcccc;" onclick="document.getElementById('formLogout').submit()">Sair</a>            <!-- href=""  -->
+            </form>
         </div>
     </nav>
 
     <main class="container">
         <h2 style="color: #444; margin-bottom: 20px;">Painel de Controle</h2>
+
+		<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
 
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
