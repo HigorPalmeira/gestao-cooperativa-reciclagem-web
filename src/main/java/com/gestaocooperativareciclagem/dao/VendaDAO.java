@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,17 +180,16 @@ public class VendaDAO {
 	
 	public void atualizarVenda(Venda venda) {
 		
-		String update = "update venda set dtVenda_venda = ?, valor_total_venda = ?, cliente = ? where id_venda = ?";
+		String update = "update venda set valor_total_venda = ?, cliente = ? where id_venda = ?";
 		
 		try {
 			
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setDate(1, venda.getDtVenda());
-			pst.setDouble(2, venda.getValorTotal());
-			pst.setString(3, venda.getCliente().getCnpj());
-			pst.setInt(4, venda.getId());
+			pst.setDouble(1, venda.getValorTotal());
+			pst.setString(2, venda.getCliente().getCnpj());
+			pst.setInt(3, venda.getId());
 			
 			pst.executeUpdate();
 			
@@ -202,15 +202,13 @@ public class VendaDAO {
 		
 	}
 	
-	public void deletarVenda(int id) {
+	public void deletarVenda(int id) throws SQLException {
 		
 		String delete = "delete from venda where id_venda = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
@@ -218,8 +216,6 @@ public class VendaDAO {
 			pst.close();
 			conexao.close();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}

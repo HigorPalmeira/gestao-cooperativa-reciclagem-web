@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -260,15 +261,13 @@ public class ItemVendaDAO {
 		
 	}
 	
-	public void deletarItemVenda(int id) {
+	public void deletarItemVenda(int id) throws SQLException {
 		
 		String delete = "delete from item_venda where id_itemvenda = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+			PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
@@ -276,8 +275,24 @@ public class ItemVendaDAO {
 			pst.close();
 			conexao.close();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		
+	}
+	
+	public void deletarItensVendaPorVenda(int idVenda) throws SQLException {
+		
+		String delete = "delete from item_venda where venda = ?";
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
+			
+			pst.setInt(1, idVenda);
+			
+			pst.executeUpdate();
+			
+			pst.close();
+			conexao.close();
+			
 		}
 		
 	}

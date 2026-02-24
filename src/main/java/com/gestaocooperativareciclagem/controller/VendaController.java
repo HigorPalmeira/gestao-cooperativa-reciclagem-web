@@ -110,11 +110,11 @@ public class VendaController extends HttpServlet {
 					break;
 					
 				case "/AtualizarVenda":
-					System.out.println("Sem implementação...");
+					atualizarVenda(request, response);
 					break;
 					
 				case "/DeletarVenda":
-					System.out.println("Sem implementação...");
+					deletarVenda(request, response);
 					break;
 			}
 			
@@ -158,6 +158,55 @@ public class VendaController extends HttpServlet {
 		
 	}
 	
+	protected void atualizarVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		try {
+			
+			int idVenda = Integer.parseInt(request.getParameter("id"));
+			String cnpj = request.getParameter("clientCnpj");
+			String itensJson = request.getParameter("itensVendaJson");
+			String itensRemovidosJson = request.getParameter("itensVendaRemovidosJson");
+			
+			Gson gson = new Gson();
+			Type typeList = new TypeToken<ArrayList<ItemVenda>>() {}.getType();
+			List<ItemVenda> listaItensVenda = gson.fromJson(itensJson, typeList);
+			List<ItemVenda> listaItensVendaRemovidos = gson.fromJson(itensRemovidosJson, typeList);
+			
+			vendaService.atualizarVenda(idVenda, cnpj, listaItensVenda, listaItensVendaRemovidos);
+			
+			request.getSession().setAttribute("msgSucesso", "Venda atualizada com sucesso!");
+			
+		} catch (Exception e) {
+
+			request.setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar a venda. Erro: " + e.getMessage());
+	
+		}
+		
+		buscarVenda(request, response);
+
+	}
+	
+	protected void deletarVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			int idVenda = Integer.parseInt(request.getParameter("id"));
+			
+			vendaService.deletarVenda(idVenda);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarVendas");
+			
+		} catch (Exception e) {
+			
+			request.setAttribute("msgErro", "Ocorreu um erro ao tentar deletar a venda. Erro: " + e.getMessage());
+			buscarVenda(request, response);
+			
+		}
+		
+	}
+	
 	protected void buscarVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
@@ -167,9 +216,11 @@ public class VendaController extends HttpServlet {
 			Venda venda = vendaService.buscarVendaPorId(idVenda);
 			
 			List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+			List<ItemVenda> listaItensVenda = vendaService.listarItensVendaPorVenda(venda);
 			
 			request.setAttribute("venda", venda);
 			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+			request.setAttribute("listaItensVenda", listaItensVenda);
 			
 			RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/detalheVenda.jsp");
 			reqDis.forward(request, response);

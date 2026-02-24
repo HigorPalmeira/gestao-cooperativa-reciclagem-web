@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,6 +24,22 @@ public class VendaService {
 		this.vendaDao = vendaDao;
 		this.itemVendaDao = itemVendaDao;
 		this.clienteService = clienteService;
+	}
+	
+	private void conectarItensDaVenda(Venda venda, List<ItemVenda> listaItensVenda) {
+		
+		if (venda == null) {
+			throw new RuntimeException("A Venda é inválida e não pode ser conectada ao(s) Item(ns) vendido(s).");
+		}
+		
+		if (listaItensVenda == null || listaItensVenda.size() < 1) {
+			throw new RuntimeException("A lista de Itens da venda é inválida e não pode ser conectada na Venda.");
+		}
+		
+		for (ItemVenda itemVenda : listaItensVenda) {
+			itemVenda.setVenda(venda);
+		}
+		
 	}
 	
 	public void inserirVenda(Date dtVenda, String cnpjCliente, List<ItemVenda> listaItensVenda) {
@@ -48,9 +65,7 @@ public class VendaService {
 		
 		vendaDao.inserirVenda(venda);
 		
-		for (ItemVenda itemVenda : listaItensVenda) {
-			itemVenda.setVenda(venda);
-		}
+		conectarItensDaVenda(venda, listaItensVenda);
 		
 		inserirListaItensVenda(listaItensVenda);
 		
@@ -86,11 +101,7 @@ public class VendaService {
 		
 	}
 	
-	public void atualizarVenda(int idVenda, Date dtVenda, String cnpjCliente, List<ItemVenda> listaItensVenda) {
-		
-		if (dtVenda.after(Date.valueOf(LocalDate.now()))) {
-			throw new RuntimeException("Data da venda inválida! Não é possível atualizar uma venda em uma data posterior à atual.");
-		}
+	public void atualizarVenda(int idVenda, String cnpjCliente, List<ItemVenda> listaItensVenda, List<ItemVenda> listaItensVendaRemovidos) throws SQLException {
 		
 		if (cnpjCliente == null || cnpjCliente.isBlank()) {
 			throw new RuntimeException("CNPJ do Cliente inválido! Não é pssível cadastrar uma venda sem um cliente válido.");
@@ -105,15 +116,86 @@ public class VendaService {
 				.mapToDouble(itemVenda -> itemVenda.getPrecoUnitarioKg() * itemVenda.getPesoVendidoKg())
 				.sum();
 		
-		Venda venda = new Venda(idVenda, dtVenda, valorTotal, cliente);
+		Venda venda = new Venda();
+		venda.setId(idVenda);
+		venda.setCliente(cliente);
+		venda.setValorTotal(valorTotal);
+		
+		conectarItensDaVenda(venda, listaItensVenda);
 		
 		vendaDao.atualizarVenda(venda);
 		
+		for (ItemVenda itemVenda : listaItensVenda) {
+			salvarItemVenda(itemVenda);
+		}
+		
+		if (listaItensVendaRemovidos != null && listaItensVendaRemovidos.size() > 0) {
+			for (ItemVenda itemVenda : listaItensVendaRemovidos) {
+				deletarItemVenda(itemVenda);
+			}
+		}
+		
 	}
 	
-	public void deletarVenda(int id) {
+	public void deletarItemVenda(ItemVenda itemVenda) throws SQLException {
+		
+		if (itemVenda != null) {
+			
+			itemVendaDao.deletarItemVenda(itemVenda.getId());
+			
+		}
+		
+	}
+	
+	public void atualizarItemVenda(ItemVenda itemVenda) {
+		
+		if (itemVenda == null) {
+			throw new RuntimeException("Não é possível atualizar um item da venda inválido!");
+		}
+		
+		if (itemVenda.getPesoVendidoKg() < 0.0) {
+			throw new RuntimeException("Não é possível atualizar um item da venda com o peso vendido inválido!");
+		}
+		
+		if (itemVenda.getPrecoUnitarioKg() < 0.0) {
+			throw new RuntimeException("Não é possível atualizar um item da venda com o preço unitário inválido!");
+		}
+		
+		if (itemVenda.getTipoMaterial() == null) {
+			throw new RuntimeException("Não é possível atualizar um item da venda com o Tipo de Material inválido!");
+		}
+		
+		if (itemVenda.getVenda() == null) {
+			throw new RuntimeException("Não é possível atualizar um item da venda com a Venda inválida!");
+		}
+		
+		itemVendaDao.atualizarItemVenda(itemVenda);
+		
+	}
+	
+	private void salvarItemVenda(ItemVenda itemVenda) {
+		
+		if (itemVenda == null) {
+			throw new RuntimeException("Não é possível salvar um item da venda inválido!");
+		}
+		
+		// verificação para operação
+		if (itemVenda.getId() == 0) { // novo
+			
+			inserirItemVenda(itemVenda);
+			
+		} else {
+			
+			atualizarItemVenda(itemVenda);
+			
+		}
+		
+	}
+	
+	public void deletarVenda(int id) throws SQLException {
 		
 		vendaDao.deletarVenda(id);
+		itemVendaDao.deletarItensVendaPorVenda(id);
 		
 	}
 	

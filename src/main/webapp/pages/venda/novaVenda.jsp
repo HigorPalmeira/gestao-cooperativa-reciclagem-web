@@ -79,7 +79,7 @@
 		                        <option value="">Selecione...</option>
 		                        
 		                        <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
-		                        	<option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+		                        	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
 		                        </c:forEach>
 		                        
 		                        <!-- 
