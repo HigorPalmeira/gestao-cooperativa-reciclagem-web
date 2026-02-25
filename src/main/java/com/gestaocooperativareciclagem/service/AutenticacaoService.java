@@ -26,8 +26,11 @@ public class AutenticacaoService {
 			
 			if (usuario.getSenha().equals(usuarioSalvo.getSenha())) {
 				
-				usuarioSalvo.setSenha(null);
-				usuario = usuarioSalvo;
+				usuario.setId(usuarioSalvo.getId());
+				usuario.setNome(usuarioSalvo.getNome());
+				usuario.setEmail(usuarioSalvo.getEmail());
+				usuario.setPapel(usuarioSalvo.getPapel());
+				usuario.setSenha(null);
 				
 				return true;
 				

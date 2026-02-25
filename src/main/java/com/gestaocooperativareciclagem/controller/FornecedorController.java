@@ -27,7 +27,9 @@ import com.gestaocooperativareciclagem.utils.Formatador;
 /**
  * Servlet implementation class FornecedorController
  */
-@WebServlet(urlPatterns={"/FornecedorController", "/ListarFornecedores", 
+@WebServlet(
+		name="FornecedorController",
+		urlPatterns={"/FornecedorController", "/ListarFornecedores", 
 		"/DetalharFornecedor", "/InserirFornecedor", 
 		"/AtualizarFornecedor", "/DeletarFornecedor",
 		"/VerificarFornecedor"})

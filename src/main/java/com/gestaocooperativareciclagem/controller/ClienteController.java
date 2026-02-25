@@ -25,10 +25,12 @@ import com.gestaocooperativareciclagem.utils.Validador;
 /**
  * Servlet implementation class ClienteController
  */
-@WebServlet({ "/ClienteController", "/ListarClientes", 
-	"/DetalharCliente", "/InserirCliente",
-	"/AtualizarCliente", "/DeletarCliente",
-	"/VerificarCliente"})
+@WebServlet(
+		name="ClienteController",
+		urlPatterns={ "/ClienteController", "/ListarClientes", 
+				"/DetalharCliente", "/InserirCliente",
+				"/AtualizarCliente", "/DeletarCliente",
+				"/VerificarCliente"})
 public class ClienteController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     

@@ -9,4 +9,56 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
+  
+  <servlet>
+    <servlet-name>LoteBrutoController</servlet-name>
+    <servlet-class>com.gestaocooperativareciclagem.controller.LoteBrutoController</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>LoteProcessadoController</servlet-name>
+    <servlet-class>com.gestaocooperativareciclagem.controller.LoteProcessadoController</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>FornecedorController</servlet-name>
+    <servlet-class>com.gestaocooperativareciclagem.controller.FornecedorController</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>ClienteController</servlet-name>
+    <servlet-class>com.gestaocooperativareciclagem.controller.ClienteController</servlet-class>
+  </servlet>
+  
+  <filter>
+    <filter-name>AutenticacaoFilter</filter-name>
+    <filter-class>com.gestaocooperativareciclagem.filter.AutenticacaoFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AutenticacaoFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>OperadorFilter</filter-name>
+    <filter-class>com.gestaocooperativareciclagem.filter.OperadorFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>OperadorFilter</filter-name>
+    <servlet-name>LoteBrutoController</servlet-name>
+    <servlet-name>LoteProcessadoController</servlet-name>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>GerenteFilter</filter-name>
+    <filter-class>com.gestaocooperativareciclagem.filter.GerenteFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>GerenteFilter</filter-name>
+    <servlet-name>FornecedorController</servlet-name>
+    <servlet-name>ClienteController</servlet-name>
+  </filter-mapping>
 </web-app>

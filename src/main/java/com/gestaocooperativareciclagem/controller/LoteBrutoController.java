@@ -39,7 +39,9 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 /**
  * Servlet implementation class LoteBrutoController
  */
-@WebServlet({ "/LoteBrutoController", "/ListarLotesBruto",
+@WebServlet(
+		name="LoteBrutoController",
+		urlPatterns={ "/LoteBrutoController", "/ListarLotesBruto",
 			"/InserirLoteBruto", "/DetalharLoteBruto",
 			"/AtualizarLoteBruto", "/DeletarLoteBruto",
 			"/BuscarFornecedorLote"})

@@ -35,7 +35,9 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 /**
  * Servlet implementation class LoteProcessadoController
  */
-@WebServlet(urlPatterns= {"/LoteProcessadoController", "/ListarLotesProcessados", 
+@WebServlet(
+		name="LoteProcessadoController",
+		urlPatterns= {"/LoteProcessadoController", "/ListarLotesProcessados", 
 		"/DetalharLoteProcessado", "/NovoLoteProcessado",
 		"/InserirLoteProcessado", "/AtualizarLoteProcessado",
 		"/DeletarLoteProcessado"})
