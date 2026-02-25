@@ -32,7 +32,9 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Servlet implementation class VendaController
  */
-@WebServlet({ "/VendaController", "/ListarVendas", 
+@WebServlet(
+		name="VendaController",
+		urlPatterns={ "/VendaController", "/ListarVendas", 
 	"/DetalharVenda", "/NovaVenda", "/InserirVenda",
 	"/AtualizarVenda", "/DeletarVenda"})
 public class VendaController extends HttpServlet {

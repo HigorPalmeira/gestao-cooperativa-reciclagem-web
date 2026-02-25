@@ -23,7 +23,9 @@ import com.gestaocooperativareciclagem.service.TipoMaterialService;
 /**
  * Servlet implementation class PrecoMaterialController
  */
-@WebServlet({ "/PrecoMaterialController", "/ListarPrecosMateriais", 
+@WebServlet(
+		name="PrecoMaterialController", 
+		urlPatterns={ "/PrecoMaterialController", "/ListarPrecosMateriais", 
 	"/DetalharPrecoMaterial", "/InserirPrecoMaterial",
 	"/AtualizarPrecoMaterial", "/DeletarPrecoMaterial"})
 public class PrecoMaterialController extends HttpServlet {

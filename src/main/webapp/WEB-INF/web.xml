@@ -60,5 +60,20 @@
     <filter-name>GerenteFilter</filter-name>
     <servlet-name>FornecedorController</servlet-name>
     <servlet-name>ClienteController</servlet-name>
+    <servlet-name>CategoriaProcessamentoController</servlet-name>
+    <servlet-name>PrecoMaterialController</servlet-name>
+    <servlet-name>TipoMaterialController</servlet-name>
+    <servlet-name>TransacaoCompraController</servlet-name>
+    <servlet-name>VendaController</servlet-name>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>AdministradorFilter</filter-name>
+    <filter-class>com.gestaocooperativareciclagem.filter.AdministradorFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AdministradorFilter</filter-name>
+    <servlet-name>UsuarioController</servlet-name>
   </filter-mapping>
 </web-app>

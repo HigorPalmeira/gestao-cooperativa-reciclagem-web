@@ -19,7 +19,9 @@ import com.gestaocooperativareciclagem.service.TipoMaterialService;
 /**
  * Servlet implementation class TipoMaterialController
  */
-@WebServlet({ "/TipoMaterialController", "/ListarTiposMateriais", 
+@WebServlet(
+		name="TipoMaterialController",
+		urlPatterns={ "/TipoMaterialController", "/ListarTiposMateriais", 
 	"/DetalharTipoMaterial", "/InserirTipoMaterial", 
 	"/AtualizarTipoMaterial", "/DeletarTipoMaterial" })
 public class TipoMaterialController extends HttpServlet {

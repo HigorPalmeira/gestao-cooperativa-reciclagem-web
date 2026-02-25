@@ -22,7 +22,9 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 /**
  * Servlet implementation class TransacaoCompraController
  */
-@WebServlet({ "/TransacaoCompraController", "/ListarTransacoesCompra", 
+@WebServlet(
+		name="TransacaoCompraController",
+		urlPatterns={ "/TransacaoCompraController", "/ListarTransacoesCompra", 
 	"/DetalharTransacaoCompra", "/AtualizarTransacaoCompra",
 	"/DeletarTransacaoCompra"})
 public class TransacaoCompraController extends HttpServlet {

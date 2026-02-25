@@ -19,7 +19,9 @@ import com.gestaocooperativareciclagem.service.CategoriaProcessamentoService;
 /**
  * Servlet implementation class CategoriaProcessamentoController
  */
-@WebServlet({ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", 
+@WebServlet(
+		name="CategoriaProcessamentoController",
+		urlPatterns={ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", 
 	"/DetalharCategoriaProcessamento", "/InserirCategoriaProcessamento",
 	"/DeletarCategoriaProcessamento", "/AtualizarCategoriaProcessamento"})
 public class CategoriaProcessamentoController extends HttpServlet {

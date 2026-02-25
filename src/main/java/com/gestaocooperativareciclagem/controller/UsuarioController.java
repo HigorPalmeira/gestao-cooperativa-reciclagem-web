@@ -21,7 +21,9 @@ import com.gestaocooperativareciclagem.utils.Validador;
 /**
  * Servlet implementation class UsuarioController
  */
-@WebServlet(urlPatterns = {"/UsuarioController", "/ListarUsuarios", 
+@WebServlet(
+		name="UsuarioController",
+		urlPatterns = {"/UsuarioController", "/ListarUsuarios", 
 		"/DetalharUsuario", "/InserirUsuario",
 		"/AtualizarUsuario", "/DeletarUsuario"})
 public class UsuarioController extends HttpServlet {

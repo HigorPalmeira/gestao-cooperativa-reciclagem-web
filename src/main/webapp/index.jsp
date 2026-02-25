@@ -54,6 +54,13 @@
     		</div>
     		<% session.removeAttribute("msgSucesso"); %>
     	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+    	</c:if>
 
         <!-- 1. Cartões de Indicadores (KPIs) -->
         <section class="kpi-grid">
