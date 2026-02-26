@@ -26,6 +26,13 @@
     		</div>
     		<% session.removeAttribute("msgErro"); %>
         </c:if>
+        
+        <c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
 
         <!-- SEÇÃO A: Formulário -->
         <div id="formContainer">
@@ -51,7 +58,7 @@
         </div>
 
         <!-- SEÇÃO B: Mensagem de Sucesso (Oculta por padrão) -->
-        <div id="successContainer" class="success-container">
+        <div id="successContainer" class="success-container" style="display: none;">
             <div class="success-icon">✓</div>
             <h3>Verifique o seu email</h3>
             <p class="success-text">

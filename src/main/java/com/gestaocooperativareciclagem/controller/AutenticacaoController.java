@@ -14,6 +14,7 @@ import com.gestaocooperativareciclagem.dao.UsuarioDAO;
 import com.gestaocooperativareciclagem.model.Usuario;
 import com.gestaocooperativareciclagem.service.AutenticacaoService;
 import com.gestaocooperativareciclagem.utils.Criptografia;
+import com.gestaocooperativareciclagem.utils.Mail;
 
 /**
  * Servlet implementation class AutenticacaoController
@@ -157,8 +158,19 @@ public class AutenticacaoController extends HttpServlet {
 			if (autenticacaoService.temEmailCadastrado(usuario)) {
 				
 				System.out.println("Enviando e-mail...");
+				StringBuilder corpoEmail = new StringBuilder();
 				
-				request.getSession().setAttribute("msgSucesso", "");
+				corpoEmail
+					.append("Este e-mail contém as instruções para recuperação de senha, do usuário pertencente à " + email + ".")
+					.append("<br>Acesse o link: " + request.getContextPath() + "/RecuperarSenha?id=" + usuario.getId())
+					.append("<br>Altere a senha e aguarde confirmação.")
+					.append("<br><br>")
+					.append("<strong>EcoSystem</strong>");
+				
+				Mail mail = new Mail();
+				mail.sendMail("Recuperação de Senha - Ecosystem", corpoEmail.toString(), email);
+				
+				request.getSession().setAttribute("msgSucesso", "Um e-mail foi enviado para " + email + ", leia as instruções e recupere a senha.");
 			
 			} else {
 			
