@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,126 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar Senha - ERP Cooperativa</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
-    <!-- 
-    <style>
-        /* --- CSS: Estilização Visual (Consistente com Login) --- */
-        :root {
-            --primary-color: #0056b3;
-            --primary-hover: #004494;
-            --background-color: #e9ecef;
-            --white: #ffffff;
-            --text-color: #333;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --disabled-color: #95a5a6;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Container do Cartão */
-        .card {
-            background-color: var(--white);
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        /* Logótipo / Marca */
-        .brand-logo {
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-        }
-        .brand-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
-        .brand-text { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-
-        h2 { font-size: 1.2rem; color: #555; margin-bottom: 1.5rem; margin-top: 0; }
-
-        /* Formulário */
-        .recovery-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            text-align: left;
-        }
-
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #555; }
-        
-        .form-group input {
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus { outline: none; border-color: var(--primary-color); }
-
-        /* Botão Enviar */
-        .btn-submit {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .btn-submit:hover:not(:disabled) { background-color: var(--primary-hover); }
-        .btn-submit:disabled { background-color: var(--disabled-color); cursor: not-allowed; opacity: 0.7; }
-
-        /* Links Auxiliares */
-        .back-link { margin-top: 1.5rem; font-size: 0.9rem; }
-        .back-link a { color: #666; text-decoration: none; }
-        .back-link a:hover { color: var(--primary-color); text-decoration: underline; }
-
-        /* Mensagens de Feedback */
-        .error-message {
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            display: none;
-            background-color: #f8d7da;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* Estado de Sucesso */
-        .success-container {
-            display: none; /* Oculto inicialmente */
-            flex-direction: column;
-            align-items: center;
-            color: #2c3e50;
-        }
-        .success-icon {
-            font-size: 3rem;
-            color: var(--success-color);
-            margin-bottom: 1rem;
-        }
-        .success-text { font-size: 1rem; margin-bottom: 1.5rem; line-height: 1.5; }
-
-    </style>
-     -->
 </head>
 <body class="auth-page">
 
@@ -136,6 +19,13 @@
             <span class="brand-icon">♻️</span>
             <div class="brand-text">ERP Reciclagem</div>
         </div>
+        
+        <c:if test="${not empty sessionScope.msgErro}">
+        	<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+        </c:if>
 
         <!-- SEÇÃO A: Formulário -->
         <div id="formContainer">
@@ -144,10 +34,10 @@
                 Insira o seu email corporativo. Enviaremos um link para definir uma nova senha.
             </p>
 
-            <form class="recovery-form" onsubmit="handleRecovery(event)">
+            <form class="recovery-form" action="${pageContext.request.contextPath}/RecuperarSenha" method="POST"> <!-- onsubmit="handleRecovery(event)" -->
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="nome@cooperativa.com" required>
+                    <input type="email" id="email" name="email" placeholder="nome@cooperativa.com" required>
                 </div>
 
                 <button type="submit" id="btnSubmit" class="btn-submit" disabled>
@@ -175,7 +65,7 @@
 
         <!-- Link Voltar -->
         <div class="back-link">
-            <a href="login.html">&larr; Voltar ao Login</a>
+            <a href="${pageContext.request.contextPath}/pages/login/login.jsp">&larr; Voltar ao Login</a>
         </div>
     </div>
 

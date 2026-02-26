@@ -48,7 +48,9 @@ public class AutenticacaoFilter extends HttpFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
-		List<String> rotasPublicas = Arrays.asList("/Login", "/Logout", "/pages/login/login.jsp", "/pages/login/recuperacaoSenha.jsp", "/assets/_css/");
+		List<String> rotasPublicas = Arrays.asList("/Login", "/Logout", "/RecuperarSenha", 
+				"/pages/login/login.jsp", "/pages/login/recuperacaoSenha.jsp", 
+				"/assets/_css/");
 		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;

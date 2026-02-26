@@ -43,5 +43,21 @@ public class AutenticacaoService {
 		return false;
 		
 	}
+	
+	public boolean temEmailCadastrado(Usuario usuario) {
+		
+		if (usuario == null) {
+			throw new RuntimeException("Não foi possível verificar o e-mail no sistema.");
+		}
+		
+		if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
+			throw new RuntimeException("E-mail inválido. Não é possível verificar o e-mail no sistema.");
+		}
+		
+		usuarioDao.buscarUsuarioPorEmail(usuario);
+		
+		return usuario.getId() != 0;
+		
+	}
 
 }

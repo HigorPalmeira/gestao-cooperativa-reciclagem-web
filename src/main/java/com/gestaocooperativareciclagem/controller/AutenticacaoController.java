@@ -18,7 +18,10 @@ import com.gestaocooperativareciclagem.utils.Criptografia;
 /**
  * Servlet implementation class AutenticacaoController
  */
-@WebServlet({ "/AutenticacaoController", "/Login", "/Logout" })
+@WebServlet(
+		name="AutenticacaoController",
+		urlPatterns={ "/AutenticacaoController", "/Login", 
+				"/Logout", "/RecuperarSenha" })
 public class AutenticacaoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -51,8 +54,7 @@ public class AutenticacaoController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		System.out.println("Não há rotas GET...");
 	}
 
 	/**
@@ -73,8 +75,12 @@ public class AutenticacaoController extends HttpServlet {
 					logout(request, response);
 					break;
 					
-				default:
+				case "/RecuperarSenha":
+					recuperarSenha(request, response);
+					break;
 					
+				default:
+					System.out.println("Caminho '" + path +"' não encontrado.");
 					break;
 			}
 			
@@ -130,6 +136,36 @@ public class AutenticacaoController extends HttpServlet {
 			request.getSession().removeAttribute("usuarioLogado");
 			
 			response.sendRedirect(request.getContextPath() + "/pages/login/login.jsp");
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
+	protected void recuperarSenha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		try {
+			
+			String email = request.getParameter("email");
+			
+			Usuario usuario = new Usuario();
+			usuario.setEmail(email);
+			
+			if (autenticacaoService.temEmailCadastrado(usuario)) {
+				
+				System.out.println("Enviando e-mail...");
+				
+				request.getSession().setAttribute("msgSucesso", "");
+			
+			} else {
+			
+				request.getSession().setAttribute("msgErro", "O e-mail '" + email + "' não está cadastrado no sistema.<br>Informe o e-mail do usuário para recuperação de senha.");
+				response.sendRedirect( request.getHeader("referer") );
+				
+			}
 			
 		} catch (Exception e) {
 			throw new ServletException(e);
