@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,31 @@ import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
 import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class LoteProcessadoDAO {
+	
+	public Double somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
+		
+		String sum = "select sum(peso_atual_kg_loteprocessado) from info_etapa_processamento where nome_categoriaprocessamento = ?";
+		
+		Double pesoTotal = 0.0;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);) {
+			
+			pst.setString(1, etapaProcessamento);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				pesoTotal = rset.getDouble(1);
+			}
+		
+			rset.close();
+			
+		}
+		
+		return pesoTotal;
+		
+	}
 
 	public void inserirLoteProcessado(LoteProcessado loteProcessado) {
 		

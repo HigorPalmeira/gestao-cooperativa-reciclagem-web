@@ -171,4 +171,14 @@ public class LoteProcessadoService {
 		
 	}
 	
+	public Double somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
+		
+		if (etapaProcessamento == null || etapaProcessamento.isBlank()) {
+			throw new RuntimeException("Etapa de Processamento inválida para busca.");
+		}
+		
+		return loteProcessadoDao.somarPesoTotalLoteProcessadoPorEtapaProcessamento(etapaProcessamento);
+		
+	}
+	
 }
