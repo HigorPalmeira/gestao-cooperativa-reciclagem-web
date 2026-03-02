@@ -16,6 +16,32 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class ItemVendaDAO {
 	
+	public Double somarPesoVendidoItemVendaPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+		
+		String sum = "select sum(peso_vendido_kg_itemvenda) from info_item_venda where dtVenda_venda between ? and ?";
+		
+		Double soma = 0.0;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);) {
+			
+			pst.setDate(1, dtInicio);
+			pst.setDate(2, dtFim);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				soma = rset.getDouble(1);
+			}
+			
+			rset.close();
+			
+		}
+		
+		return soma;
+		
+	}
+	
 	public void inserirItemVenda(ItemVenda itemVenda) {
 		
 		String insert = "insert into item_venda (tipo_material, venda, peso_vendido_kg_itemvenda, preco_unitario_kg_itemvenda) "
