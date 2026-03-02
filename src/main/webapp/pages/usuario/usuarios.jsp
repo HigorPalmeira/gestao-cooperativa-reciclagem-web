@@ -18,7 +18,7 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="#">Relatórios</a>
             <a href="#">Configurações</a>
         </div>

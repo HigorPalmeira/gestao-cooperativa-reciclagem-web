@@ -28,7 +28,7 @@
         </c:if>
 
         <!-- Formulário de Acesso -->
-        <form id="loginForm" class="login-form" action="${pageContext.request.contextPath}/Login" method="POST"> <!-- onsubmit="handleLogin(event)" -->
+        <form id="loginForm" class="login-form" action="${pageContext.request.contextPath}/Login" method="POST">
             
             <div class="form-group">
                 <label for="email">Email</label>
@@ -71,15 +71,6 @@
         const btnLogin = document.getElementById('btnLogin');
         const errorMsg = document.getElementById('errorMsg');
 
-        // 2. Base de Dados de Utilizadores (Simulação)
-        // Credenciais para teste
-        const usersDB = [
-            { email: "admin@coop.com", pass: "admin123", role: "Administrador" },
-            { email: "gerente@coop.com", pass: "gerente123", role: "Gerente" },
-            { email: "operador@coop.com", pass: "operador123", role: "Operador" }
-        ];
-
-        // 3. Validação de Preenchimento (Habilitar Botão)
         function checkInputs() {
             const email = emailInput.value.trim();
             const pass = passInput.value.trim();
@@ -94,37 +85,6 @@
         // Adicionar Listeners
         emailInput.addEventListener('input', checkInputs);
         passInput.addEventListener('input', checkInputs);
-
-        // 4. Processar Login
-        function handleLogin(event) {
-            event.preventDefault(); // Impede recarregamento da página
-
-            const email = emailInput.value.trim();
-            const pass = passInput.value.trim();
-
-            // Verificar credenciais na base de dados simulada
-            const user = usersDB.find(u => u.email === email && u.pass === pass);
-
-            if (user) {
-                // SUCESSO
-                errorMsg.style.display = 'none';
-                
-                // Simulação de armazenamento de sessão (opcional)
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-                // Redirecionamento
-                // alert(`Bem-vindo, ${user.role}! Redirecionando...`);
-                window.location.href = '../index.html'; // Redireciona para o Início (Dashboard)
-            } else {
-                // ERRO
-                errorMsg.style.display = 'block';
-                
-                // Animação visual simples (shake) no botão ou input se desejar
-                passInput.value = ""; // Limpa a senha
-                btnLogin.disabled = true; // Desativa botão novamente
-                passInput.focus();
-            }
-        }
 
     </script>
 </body>

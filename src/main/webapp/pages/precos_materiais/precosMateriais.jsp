@@ -23,7 +23,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System</div>
         <div>
-            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
         </div>
     </nav>
 

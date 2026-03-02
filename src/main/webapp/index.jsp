@@ -21,7 +21,7 @@
         <div class="brand">ERP Reciclagem</div>
         <div class="nav-links">
             <!-- Funcionalidades Core -->
-            <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a> <!-- pages/fornecedor/fornecedores.jsp -->
+            <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
             <a href="${pageContext.request.contextPath}/ListarVendas">Vendas</a>

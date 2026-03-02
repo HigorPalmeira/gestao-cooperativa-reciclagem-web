@@ -21,7 +21,7 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação segura -->
-            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
         </div>

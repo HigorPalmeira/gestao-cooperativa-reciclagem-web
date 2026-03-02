@@ -143,7 +143,7 @@ public class HomeController extends HttpServlet {
 			
 			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar ir para a página inicial!<br>Erro: " + e.getMessage());
 			response.sendRedirect(request.getHeader("referer"));
-			e.printStackTrace();
+		
 		}
 		
 	}

@@ -20,7 +20,7 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links com alertas para simulação -->
-            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="#" onclick="alert('Navegar para Relatórios')">Relatórios Financeiros</a>
         </div>
     </nav>

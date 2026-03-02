@@ -41,7 +41,7 @@
                 Insira o seu email corporativo. Enviaremos um link para definir uma nova senha.
             </p>
 
-            <form class="recovery-form" action="${pageContext.request.contextPath}/RecuperarSenha" method="POST"> <!-- onsubmit="handleRecovery(event)" -->
+            <form class="recovery-form" action="${pageContext.request.contextPath}/RecuperarSenha" method="POST">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="nome@cooperativa.com" required>
@@ -87,14 +87,6 @@
         const errorMsg = document.getElementById('errorMsg');
         const sentEmailDisplay = document.getElementById('sentEmailDisplay');
 
-        // 2. Base de Dados Simulada (Mesmos emails do Login)
-        const usersDB = [
-            "admin@coop.com",
-            "gerente@coop.com",
-            "operador@coop.com"
-        ];
-
-        // 3. Habilitar Botão
         emailInput.addEventListener('input', function() {
             if (this.value.trim().length > 0 && this.value.includes('@')) {
                 btnSubmit.disabled = false;
@@ -102,36 +94,6 @@
                 btnSubmit.disabled = true;
             }
         });
-
-        // 4. Processar Envio
-        function handleRecovery(event) {
-            event.preventDefault();
-            const email = emailInput.value.trim();
-
-            // Simula tempo de processamento
-            btnSubmit.textContent = "A verificar...";
-            btnSubmit.disabled = true;
-
-            setTimeout(() => {
-                // Verifica se o email existe na DB
-                if (usersDB.includes(email)) {
-                    // SUCESSO
-                    showSuccess(email);
-                } else {
-                    // ERRO
-                    errorMsg.style.display = 'block';
-                    btnSubmit.textContent = "Enviar Instruções";
-                    btnSubmit.disabled = false;
-                }
-            }, 1000); // Delay de 1 segundo para realismo
-        }
-
-        // 5. Exibir Ecrã de Sucesso
-        function showSuccess(email) {
-            formContainer.style.display = 'none'; // Oculta formulário
-            successContainer.style.display = 'flex'; // Mostra sucesso
-            sentEmailDisplay.textContent = email; // Exibe o email para confirmação
-        }
 
     </script>
 </body>

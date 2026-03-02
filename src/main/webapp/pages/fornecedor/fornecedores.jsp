@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Fornecedores</title>
     
-    <link rel="stylesheet" href="assets/_css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
 </head>
 <body>
@@ -19,9 +19,9 @@
     <nav class="main-nav">
         <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
         <div>
-            <a href="index.jsp">Início</a>
-            <a href="ListarLotesBruto">Lotes Brutos</a>
-            <a href="ListarTransacoesCompra">Transações de Compra</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
+            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Transações de Compra</a>
         </div>
     </nav>
 
@@ -66,7 +66,7 @@
                 <tbody id="resultsTableBody">
                 	<c:forEach items="${listaFornecedores}" var="fornecedor">
                 		<tr>
-                			<td><a href="DetalharFornecedor?doc=${fornecedor.documento}">${fornecedor.documento}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharFornecedor?doc=${fornecedor.documento}">${fornecedor.documento}</a></td>
                 			<td>${fornecedor.nome}</td>
                 			<td>${fornecedor.tipo}</td>
                 			<td>${fornecedor.dtCadastro}</td>
@@ -85,8 +85,8 @@
 
         <div class="quick-links">
             Navegar para: 
-            <a href="ListarLotesBruto">Lotes Brutos</a> | 
-            <a href="ListarTransacoesCompra">Transações de Compra</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a> | 
+            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Transações de Compra</a>
         </div>
     </main>
 

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Lotes Brutos</title>
     
-     <link rel="stylesheet" href="assets/_css/styles.css">
+     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
      
 </head>
 <body>
@@ -20,9 +20,9 @@
         <div class="brand">ERP System</div>
         <div>
             <!-- Links atualizados para evitar erro de navegação no preview -->
-            <a href="index.jsp">Início</a>
-            <a href="ListarLotesProcessados">Lotes Processados</a>
-            <a href="ListarFornecedores">Fornecedores</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
+            <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a>
         </div>
     </nav>
 
@@ -85,7 +85,7 @@
                     
                     <c:forEach items="${listaLotesBrutos}" var="loteBruto">
                     	<tr>
-                    		<td><a href="DetalharLoteBruto?id=${loteBruto.id}">#LB-${String.format("%03d", loteBruto.id)}</a></td>
+                    		<td><a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=${loteBruto.id}">#LB-${String.format("%03d", loteBruto.id)}</a></td>
                     		<td>${loteBruto.pesoEntradaKg}</td>
                     		<td>${loteBruto.dtEntrada}</td>
                     		<td>
@@ -110,18 +110,6 @@
     </main>
 
     <script>
-        /* --- JavaScript: Lógica de Interação --- */
-
-        // Dados simulados (Mock Database)
-        // Formato de data ISO para facilitar filtragem: YYYY-MM-DD
-        /*
-        const batchesDatabase = [
-            { id: 101, weight: 500.00, date: '2026-01-12', status: 'Em Processamento' },
-            { id: 98, weight: 1200.50, date: '2026-01-05', status: 'Concluído' },
-            { id: 95, weight: 320.00, date: '2026-01-02', status: 'Recebido' },
-            { id: 90, weight: 800.00, date: '2025-12-20', status: 'Concluído' }
-        ];
-        */
         
         const listaLotesBruto = [
         	<c:forEach var="loteBruto" items="${listaLotesBrutos}" varStatus="loop">
@@ -193,7 +181,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = ```
                     <td>
-                        <a href="DetalharLoteBruto?id=${batch.id}" class="id-link">
+                        <a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=${batch.id}" class="id-link">
                             #LB-\${String(batch.id).padStart(3, '0')}
                         </a>
                     </td>

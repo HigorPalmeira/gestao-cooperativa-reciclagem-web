@@ -16,7 +16,7 @@
     <nav class="main-nav">
         <div class="brand">ERP System &rsaquo; Área de Produção</div>
         <div class="nav-links">
-            <a href="${pageContext.request.contextPath}/index.jsp">Início</a>
+            <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="#" onclick="alert('Navegar para Relatórios de Operação')">Meus Relatórios</a>
         </div>
     </nav>
