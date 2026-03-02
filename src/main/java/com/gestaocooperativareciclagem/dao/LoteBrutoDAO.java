@@ -41,11 +41,11 @@ public class LoteBrutoDAO {
 		
 	}
 	
-	public Long somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public Double somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		String sum = "select sum(peso_entrada_kg_lotebruto) from lote_bruto where dtEntrada_lotebruto between ? and ?";
 		
-		Long pesoTotal = 0L;
+		Double pesoTotal = 0.0;
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(sum);) {
@@ -56,7 +56,7 @@ public class LoteBrutoDAO {
 			ResultSet rset = pst.executeQuery();
 			
 			if (rset.next()) {
-				pesoTotal = rset.getLong(1);
+				pesoTotal = rset.getDouble(1);
 			}
 			
 			rset.close();

@@ -110,7 +110,7 @@ public class LoteBrutoService {
 		
 	}
 	
-	public Long somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public Double somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		if (dtInicio == null || dtFim == null) {
 			throw new RuntimeException("Data(s) de busca inválida(s)!");

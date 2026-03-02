@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -106,6 +107,26 @@ public class TransacaoCompraService {
 		transacaoCompraDao.buscarTransacaoCompraPorId(transacaoCompra);
 		
 		return transacaoCompra;
+		
+	}
+	
+	public Long contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+		
+		if (status == null) {
+			throw new RuntimeException("Status de Pagamento para a busca inválido.");
+		}
+		
+		return transacaoCompraDao.contarTransacaoCompraPorStatus(status);
+		
+	}
+	
+	public Double somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+		
+		if (status == null) {
+			throw new RuntimeException("Status de Pagamento para a busca inválido.");
+		}
+		
+		return transacaoCompraDao.somarValorTotalTransacaoCompraPorStatus(status);
 		
 	}
 

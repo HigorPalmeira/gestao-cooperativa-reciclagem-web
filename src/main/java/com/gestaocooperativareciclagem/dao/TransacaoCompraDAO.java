@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,54 @@ import com.gestaocooperativareciclagem.model.enums.TipoFornecedor;
 import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class TransacaoCompraDAO {
+	
+	public Long contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+		
+		String count = "select count(*) from transacao_compra where status_pagamento_transacaocompra = ?";
+		
+		Long contagem = 0L;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(count);) {
+			
+			pst.setString(1, status.name());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				contagem = rset.getLong(1);
+			}
+			
+			rset.close();
+			
+		}
+		
+		return contagem;
+		
+	}
+	
+	public Double somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+		
+		String sum = "select sum(valor_total_calculado_transacaocompra) from transacao_compra where status_pagamento_transacaocompra = ?";
+		
+		Double valorTotal = 0.0;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);) {
+			
+			pst.setString(1, status.name());
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				valorTotal = rset.getDouble(1);
+			}
+			
+		}
+		
+		return valorTotal;
+		
+	}
 	
 	public void inserirTransacaoCompra(TransacaoCompra transacaoCompra) {
 		
