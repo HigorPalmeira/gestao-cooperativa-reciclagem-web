@@ -59,5 +59,22 @@ public class AutenticacaoService {
 		return usuario.getId() != 0;
 		
 	}
+	
+	public void alterarSenha(int idUsuario, String senha) {
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(idUsuario);
+		
+		usuarioDao.buscarUsuarioPorId(usuario);
+		
+		if (usuario.getEmail() == null) {
+			throw new RuntimeException("O usuário não existe! Verifique se os dados estão corretos.");
+		}
+		
+		usuario.setSenha(senha);
+		
+		usuarioDao.atualizarUsuario(usuario);
+		
+	}
 
 }

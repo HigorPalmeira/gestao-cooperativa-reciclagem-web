@@ -446,3 +446,80 @@ nav.main-nav .dropdown-content a:hover {
 }
 
 .dropdown:hover .dropdown-content {display: block;}
+
+
+
+/* --- 14. Quadro Kanban (Produção) --- */
+.kanban-board {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    min-height: 500px;
+    align-items: flex-start; /* Para as colunas não esticarem todas à mesma altura */
+}
+
+.kanban-column {
+    background-color: #ebecf0; /* Fundo cinza típico de Kanban */
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.kanban-col-header {
+    font-weight: bold;
+    color: #333;
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.kanban-col-count {
+    background-color: #ccc;
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+/* Área onde os cards são soltos */
+.kanban-dropzone {
+    flex: 1;
+    min-height: 150px; /* Área mínima para conseguir soltar um card numa coluna vazia */
+    border: 2px dashed transparent;
+    transition: background-color 0.2s, border-color 0.2s;
+    border-radius: 4px;
+}
+
+/* Efeito visual quando arrasta um card por cima */
+.kanban-dropzone.drag-over {
+    background-color: rgba(0, 86, 179, 0.1);
+    border-color: var(--primary-color);
+}
+
+/* O Card do Lote */
+.kanban-card {
+    background-color: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: grab;
+    border-left: 4px solid var(--primary-color);
+}
+
+.kanban-card:active { cursor: grabbing; }
+
+.kanban-card-title { font-weight: bold; font-size: 1rem; color: #2c3e50; margin-bottom: 5px; }
+.kanban-card-info { font-size: 0.85rem; color: #666; display: flex; justify-content: space-between; margin-bottom: 5px;}
+.kanban-card-weight { font-weight: bold; color: var(--success-color); }
+
+/* Vistas do ecrã */
+#view-overview { display: block; }
+#view-kanban { display: none; }
+
