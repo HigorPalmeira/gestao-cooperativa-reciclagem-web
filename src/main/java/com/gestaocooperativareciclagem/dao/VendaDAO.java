@@ -15,6 +15,30 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class VendaDAO {
 	
+	public Double somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+		
+		String sum = "select sum(valor_total_venda) from venda where dtVenda_venda between ? and ?";
+		
+		Double valorTotal = 0.0;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);) {
+			
+			pst.setDate(1, dtInicio);
+			pst.setDate(2, dtFim);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				valorTotal = rset.getDouble(1);
+			}
+			
+		}
+		
+		return valorTotal;
+		
+	}
+	
 	public void inserirVenda(Venda venda) {
 		
 		String insert = "insert into venda (dtVenda_venda, valor_total_venda, cliente) values (?, ?, ?)";
