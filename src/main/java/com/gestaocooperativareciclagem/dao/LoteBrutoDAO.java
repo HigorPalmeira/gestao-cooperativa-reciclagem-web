@@ -16,6 +16,57 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class LoteBrutoDAO {
 	
+	public Long contarLoteBrutoPorData(Date dtLoteBruto) throws SQLException {
+		
+		String count = "select count(*) from lote_bruto where dtEntrada_lotebruto = ?";
+		
+		Long contagem = 0L;
+
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(count);) {
+			
+			pst.setDate(1, dtLoteBruto);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				contagem = rset.getLong(1);
+			}
+			
+			rset.close();
+			
+		}
+		
+		return contagem;
+		
+	}
+	
+	public Long somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+		
+		String sum = "select sum(peso_entrada_kg_lotebruto) from lote_bruto where dtEntrada_lotebruto between ? and ?";
+		
+		Long pesoTotal = 0L;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);) {
+			
+			pst.setDate(1, dtInicio);
+			pst.setDate(2, dtFim);
+			
+			ResultSet rset = pst.executeQuery();
+			
+			if (rset.next()) {
+				pesoTotal = rset.getLong(1);
+			}
+			
+			rset.close();
+			
+		}
+		
+		return pesoTotal;
+		
+	}
+	
 	public void inserirLoteBruto(LoteBruto loteBruto) throws SQLException {
 		
 		String insert = "insert into lote_bruto (peso_entrada_kg_lotebruto, dtEntrada_lotebruto, status_lotebruto, fornecedor) values (?, ?, ?, ?)";

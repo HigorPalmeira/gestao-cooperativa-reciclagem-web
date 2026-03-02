@@ -2,6 +2,7 @@ package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
@@ -92,6 +93,35 @@ public class LoteBrutoService {
 		loteBrutoDao.buscarLoteBrutoPorId(loteBruto);
 		
 		return loteBruto;
+		
+	}
+	
+	public Long contarLoteBrutoPorData(Date dtLote) throws SQLException {
+		
+		if (dtLote == null) {
+			throw new RuntimeException("Data de busca inválida!");
+		}
+		
+		if (dtLote.after(Date.valueOf(LocalDate.now()))) {
+			throw new RuntimeException("A data de busca não pode ser posterior a data atual.");
+		}
+		
+		return loteBrutoDao.contarLoteBrutoPorData(dtLote);
+		
+	}
+	
+	public Long somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+		
+		if (dtInicio == null || dtFim == null) {
+			throw new RuntimeException("Data(s) de busca inválida(s)!");
+		}
+		
+		final Date hoje = Date.valueOf(LocalDate.now());
+		if (dtInicio.after(hoje) || dtFim.after(hoje)) {
+			throw new RuntimeException("A(s) data(s) de busca não pode(m) ser posterior(es) a data atual.");
+		}
+		
+		return loteBrutoDao.somarPesoEntradaLoteBrutoPorDatas(dtInicio, dtFim);
 		
 	}
 
