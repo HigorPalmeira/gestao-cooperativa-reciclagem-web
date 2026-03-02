@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -129,7 +130,14 @@ public class AutenticacaoController extends HttpServlet {
 				request.getSession().setAttribute("usuarioLogado", usuario);
 				request.getSession().setAttribute("msgSucesso", "Login realizado com sucesso!");
 				
-				response.sendRedirect(request.getContextPath() + "/index.jsp");
+				if (usuario.getPapel().equalsIgnoreCase("operador")) {
+					response.sendRedirect("pages/producao/producao.jsp");
+				} else if (Arrays.asList("administrador", "gerente").contains(usuario.getPapel().toLowerCase())) {
+					response.sendRedirect(request.getContextPath() + "/Home");					
+				} else {
+					throw new RuntimeException("O papel do usuário (" + usuario.getPapel() +") não reconhecido pelo sistema!");
+				}
+				
 			
 			} else {
 

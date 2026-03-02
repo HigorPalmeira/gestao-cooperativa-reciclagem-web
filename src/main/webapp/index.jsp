@@ -67,28 +67,28 @@
             <!-- KPI 1 -->
             <div class="kpi-card kpi-blue" onclick="window.location.href='ListarLotesBruto'"> <!-- pages/lote_bruto/lotesBrutos.jsp -->
                 <div class="kpi-title">Lotes Brutos Recebidos (Hoje)</div>
-                <div class="kpi-value">12</div>
-                <div class="kpi-desc">Total de 4.500 Kg</div>
+                <div class="kpi-value">${lotesBrutosRecebidosHoje}</div>
+                <div class="kpi-desc">${String.format("Total de %.2f Kg", lotesBrutosKgRecebidosHoje)}</div>
             </div>
 
             <!-- KPI 2 -->
             <div class="kpi-card kpi-green" onclick="window.location.href='ListarVendas'">
                 <div class="kpi-title">Vendas do Mês (R$)</div>
-                <div class="kpi-value">R$ 45.200</div>
+                <div class="kpi-value">${String.format("R$ %.2f", totalVendasMes)}</div>
                 <div class="kpi-desc">+15% vs mês anterior</div>
             </div>
 
             <!-- KPI 3 -->
             <div class="kpi-card kpi-yellow" onclick="window.location.href='ListarTransacoesCompra'">
                 <div class="kpi-title">Pagamentos Pendentes</div>
-                <div class="kpi-value">5</div>
-                <div class="kpi-desc">Valor Total: R$ 3.150</div>
+                <div class="kpi-value">${totalPagamentosPendentes}</div>
+                <div class="kpi-desc">Valor Total: ${String.format("R$ %.2f", valorTotalPagamentosPendentes)}</div>
             </div>
 
             <!-- KPI 4 -->
             <div class="kpi-card kpi-info" onclick="window.location.href='ListarLotesProcessados'">
                 <div class="kpi-title">Estoque Processado</div>
-                <div class="kpi-value">1.200 Kg</div>
+                <div class="kpi-value">${String.format("%.2f Kg", lotesProcessadosKgProntos)}</div>
                 <div class="kpi-desc">Pronto para venda</div>
             </div>
         </section>

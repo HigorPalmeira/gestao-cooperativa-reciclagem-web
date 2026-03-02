@@ -116,11 +116,6 @@ public class LoteBrutoService {
 			throw new RuntimeException("Data(s) de busca inválida(s)!");
 		}
 		
-		final Date hoje = Date.valueOf(LocalDate.now());
-		if (dtInicio.after(hoje) || dtFim.after(hoje)) {
-			throw new RuntimeException("A(s) data(s) de busca não pode(m) ser posterior(es) a data atual.");
-		}
-		
 		return loteBrutoDao.somarPesoEntradaLoteBrutoPorDatas(dtInicio, dtFim);
 		
 	}

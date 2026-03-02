@@ -59,7 +59,7 @@ public class GerenteFilter extends HttpFilter implements Filter {
 			chain.doFilter(request, response);			
 		} else {
 			req.getSession().setAttribute("msgErro", "Acesso restrito a Gerentes e Administradores");
-			res.sendRedirect(req.getContextPath() + "/index.jsp");
+			res.sendRedirect(req.getHeader("referer")); // req.getContextPath() + "/index.jsp"
 		}
 		
 	}
