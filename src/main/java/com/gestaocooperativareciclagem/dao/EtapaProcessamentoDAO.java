@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -79,13 +80,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
 				
@@ -137,13 +138,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
 				
@@ -195,13 +196,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
 				
@@ -253,13 +254,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
 				
@@ -312,13 +313,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
 				
@@ -370,13 +371,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				
 				etapaProcessamento.setLoteProcessado( new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto) );
@@ -424,13 +425,13 @@ public class EtapaProcessamentoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				
 				etapaProcessamento.setLoteProcessado( new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto) );

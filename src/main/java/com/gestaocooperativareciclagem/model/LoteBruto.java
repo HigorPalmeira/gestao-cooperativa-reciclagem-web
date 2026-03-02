@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 import com.gestaocooperativareciclagem.model.enums.StatusLoteBruto;
@@ -7,14 +8,14 @@ import com.gestaocooperativareciclagem.model.enums.StatusLoteBruto;
 public class LoteBruto {
 	
 	private int id;
-	private double pesoEntradaKg;
+	private BigDecimal pesoEntradaKg;
 	private Date dtEntrada;
 	private StatusLoteBruto status;
 	private Fornecedor fornecedor;
 	
 	public LoteBruto() {}
 	
-	public LoteBruto(int id, double pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
+	public LoteBruto(int id, BigDecimal pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
 		this.id = id;
 		this.pesoEntradaKg = pesoEntradaKg;
 		this.dtEntrada = dtEntrada;
@@ -22,7 +23,7 @@ public class LoteBruto {
 		this.fornecedor = fornecedor;
 	}
 
-	public LoteBruto(double pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
+	public LoteBruto(BigDecimal pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
 		this.pesoEntradaKg = pesoEntradaKg;
 		this.dtEntrada = dtEntrada;
 		this.status = status;
@@ -37,11 +38,11 @@ public class LoteBruto {
 		this.id = id;
 	}
 
-	public double getPesoEntradaKg() {
+	public BigDecimal getPesoEntradaKg() {
 		return pesoEntradaKg;
 	}
 
-	public void setPesoEntradaKg(double pesoEntradaKg) {
+	public void setPesoEntradaKg(BigDecimal pesoEntradaKg) {
 		this.pesoEntradaKg = pesoEntradaKg;
 	}
 

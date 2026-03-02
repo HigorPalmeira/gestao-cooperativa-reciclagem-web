@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,9 +19,9 @@ public class PrecoMaterialService {
 		this.tipoMaterialService = tipoMaterialService;
 	}
 	
-	public void inserirPrecoMaterial(double precoCompra, Date dtVigencia, int idTipoMaterial) {
+	public void inserirPrecoMaterial(BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) {
 		
-		if (precoCompra <= 0) {
+		if (precoCompra.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Preço de Compra inválido! É necessário informar um valor válido: maior que zero.");
 		}
 		
@@ -36,9 +37,9 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public void atualizarPrecoMaterial(int idPrecoMaterial, double precoCompra, Date dtVigencia, int idTipoMaterial) {
+	public void atualizarPrecoMaterial(int idPrecoMaterial, BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) {
 		
-		if (precoCompra <= 0) {
+		if (precoCompra.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Preço de Compra inválido! É necessário informar um valor válido: maior que zero.");
 		}
 		
@@ -73,13 +74,13 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(double precoCompra) {
+	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) {
 		
 		return precoMaterialDao.listarPrecosMaterialPorPrecoCompra(precoCompra);
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(double precoCompraInicial, double precoCompraFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) {
 		
 		return precoMaterialDao.listarPrecosMaterialPorIntervaloPrecoCompra(precoCompraInicial, precoCompraFinal);
 		

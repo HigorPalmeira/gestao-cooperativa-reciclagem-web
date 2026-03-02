@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -57,9 +58,10 @@ public class VendaService {
 		}
 		
 		Cliente cliente = clienteService.buscarClientePorCnpj(cnpjCliente);
-		double valorTotal = listaItensVenda.stream()
-				.mapToDouble(itemVenda -> itemVenda.getPrecoUnitarioKg() * itemVenda.getPesoVendidoKg())
-				.sum();
+		
+		BigDecimal valorTotal = listaItensVenda.stream()
+				.map(itemVenda -> itemVenda.getPrecoUnitarioKg().multiply(itemVenda.getPesoVendidoKg()))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		
 		Venda venda = new Venda(dtVenda, valorTotal, cliente);
 		
@@ -77,11 +79,11 @@ public class VendaService {
 			throw new RuntimeException("Item da Venda inválido! O item da venda não pode estar vazio.");
 		}
 		
-		if (itemVenda.getPesoVendidoKg() <= 0) {
+		if (itemVenda.getPesoVendidoKg().compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("O peso vendido é inválido! O peso vendido deve ser maior que 0.0 Kg.");
 		}
 		
-		if (itemVenda.getPrecoUnitarioKg() <= 0) {
+		if (itemVenda.getPrecoUnitarioKg().compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("O preço unitário por quilo é inválido! O preço unitário deve ser maio que R$ 0,00/Kg.");
 		}
 		
@@ -112,9 +114,9 @@ public class VendaService {
 		}
 		
 		Cliente cliente = clienteService.buscarClientePorCnpj(cnpjCliente);
-		double valorTotal = listaItensVenda.stream()
-				.mapToDouble(itemVenda -> itemVenda.getPrecoUnitarioKg() * itemVenda.getPesoVendidoKg())
-				.sum();
+		BigDecimal valorTotal = listaItensVenda.stream()
+				.map(itemVenda -> itemVenda.getPrecoUnitarioKg().multiply(itemVenda.getPesoVendidoKg()))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		
 		Venda venda = new Venda();
 		venda.setId(idVenda);
@@ -153,11 +155,11 @@ public class VendaService {
 			throw new RuntimeException("Não é possível atualizar um item da venda inválido!");
 		}
 		
-		if (itemVenda.getPesoVendidoKg() < 0.0) {
+		if (itemVenda.getPesoVendidoKg().compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Não é possível atualizar um item da venda com o peso vendido inválido!");
 		}
 		
-		if (itemVenda.getPrecoUnitarioKg() < 0.0) {
+		if (itemVenda.getPrecoUnitarioKg().compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Não é possível atualizar um item da venda com o preço unitário inválido!");
 		}
 		
@@ -251,7 +253,7 @@ public class VendaService {
 		
 	}
 
-	public Double somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public BigDecimal somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		if (dtInicio == null || dtFim == null) {
 			throw new RuntimeException("Data(s) de busca inválida(s)!");
@@ -261,7 +263,7 @@ public class VendaService {
 		
 	}
 	
-	public Double somarPesoVendidoItemVendaPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public BigDecimal somarPesoVendidoItemVendaPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		if (dtInicio == null || dtFim == null) {
 			throw new RuntimeException("Data(s) de busca inválida(s)!");

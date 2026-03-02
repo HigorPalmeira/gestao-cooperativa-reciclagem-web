@@ -1,24 +1,25 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class Venda {
 	
 	private int id;
 	private Date dtVenda;
-	private double valorTotal;
+	private BigDecimal valorTotal;
 	private Cliente cliente;
 	
 	public Venda() {}
 
-	public Venda(int id, Date dtVenda, double valorTotal, Cliente cliente) {
+	public Venda(int id, Date dtVenda, BigDecimal valorTotal, Cliente cliente) {
 		this.id = id;
 		this.dtVenda = dtVenda;
 		this.valorTotal = valorTotal;
 		this.cliente = cliente;
 	}
 
-	public Venda(Date dtVenda, double valorTotal, Cliente cliente) {
+	public Venda(Date dtVenda, BigDecimal valorTotal, Cliente cliente) {
 		this.dtVenda = dtVenda;
 		this.valorTotal = valorTotal;
 		this.cliente = cliente;
@@ -40,11 +41,11 @@ public class Venda {
 		this.dtVenda = dtVenda;
 	}
 
-	public double getValorTotal() {
+	public BigDecimal getValorTotal() {
 		return valorTotal;
 	}
 
-	public void setValorTotal(double valorTotal) {
+	public void setValorTotal(BigDecimal valorTotal) {
 		this.valorTotal = valorTotal;
 	}
 

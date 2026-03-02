@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -118,7 +119,7 @@ public class TransacaoCompraController extends HttpServlet {
 			
 			StatusPagamentoTransacaoCompra status = StatusPagamentoTransacaoCompra.valueOf(statusTexto);
 			
-			transacaoCompraService.atualizarTransacaoCompra(idTransacao, 0, status, null, Date.valueOf(LocalDate.now()), null);
+			transacaoCompraService.atualizarTransacaoCompra(idTransacao, BigDecimal.ZERO, status, null, Date.valueOf(LocalDate.now()), null);
 			
 			request.getSession().setAttribute("msgSucesso", "Transação de Compra atualizada com sucesso!");
 			

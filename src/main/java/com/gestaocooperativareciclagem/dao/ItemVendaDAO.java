@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,11 +17,11 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class ItemVendaDAO {
 	
-	public Double somarPesoVendidoItemVendaPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public BigDecimal somarPesoVendidoItemVendaPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		String sum = "select sum(peso_vendido_kg_itemvenda) from info_item_venda where dtVenda_venda between ? and ?";
 		
-		Double soma = 0.0;
+		BigDecimal soma = BigDecimal.ZERO;
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(sum);) {
@@ -31,7 +32,7 @@ public class ItemVendaDAO {
 			ResultSet rset = pst.executeQuery();
 			
 			if (rset.next()) {
-				soma = rset.getDouble(1);
+				soma = rset.getBigDecimal(1);
 			}
 			
 			rset.close();
@@ -54,8 +55,8 @@ public class ItemVendaDAO {
 			PreparedStatement pst = conexao.prepareStatement(insert);
 			pst.setInt(1, itemVenda.getTipoMaterial().getId());
 			pst.setInt(2, itemVenda.getVenda().getId());
-			pst.setDouble(3, itemVenda.getPesoVendidoKg());
-			pst.setDouble(4, itemVenda.getPrecoUnitarioKg());
+			pst.setBigDecimal(3, itemVenda.getPesoVendidoKg());
+			pst.setBigDecimal(4, itemVenda.getPrecoUnitarioKg());
 			
 			pst.executeUpdate();
 			
@@ -83,8 +84,8 @@ public class ItemVendaDAO {
 			while(rset.next()) {
 				
 				int idItemVenda = rset.getInt("id_itemvenda");
-				double pesoVendidoKgItemVenda = rset.getDouble("peso_vendido_kg_itemvenda");
-				double precoUnitarioKgItemVenda = rset.getDouble("preco_unitario_kg_itemvenda");
+				BigDecimal pesoVendidoKgItemVenda = rset.getBigDecimal("peso_vendido_kg_itemvenda");
+				BigDecimal precoUnitarioKgItemVenda = rset.getBigDecimal("preco_unitario_kg_itemvenda");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
 				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
@@ -93,7 +94,7 @@ public class ItemVendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
@@ -133,8 +134,8 @@ public class ItemVendaDAO {
 			while(rset.next()) {
 				
 				int idItemVenda = rset.getInt("id_itemvenda");
-				double pesoVendidoKgItemVenda = rset.getDouble("peso_vendido_kg_itemvenda");
-				double precoUnitarioKgItemVenda = rset.getDouble("preco_unitario_kg_itemvenda");
+				BigDecimal pesoVendidoKgItemVenda = rset.getBigDecimal("peso_vendido_kg_itemvenda");
+				BigDecimal precoUnitarioKgItemVenda = rset.getBigDecimal("preco_unitario_kg_itemvenda");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
 				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
@@ -143,7 +144,7 @@ public class ItemVendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
@@ -183,8 +184,8 @@ public class ItemVendaDAO {
 			while(rset.next()) {
 				
 				int idItemVenda = rset.getInt("id_itemvenda");
-				double pesoVendidoKgItemVenda = rset.getDouble("peso_vendido_kg_itemvenda");
-				double precoUnitarioKgItemVenda = rset.getDouble("preco_unitario_kg_itemvenda");
+				BigDecimal pesoVendidoKgItemVenda = rset.getBigDecimal("peso_vendido_kg_itemvenda");
+				BigDecimal precoUnitarioKgItemVenda = rset.getBigDecimal("preco_unitario_kg_itemvenda");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
 				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
@@ -193,7 +194,7 @@ public class ItemVendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
@@ -232,8 +233,8 @@ public class ItemVendaDAO {
 			while(rset.next()) {
 				
 				itemVenda.setId( rset.getInt("id_itemvenda") );
-				itemVenda.setPesoVendidoKg( rset.getDouble("peso_vendido_kg_itemvenda") );
-				itemVenda.setPrecoUnitarioKg( rset.getDouble("preco_unitario_kg_itemvenda") );
+				itemVenda.setPesoVendidoKg( rset.getBigDecimal("peso_vendido_kg_itemvenda") );
+				itemVenda.setPrecoUnitarioKg( rset.getBigDecimal("preco_unitario_kg_itemvenda") );
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
 				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
@@ -242,7 +243,7 @@ public class ItemVendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
@@ -272,8 +273,8 @@ public class ItemVendaDAO {
 			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setInt(1, itemVenda.getTipoMaterial().getId());
 			pst.setInt(2, itemVenda.getVenda().getId());
-			pst.setDouble(3, itemVenda.getPesoVendidoKg());
-			pst.setDouble(4, itemVenda.getPrecoUnitarioKg());
+			pst.setBigDecimal(3, itemVenda.getPesoVendidoKg());
+			pst.setBigDecimal(4, itemVenda.getPrecoUnitarioKg());
 			pst.setInt(5, itemVenda.getId());
 			
 			pst.executeUpdate();

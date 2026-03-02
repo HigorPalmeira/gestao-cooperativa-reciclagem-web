@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -154,7 +155,7 @@ public class LoteBrutoController extends HttpServlet {
 		try {
 			
 			String documento = request.getParameter("supplierDoc");
-			double pesoEntrada = Double.parseDouble(request.getParameter("entryWeight"));
+			BigDecimal pesoEntrada = new BigDecimal(request.getParameter("entryWeight")); 
 			
 			Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
 			
@@ -180,7 +181,7 @@ public class LoteBrutoController extends HttpServlet {
 		try {
 			
 			int idLoteBruto = Integer.parseInt(request.getParameter("id"));
-			double pesoEntrada = Double.parseDouble(request.getParameter("entryWeight"));
+			BigDecimal pesoEntrada = new BigDecimal(request.getParameter("entryWeight"));
 			StatusLoteBruto status = StatusLoteBruto.fromDescricao(request.getParameter("batchStatus"));
 			String documento = request.getParameter("supplierDoc");
 		
@@ -233,7 +234,7 @@ public class LoteBrutoController extends HttpServlet {
 		try {
 			
 			int idLoteBruto = Integer.parseInt(request.getParameter("id"));
-			double pesoEntrada = Double.parseDouble(request.getParameter("entryWeight"));
+			BigDecimal pesoEntrada = new BigDecimal(request.getParameter("entryWeight"));
 			StatusLoteBruto status = StatusLoteBruto.fromDescricao(request.getParameter("batchStatus"));
 			String documento = request.getParameter("supplierDoc");
 			

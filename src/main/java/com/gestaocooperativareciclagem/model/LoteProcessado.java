@@ -1,19 +1,20 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 
 public class LoteProcessado {
 	
 	private int id;
-	private double pesoAtualKg;
+	private BigDecimal pesoAtualKg;
 	private Date dtCriacao;
 	private TipoMaterial tipoMaterial;
 	private LoteBruto loteBruto;
 	
 	public LoteProcessado() {}
 
-	public LoteProcessado(int id, double pesoAtualKg, Date dtCriacao, TipoMaterial tipoMaterial,
+	public LoteProcessado(int id, BigDecimal pesoAtualKg, Date dtCriacao, TipoMaterial tipoMaterial,
 			LoteBruto loteBruto) {
 		this.id = id;
 		this.pesoAtualKg = pesoAtualKg;
@@ -22,7 +23,7 @@ public class LoteProcessado {
 		this.loteBruto = loteBruto;
 	}
 
-	public LoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
+	public LoteProcessado(BigDecimal pesoAtualKg, TipoMaterial tipoMaterial, LoteBruto loteBruto) {
 		this.pesoAtualKg = pesoAtualKg;
 		this.dtCriacao = Date.valueOf(LocalDate.now());
 		this.tipoMaterial = tipoMaterial;
@@ -37,11 +38,11 @@ public class LoteProcessado {
 		this.id = id;
 	}
 
-	public double getPesoAtualKg() {
+	public BigDecimal getPesoAtualKg() {
 		return pesoAtualKg;
 	}
 
-	public void setPesoAtualKg(double pesoAtualKg) {
+	public void setPesoAtualKg(BigDecimal pesoAtualKg) {
 		this.pesoAtualKg = pesoAtualKg;
 	}
 

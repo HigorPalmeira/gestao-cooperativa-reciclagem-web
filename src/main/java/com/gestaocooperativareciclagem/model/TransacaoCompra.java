@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
@@ -7,7 +8,7 @@ import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompr
 public class TransacaoCompra {
 	
 	private int id;
-	private double valorTotalCalculado;
+	private BigDecimal valorTotalCalculado;
 	private StatusPagamentoTransacaoCompra status;
 	private Date dtCalculo;
 	private Date dtPagamento;
@@ -15,7 +16,7 @@ public class TransacaoCompra {
 	
 	public TransacaoCompra() {}
 
-	public TransacaoCompra(int id, double valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo,
+	public TransacaoCompra(int id, BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo,
 			Date dtPagamento, LoteBruto loteBruto) {
 		this.id = id;
 		this.valorTotalCalculado = valorTotalCalculado;
@@ -25,7 +26,7 @@ public class TransacaoCompra {
 		this.loteBruto = loteBruto;
 	}
 
-	public TransacaoCompra(double valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo,
+	public TransacaoCompra(BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo,
 			Date dtPagamento, LoteBruto loteBruto) {
 		this.valorTotalCalculado = valorTotalCalculado;
 		this.status = status;
@@ -42,11 +43,11 @@ public class TransacaoCompra {
 		this.id = id;
 	}
 
-	public double getValorTotalCalculado() {
+	public BigDecimal getValorTotalCalculado() {
 		return valorTotalCalculado;
 	}
 
-	public void setValorTotalCalculado(double valorTotalCalculado) {
+	public void setValorTotalCalculado(BigDecimal valorTotalCalculado) {
 		this.valorTotalCalculado = valorTotalCalculado;
 	}
 

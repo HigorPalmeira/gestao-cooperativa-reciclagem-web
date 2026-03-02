@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,7 +147,7 @@ public class LoteProcessadoController extends HttpServlet {
 			String idLoteBrutoTexto = request.getParameter("rawBatchId");
 			int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
 			int idCategoriaProcessamento = Integer.parseInt(request.getParameter("processStage"));
-			double pesoAtualKg = Double.parseDouble(request.getParameter("currentWeight"));
+			BigDecimal pesoAtualKg = new BigDecimal(request.getParameter("currentWeight"));
 			
 			int idLoteBruto = Integer.parseInt(idLoteBrutoTexto.replaceAll("\\D", ""));
 			
@@ -174,7 +175,7 @@ public class LoteProcessadoController extends HttpServlet {
 			// int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
 			// int idLoteBruto = Integer.parseInt(request.getParameter("rawBatchId"));
 			
-			double pesoAtualKg = Double.parseDouble(request.getParameter("currentWeight"));
+			BigDecimal pesoAtualKg = new BigDecimal(request.getParameter("currentWeight"));
 			
 			// TipoMaterial tipoMaterial = tipoMaterialService.buscarTipoMaterialPorId(idTipoMaterial);
 			// LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(idLoteBruto);

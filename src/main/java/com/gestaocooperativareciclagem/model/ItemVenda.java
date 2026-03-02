@@ -1,16 +1,18 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
+
 public class ItemVenda {
 	
 	private int id;
 	private TipoMaterial tipoMaterial;
 	private Venda venda;
-	private double pesoVendidoKg;
-	private double precoUnitarioKg;
+	private BigDecimal pesoVendidoKg;
+	private BigDecimal precoUnitarioKg;
 	
 	public ItemVenda() {}
 
-	public ItemVenda(int id, TipoMaterial tipoMaterial, Venda venda, double pesoVendidoKg, double precoUnitarioKg) {
+	public ItemVenda(int id, TipoMaterial tipoMaterial, Venda venda, BigDecimal pesoVendidoKg, BigDecimal precoUnitarioKg) {
 		this.id = id;
 		this.tipoMaterial = tipoMaterial;
 		this.venda = venda;
@@ -18,7 +20,7 @@ public class ItemVenda {
 		this.precoUnitarioKg = precoUnitarioKg;
 	}
 
-	public ItemVenda(TipoMaterial tipoMaterial, Venda venda, double pesoVendidoKg, double precoUnitarioKg) {
+	public ItemVenda(TipoMaterial tipoMaterial, Venda venda, BigDecimal pesoVendidoKg, BigDecimal precoUnitarioKg) {
 		this.tipoMaterial = tipoMaterial;
 		this.venda = venda;
 		this.pesoVendidoKg = pesoVendidoKg;
@@ -49,19 +51,19 @@ public class ItemVenda {
 		this.venda = venda;
 	}
 
-	public double getPesoVendidoKg() {
+	public BigDecimal getPesoVendidoKg() {
 		return pesoVendidoKg;
 	}
 
-	public void setPesoVendidoKg(double pesoVendidoKg) {
+	public void setPesoVendidoKg(BigDecimal pesoVendidoKg) {
 		this.pesoVendidoKg = pesoVendidoKg;
 	}
 
-	public double getPrecoUnitarioKg() {
+	public BigDecimal getPrecoUnitarioKg() {
 		return precoUnitarioKg;
 	}
 
-	public void setPrecoUnitarioKg(double precoUnitarioKg) {
+	public void setPrecoUnitarioKg(BigDecimal precoUnitarioKg) {
 		this.precoUnitarioKg = precoUnitarioKg;
 	}
 

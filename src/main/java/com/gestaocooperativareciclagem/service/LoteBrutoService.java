@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class LoteBrutoService {
 		this.loteBrutoDao = loteBrutoDao;
 	}
 	
-	public void inserirLoteBruto(double pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
+	public void inserirLoteBruto(BigDecimal pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
 		
 		LoteBruto loteBruto = new LoteBruto(pesoEntradaKg, dtEntrada, status, fornecedor);
 		
@@ -26,7 +27,7 @@ public class LoteBrutoService {
 		
 	}
 	
-	public void atualizarLoteBruto(int idLoteBruto, double pesoEntradaKg, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
+	public void atualizarLoteBruto(int idLoteBruto, BigDecimal pesoEntradaKg, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
 		
 		LoteBruto loteBruto = buscarLoteBrutoPorId(idLoteBruto);
 		
@@ -43,7 +44,7 @@ public class LoteBrutoService {
 			loteBruto.setStatus(status);
 		}
 		
-		if (pesoEntradaKg > 0) {
+		if (pesoEntradaKg.compareTo(BigDecimal.ZERO) > 0) {
 			loteBruto.setPesoEntradaKg(pesoEntradaKg);			
 		}
 		
@@ -75,9 +76,9 @@ public class LoteBrutoService {
 		
 	}
 	
-	public List<LoteBruto> listarLotesBrutosPorIntervaloDePesoEntrada(double pesoEntradaInicial, double pesoEntradaFinal) {
+	public List<LoteBruto> listarLotesBrutosPorIntervaloDePesoEntrada(BigDecimal pesoEntradaInicial, BigDecimal pesoEntradaFinal) {
 		
-		if (pesoEntradaInicial < 0 || pesoEntradaFinal < 0) {
+		if (pesoEntradaInicial.compareTo(BigDecimal.ZERO) < 0 || pesoEntradaFinal.compareTo(BigDecimal.ZERO) < 0) {
 			throw new RuntimeException("Peso de entrada informado é inválido! É necessário informar um valor válido: maior que 0.");
 		}
 		
@@ -110,7 +111,7 @@ public class LoteBrutoService {
 		
 	}
 	
-	public Double somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public BigDecimal somarPesoEntradaLoteBrutoPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
 		if (dtInicio == null || dtFim == null) {
 			throw new RuntimeException("Data(s) de busca inválida(s)!");

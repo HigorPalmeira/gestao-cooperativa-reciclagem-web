@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -33,19 +34,19 @@ public class LoteProcessadoService {
 		this.loteBrutoService = loteBrutoService;
 	}
 
-	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, double pesoKg) {
+	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, BigDecimal pesoKg) {
 		
 		PrecoMaterial precoMaterial = precoMaterialService.buscarPrecoMaterialVigentePorTipoMaterial(tipoMaterial);
 		
-		double valorTotalCalculado = precoMaterial.getPrecoCompra() * pesoKg;
+		BigDecimal valorTotalCalculado = precoMaterial.getPrecoCompra().multiply(pesoKg);
 		
 		transacaoCompraService.inserirTransacaoCompra(valorTotalCalculado, StatusPagamentoTransacaoCompra.PENDENTE, Date.valueOf(LocalDate.now()), loteBruto);
 		
 	}
 	
-	public void inserirLoteProcessado(double pesoAtualKg, TipoMaterial tipoMaterial, CategoriaProcessamento categoriaProcessamento, LoteBruto loteBruto) throws SQLException {
+	public void inserirLoteProcessado(BigDecimal pesoAtualKg, TipoMaterial tipoMaterial, CategoriaProcessamento categoriaProcessamento, LoteBruto loteBruto) throws SQLException {
 		
-		if (pesoAtualKg <= 0) {
+		if (pesoAtualKg.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("O peso do lote processado é inválido! Para registrar o lote processado informe um peso (em Kg) válido.");
 		}
 		
@@ -63,15 +64,12 @@ public class LoteProcessadoService {
 		
 		
 		List<LoteProcessado> listaLotesProcessados = listarLotesProcessadoPorLoteBruto(loteBruto);
-		double pesoTotal = 0;
+		BigDecimal pesoTotal = listaLotesProcessados.stream()
+				.map(LoteProcessado::getPesoAtualKg)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		
-		for (LoteProcessado ltProcessado : listaLotesProcessados) {
-			pesoTotal += ltProcessado.getPesoAtualKg();
-		}
-		
-		// melhorar a comparação 
-		if (pesoTotal + pesoAtualKg > loteBruto.getPesoEntradaKg()) {
-			throw new RuntimeException("Não é possível cadastrar o lote processado com o peso atual. O peso máximo aceito para o lote é de: " + (loteBruto.getPesoEntradaKg() - pesoTotal));
+		if (loteBruto.getPesoEntradaKg().compareTo( pesoTotal.add(pesoAtualKg) ) < 0) {
+			throw new RuntimeException("Não é possível cadastrar o lote processado com o peso atual. O peso máximo aceito para o lote é de: " + (loteBruto.getPesoEntradaKg().subtract(pesoTotal).doubleValue()));
 		}
 		
 		
@@ -82,13 +80,13 @@ public class LoteProcessadoService {
 
 		gerarTransacaoCompra(loteBruto, tipoMaterial, loteProcessado.getPesoAtualKg());
 			
-		if (pesoTotal + pesoAtualKg == loteBruto.getPesoEntradaKg()) {
-			loteBrutoService.atualizarLoteBruto(loteBruto.getId(), 0, StatusLoteBruto.PROCESSADO, null);
+		if (loteBruto.getPesoEntradaKg().compareTo( pesoTotal.add(pesoAtualKg) ) == 0) {
+			loteBrutoService.atualizarLoteBruto(loteBruto.getId(), BigDecimal.ZERO, StatusLoteBruto.PROCESSADO, null);
 		}
 		
 	}
 	
-	public void atualizarLoteProcessado(int idLoteProcessado, double pesoAtualKg) {
+	public void atualizarLoteProcessado(int idLoteProcessado, BigDecimal pesoAtualKg) {
 		
 		LoteProcessado loteProcessado = buscarLoteProcessadoPorId(idLoteProcessado);
 		
@@ -96,7 +94,7 @@ public class LoteProcessadoService {
 		loteProcessadoAtualizado.setId(idLoteProcessado);
 		
 		loteProcessadoAtualizado.setPesoAtualKg(
-				pesoAtualKg > 0
+				pesoAtualKg.compareTo(BigDecimal.ZERO) > 0
 				? pesoAtualKg
 				: loteProcessado.getPesoAtualKg()
 				);
@@ -171,7 +169,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public Double somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
+	public BigDecimal somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
 		
 		if (etapaProcessamento == null || etapaProcessamento.isBlank()) {
 			throw new RuntimeException("Etapa de Processamento inválida para busca.");

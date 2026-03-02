@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,11 +20,11 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class LoteProcessadoDAO {
 	
-	public Double somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
+	public BigDecimal somarPesoTotalLoteProcessadoPorEtapaProcessamento(String etapaProcessamento) throws SQLException {
 		
-		String sum = "select sum(peso_atual_kg_loteprocessado) from info_etapa_processamento where nome_categoriaprocessamento = ?";
+		String sum = "select coalesce(sum(peso_atual_kg_loteprocessado), 0) from info_etapa_processamento where nome_categoriaprocessamento = ?";
 		
-		Double pesoTotal = 0.0;
+		BigDecimal pesoTotal = BigDecimal.ZERO;
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(sum);) {
@@ -33,9 +34,9 @@ public class LoteProcessadoDAO {
 			ResultSet rset = pst.executeQuery();
 			
 			if (rset.next()) {
-				pesoTotal = rset.getDouble(1);
+				pesoTotal = rset.getBigDecimal(1);
 			}
-		
+			
 			rset.close();
 			
 		}
@@ -54,7 +55,7 @@ public class LoteProcessadoDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-			pst.setDouble(1, loteProcessado.getPesoAtualKg());
+			pst.setBigDecimal(1, loteProcessado.getPesoAtualKg());
 			pst.setDate(2, loteProcessado.getDtCriacao());
 			pst.setInt(3, loteProcessado.getTipoMaterial().getId());
 			pst.setInt(4, loteProcessado.getLoteBruto().getId());
@@ -94,7 +95,7 @@ public class LoteProcessadoDAO {
 			while(rset.next()) {
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -109,7 +110,7 @@ public class LoteProcessadoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
@@ -147,7 +148,7 @@ public class LoteProcessadoDAO {
 			while(rset.next()) {
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -162,7 +163,7 @@ public class LoteProcessadoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
@@ -200,7 +201,7 @@ public class LoteProcessadoDAO {
 			while(rset.next()) {
 				
 				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				double pesoAtualKgLoteProcessado = rset.getDouble("peso_atual_kg_loteprocessado");
+				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
 				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -215,7 +216,7 @@ public class LoteProcessadoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
@@ -252,7 +253,7 @@ public class LoteProcessadoDAO {
 			while(rset.next()) {
 				
 				loteProcessado.setId( rset.getInt("id_loteprocessado") );
-				loteProcessado.setPesoAtualKg( rset.getDouble("peso_atual_kg_loteprocessado") );
+				loteProcessado.setPesoAtualKg( rset.getBigDecimal("peso_atual_kg_loteprocessado") );
 				loteProcessado.setDtCriacao( rset.getDate("dtCriacao_loteprocessado") );
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -269,7 +270,7 @@ public class LoteProcessadoDAO {
 				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKgLoteBruto = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
@@ -298,7 +299,7 @@ public class LoteProcessadoDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setDouble(1, loteProcessado.getPesoAtualKg());
+			pst.setBigDecimal(1, loteProcessado.getPesoAtualKg());
 			pst.setInt(2, loteProcessado.getId());
 			
 			pst.executeUpdate();

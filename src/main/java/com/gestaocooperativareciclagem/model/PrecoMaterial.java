@@ -1,24 +1,25 @@
 package com.gestaocooperativareciclagem.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class PrecoMaterial {
 	
 	private int id;
-	private double precoCompra;
+	private BigDecimal precoCompra;
 	private Date dtVigencia;
 	private TipoMaterial tipoMaterial;
 	
 	public PrecoMaterial() {}
 	
-	public PrecoMaterial(int id, double precoCompra, Date dtVigencia, TipoMaterial tipoMaterial) {
+	public PrecoMaterial(int id, BigDecimal precoCompra, Date dtVigencia, TipoMaterial tipoMaterial) {
 		this.id = id;
 		this.precoCompra = precoCompra;
 		this.dtVigencia = dtVigencia;
 		this.tipoMaterial = tipoMaterial;
 	}
 
-	public PrecoMaterial(double precoCompra, Date dtVigencia, TipoMaterial tipoMaterial) {
+	public PrecoMaterial(BigDecimal precoCompra, Date dtVigencia, TipoMaterial tipoMaterial) {
 		this.precoCompra = precoCompra;
 		this.dtVigencia = dtVigencia;
 		this.tipoMaterial = tipoMaterial;
@@ -32,11 +33,11 @@ public class PrecoMaterial {
 		this.id = id;
 	}
 
-	public double getPrecoCompra() {
+	public BigDecimal getPrecoCompra() {
 		return precoCompra;
 	}
 
-	public void setPrecoCompra(double precoCompra) {
+	public void setPrecoCompra(BigDecimal precoCompra) {
 		this.precoCompra = precoCompra;
 	}
 

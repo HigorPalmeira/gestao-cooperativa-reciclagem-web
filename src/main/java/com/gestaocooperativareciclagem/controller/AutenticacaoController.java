@@ -133,7 +133,7 @@ public class AutenticacaoController extends HttpServlet {
 				if (usuario.getPapel().equalsIgnoreCase("operador")) {
 					response.sendRedirect("pages/producao/producao.jsp");
 				} else if (Arrays.asList("administrador", "gerente").contains(usuario.getPapel().toLowerCase())) {
-					response.sendRedirect(request.getContextPath() + "/Home");					
+					response.sendRedirect(request.getContextPath() + "/Home");
 				} else {
 					throw new RuntimeException("O papel do usuário (" + usuario.getPapel() +") não reconhecido pelo sistema!");
 				}

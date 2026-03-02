@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -118,12 +119,12 @@ public class HomeController extends HttpServlet {
 			Date dtHoje = Date.valueOf(hoje);
 			
 			Long lotesBrutosRecebidosHoje = loteBrutoService.contarLoteBrutoPorData(dtHoje);
-			Double lotesBrutosKgRecebidosHoje = loteBrutoService.somarPesoEntradaLoteBrutoPorDatas(dtHoje, dtHoje);
-			Double totalVendasNoMes = vendaService.somarValorTotalVendasPorDatas(Date.valueOf(inicioMes), Date.valueOf(fimMes));
+			BigDecimal lotesBrutosKgRecebidosHoje = loteBrutoService.somarPesoEntradaLoteBrutoPorDatas(dtHoje, dtHoje);
+			BigDecimal totalVendasNoMes = vendaService.somarValorTotalVendasPorDatas(Date.valueOf(inicioMes), Date.valueOf(fimMes));
 			
 			Long totalPagamentosPendentes = transacaoCompraService.contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
-			Double valorTotalPagamentosPendentes = transacaoCompraService.somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
-			Double lotesProcessadosKgProntos = loteProcessadoService.somarPesoTotalLoteProcessadoPorEtapaProcessamento("Pronto para Venda");
+			BigDecimal valorTotalPagamentosPendentes = transacaoCompraService.somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
+			BigDecimal lotesProcessadosKgProntos = loteProcessadoService.somarPesoTotalLoteProcessadoPorEtapaProcessamento("Pronto para Venda");
 			
 			request.setAttribute("lotesBrutosRecebidosHoje", lotesBrutosRecebidosHoje);
 			request.setAttribute("lotesBrutosKgRecebidosHoje", lotesBrutosKgRecebidosHoje);
@@ -142,7 +143,7 @@ public class HomeController extends HttpServlet {
 			
 			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar ir para a página inicial!<br>Erro: " + e.getMessage());
 			response.sendRedirect(request.getHeader("referer"));
-			
+			e.printStackTrace();
 		}
 		
 	}

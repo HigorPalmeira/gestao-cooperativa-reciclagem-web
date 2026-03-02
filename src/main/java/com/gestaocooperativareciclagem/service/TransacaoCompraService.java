@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class TransacaoCompraService {
 		this.transacaoCompraDao = transacaoCompraDao;
 	}
 	
-	public void inserirTransacaoCompra(double valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo, LoteBruto loteBruto) {
+	public void inserirTransacaoCompra(BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo, LoteBruto loteBruto) {
 		
 		// adicionar validacao no model
 		TransacaoCompra transacaoCompra = new TransacaoCompra(valorTotalCalculado, status, dtCalculo, null, loteBruto);
@@ -27,7 +28,7 @@ public class TransacaoCompraService {
 		
 	}
 	
-	public void atualizarTransacaoCompra(int idTransacao, double valorTotalCalculado, StatusPagamentoTransacaoCompra status, 
+	public void atualizarTransacaoCompra(int idTransacao, BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, 
 			Date dtCalculo, Date dtPagamento, LoteBruto loteBruto) {
 		
 		TransacaoCompra transacaoCompraOriginal = buscarTransacaoCompraPorId(idTransacao);
@@ -40,7 +41,7 @@ public class TransacaoCompraService {
 		transacaoCompraAtualizada.setId(idTransacao);	
 		
 		transacaoCompraAtualizada.setValorTotalCalculado( 
-				valorTotalCalculado > 0 
+				valorTotalCalculado.compareTo(BigDecimal.ZERO) > 0 
 				? valorTotalCalculado 
 				: transacaoCompraOriginal.getValorTotalCalculado()
 				);
@@ -120,7 +121,7 @@ public class TransacaoCompraService {
 		
 	}
 	
-	public Double somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+	public BigDecimal somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
 		
 		if (status == null) {
 			throw new RuntimeException("Status de Pagamento para a busca inválido.");

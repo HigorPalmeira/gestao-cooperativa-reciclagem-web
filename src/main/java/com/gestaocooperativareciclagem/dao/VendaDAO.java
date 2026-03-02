@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,11 +16,11 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class VendaDAO {
 	
-	public Double somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
+	public BigDecimal somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 		
-		String sum = "select sum(valor_total_venda) from venda where dtVenda_venda between ? and ?";
+		String sum = "select coalesce(sum(valor_total_venda), 0) from venda where dtVenda_venda between ? and ?";
 		
-		Double valorTotal = 0.0;
+		BigDecimal valorTotal = BigDecimal.ZERO;
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(sum);) {
@@ -30,8 +31,10 @@ public class VendaDAO {
 			ResultSet rset = pst.executeQuery();
 			
 			if (rset.next()) {
-				valorTotal = rset.getDouble(1);
+				valorTotal = rset.getBigDecimal(1);
 			}
+			
+			rset.close();
 			
 		}
 		
@@ -50,7 +53,7 @@ public class VendaDAO {
 			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
 			pst.setDate(1, venda.getDtVenda());
-			pst.setDouble(2, venda.getValorTotal());
+			pst.setBigDecimal(2, venda.getValorTotal());
 			pst.setString(3, venda.getCliente().getCnpj());
 			
 			int linhasAfetadas = pst.executeUpdate();
@@ -89,7 +92,7 @@ public class VendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresa = rset.getString("nome_empresa_cliente");
@@ -133,7 +136,7 @@ public class VendaDAO {
 				
 				int idVenda = rset.getInt("id_venda");
 				Date dtVenda = rset.getDate("dtVenda_venda");
-				double valorTotalVenda = rset.getDouble("valor_total_venda");
+				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresa = rset.getString("nome_empresa_cliente");
@@ -176,7 +179,7 @@ public class VendaDAO {
 				
 				venda.setId( rset.getInt("id_venda") );
 				venda.setDtVenda( rset.getDate("dtVenda_venda") );
-				venda.setValorTotal( rset.getDouble("valor_total_venda") );
+				venda.setValorTotal( rset.getBigDecimal("valor_total_venda") );
 				
 				String cnpjCliente = rset.getString("cnpj_cliente");
 				String nomeEmpresa = rset.getString("nome_empresa_cliente");
@@ -211,7 +214,7 @@ public class VendaDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setDouble(1, venda.getValorTotal());
+			pst.setBigDecimal(1, venda.getValorTotal());
 			pst.setString(2, venda.getCliente().getCnpj());
 			pst.setInt(3, venda.getId());
 			

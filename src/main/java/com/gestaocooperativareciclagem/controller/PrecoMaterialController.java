@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -120,7 +121,7 @@ public class PrecoMaterialController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		double preco = Double.parseDouble(request.getParameter("modalPrice"));
+		BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
 		Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
 		int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
 		
@@ -135,7 +136,7 @@ public class PrecoMaterialController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 		int idPreco = Integer.parseInt(request.getParameter("modalId"));
-		double preco = Double.parseDouble(request.getParameter("modalPrice"));
+		BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
 		Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
 		int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
 		

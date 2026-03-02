@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ public class PrecoMaterialDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(insert);
-			pst.setDouble(1, precoMaterial.getPrecoCompra());
+			pst.setBigDecimal(1, precoMaterial.getPrecoCompra());
 			pst.setDate(2, precoMaterial.getDtVigencia());
 			pst.setInt(3, precoMaterial.getTipoMaterial().getId());
 			
@@ -53,7 +54,7 @@ public class PrecoMaterialDAO {
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -78,7 +79,7 @@ public class PrecoMaterialDAO {
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(double precoCompra) {
+	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
@@ -88,14 +89,14 @@ public class PrecoMaterialDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			PreparedStatement pst = conexao.prepareStatement(select);
-			pst.setDouble(1, precoCompra);
+			pst.setBigDecimal(1, precoCompra);
 			
 			ResultSet rset = pst.executeQuery();
 			
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -120,7 +121,7 @@ public class PrecoMaterialDAO {
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(double precoCompraInicial, double precoCompraFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
@@ -130,15 +131,15 @@ public class PrecoMaterialDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			PreparedStatement pst = conexao.prepareStatement(select);
-			pst.setDouble(1, precoCompraInicial);
-			pst.setDouble(2, precoCompraFinal);
+			pst.setBigDecimal(1, precoCompraInicial);
+			pst.setBigDecimal(2, precoCompraFinal);
 			
 			ResultSet rset = pst.executeQuery();
 			
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -180,7 +181,7 @@ public class PrecoMaterialDAO {
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -223,7 +224,7 @@ public class PrecoMaterialDAO {
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -258,14 +259,14 @@ public class PrecoMaterialDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			PreparedStatement pst = conexao.prepareStatement(select);
-			pst.setDouble(1, idTipoMaterialBuscado);
+			pst.setInt(1, idTipoMaterialBuscado);
 			
 			ResultSet rset = pst.executeQuery();
 			
 			while(rset.next()) {
 				
 				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				double precoCompraMaterial = rset.getDouble("preco_compra_kg_precomaterial");
+				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
 				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -306,7 +307,7 @@ public class PrecoMaterialDAO {
 			while(rset.next()) {
 				
 				precoMaterial.setId( rset.getInt("id_precomaterial") );
-				precoMaterial.setPrecoCompra( rset.getDouble("preco_compra_kg_precomaterial") );
+				precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
 				precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -346,7 +347,7 @@ public class PrecoMaterialDAO {
 			while(rset.next()) {
 				
 				precoMaterial.setId( rset.getInt("id_precomaterial") );
-				precoMaterial.setPrecoCompra( rset.getDouble("preco_compra_kg_precomaterial") );
+				precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
 				precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
 				
 				int idTipoMaterial = rset.getInt("id_tipomaterial");
@@ -376,7 +377,7 @@ public class PrecoMaterialDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setDouble(1, precoMaterial.getPrecoCompra());
+			pst.setBigDecimal(1, precoMaterial.getPrecoCompra());
 			pst.setDate(2, precoMaterial.getDtVigencia());
 			pst.setInt(3, precoMaterial.getTipoMaterial().getId());
 			pst.setInt(4, precoMaterial.getId());

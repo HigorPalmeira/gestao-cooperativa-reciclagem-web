@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -20,7 +21,7 @@ public class TransacaoCompraDAO {
 	
 	public Long contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
 		
-		String count = "select count(*) from transacao_compra where status_pagamento_transacaocompra = ?";
+		String count = "select coalesce(count(*), 0) from transacao_compra where status_pagamento_transacaocompra = ?";
 		
 		Long contagem = 0L;
 		
@@ -43,11 +44,11 @@ public class TransacaoCompraDAO {
 		
 	}
 	
-	public Double somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
+	public BigDecimal somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra status) throws SQLException {
 		
-		String sum = "select sum(valor_total_calculado_transacaocompra) from transacao_compra where status_pagamento_transacaocompra = ?";
+		String sum = "select coalesce(sum(valor_total_calculado_transacaocompra), 0) from transacao_compra where status_pagamento_transacaocompra = ?";
 		
-		Double valorTotal = 0.0;
+		BigDecimal valorTotal = BigDecimal.ZERO;
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(sum);) {
@@ -57,8 +58,10 @@ public class TransacaoCompraDAO {
 			ResultSet rset = pst.executeQuery();
 			
 			if (rset.next()) {
-				valorTotal = rset.getDouble(1);
+				valorTotal = rset.getBigDecimal(1);
 			}
+			
+			rset.close();
 			
 		}
 		
@@ -77,7 +80,7 @@ public class TransacaoCompraDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(insert);
-			pst.setDouble(1, transacaoCompra.getValorTotalCalculado());
+			pst.setBigDecimal(1, transacaoCompra.getValorTotalCalculado());
 			pst.setString(2, transacaoCompra.getStatus().name());
 			pst.setDate(3, transacaoCompra.getDtCalculo());
 			pst.setDate(4, transacaoCompra.getDtPagamento());
@@ -109,14 +112,14 @@ public class TransacaoCompraDAO {
 			while(rset.next()) {
 				
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
-				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
+				BigDecimal valorTotalCalculado = rset.getBigDecimal("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
 						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKg = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
@@ -160,14 +163,14 @@ public class TransacaoCompraDAO {
 			while(rset.next()) {
 				
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
-				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
+				BigDecimal valorTotalCalculado = rset.getBigDecimal("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
 						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKg = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
@@ -211,14 +214,14 @@ public class TransacaoCompraDAO {
 			while(rset.next()) {
 				
 				int idTransacaoCompra = rset.getInt("id_transacaocompra");
-				double valorTotalCalculado = rset.getDouble("valor_total_calculado_transacaocompra");
+				BigDecimal valorTotalCalculado = rset.getBigDecimal("valor_total_calculado_transacaocompra");
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
 						.valueOf(rset.getString("status_pagamento_transacaocompra"));
 				Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
 				Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKg = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
@@ -261,7 +264,7 @@ public class TransacaoCompraDAO {
 			while(rset.next()) {
 				
 				transacaoCompra.setId( rset.getInt("id_transacaocompra") );
-				transacaoCompra.setValorTotalCalculado( rset.getDouble("valor_total_calculado_transacaocompra") );
+				transacaoCompra.setValorTotalCalculado( rset.getBigDecimal("valor_total_calculado_transacaocompra") );
 				
 				StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
 						.valueOf(rset.getString("status_pagamento_transacaocompra"));
@@ -271,7 +274,7 @@ public class TransacaoCompraDAO {
 				transacaoCompra.setDtPagamento( rset.getDate("dtPagamento_transacaocompra") );
 				
 				int idLoteBruto = rset.getInt("id_lotebruto");
-				double pesoEntradaKg = rset.getDouble("peso_entrada_kg_lotebruto");
+				BigDecimal pesoEntradaKg = rset.getBigDecimal("peso_entrada_kg_lotebruto");
 				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
 				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
 				
@@ -308,7 +311,7 @@ public class TransacaoCompraDAO {
 			Connection conexao = Conexao.getConnection();
 			
 			PreparedStatement pst = conexao.prepareStatement(update);
-			pst.setDouble(1, transacaoCompra.getValorTotalCalculado());
+			pst.setBigDecimal(1, transacaoCompra.getValorTotalCalculado());
 			pst.setString(2, transacaoCompra.getStatus().name());
 			pst.setDate(3, transacaoCompra.getDtCalculo());
 			pst.setDate(4, transacaoCompra.getDtPagamento());
