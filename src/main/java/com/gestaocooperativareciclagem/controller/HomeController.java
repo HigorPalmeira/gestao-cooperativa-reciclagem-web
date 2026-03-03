@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -24,6 +25,7 @@ import com.gestaocooperativareciclagem.dao.PrecoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
 import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.dao.VendaDAO;
+import com.gestaocooperativareciclagem.model.Usuario;
 import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
 import com.gestaocooperativareciclagem.service.ClienteService;
 import com.gestaocooperativareciclagem.service.EtapaProcessamentoService;
@@ -90,7 +92,7 @@ public class HomeController extends HttpServlet {
 			
 			switch(path) {
 				case "/Home":
-					pageIndexDashboard(request, response);
+					filtro(request, response);
 					break;
 			}
 			
@@ -106,6 +108,34 @@ public class HomeController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	protected void filtro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		try {
+			
+			Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
+			
+			if (usuario.getPapel().equalsIgnoreCase("operador")) {
+				
+				response.sendRedirect(request.getContextPath() + "/Producao");
+				
+			} else if (Arrays.asList("administrador", "gerente").contains(usuario.getPapel().toLowerCase())) {
+				
+				pageIndexDashboard(request, response);
+				
+			} else {
+				
+				throw new RuntimeException("O papel do usuário (" + usuario.getPapel() +") não reconhecido pelo sistema!");
+				
+			}
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
 	}
 	
 	protected void pageIndexDashboard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -16,6 +16,11 @@
   </servlet>
   
   <servlet>
+    <servlet-name>ProducaoController</servlet-name>
+    <servlet-class>com.gestaocooperativareciclagem.controller.ProducaoController</servlet-class>
+  </servlet>
+  
+  <servlet>
     <servlet-name>LoteBrutoController</servlet-name>
     <servlet-class>com.gestaocooperativareciclagem.controller.LoteBrutoController</servlet-class>
   </servlet>
@@ -52,6 +57,7 @@
 
   <filter-mapping>
     <filter-name>OperadorFilter</filter-name>
+    <servlet-name>ProducaoController</servlet-name>
     <servlet-name>LoteBrutoController</servlet-name>
     <servlet-name>LoteProcessadoController</servlet-name>
   </filter-mapping>
@@ -63,7 +69,6 @@
 
   <filter-mapping>
     <filter-name>GerenteFilter</filter-name>
-    <servlet-name>HomeController</servlet-name>
     <servlet-name>FornecedorController</servlet-name>
     <servlet-name>ClienteController</servlet-name>
     <servlet-name>CategoriaProcessamentoController</servlet-name>

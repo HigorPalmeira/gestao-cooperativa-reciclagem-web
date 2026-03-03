@@ -103,6 +103,30 @@ public class LoteProcessadoService {
 		
 	}
 	
+	public void atualizarEtapaProcessamentoLoteProcessado(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String statusProcessamento) {
+		
+		LoteProcessado loteProcessado = new LoteProcessado();
+		loteProcessado.setId(idLoteProcessado);
+		
+		loteProcessadoDao.buscarLoteProcessadoPorId(loteProcessado);
+		
+		EtapaProcessamento etapaProcessamentoAtual = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(idLoteProcessado);
+		
+		if (etapaProcessamentoAtual.getCategoriaProcessamento().getId() == idCategoriaProcessamento) {
+			
+			etapaProcessamentoAtual.setDtProcessamento(dtProcessamento);
+			etapaProcessamentoAtual.setStatus(statusProcessamento);
+			etapaProcessamentoService.atualizarEtapaProcessamento(idLoteProcessado, idCategoriaProcessamento, dtProcessamento, statusProcessamento);
+			
+		} else {
+			
+			etapaProcessamentoService.atualizarEtapaProcessamento(etapaProcessamentoAtual.getLoteProcessado().getId(), etapaProcessamentoAtual.getCategoriaProcessamento().getId(), dtProcessamento, "Concluído");
+			etapaProcessamentoService.inserirEtapaProcessamentoService(idLoteProcessado, idCategoriaProcessamento, dtProcessamento, statusProcessamento);
+			
+		}
+		
+	}
+	
 	public void deletarLoteProcessado(int id) {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();

@@ -7,8 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produção - ERP Cooperativa</title>
-    <!-- Utilizando o CSS Global conforme solicitado -->
+    
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
+    
 </head>
 <body>
 
@@ -49,9 +50,15 @@
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label for="materialFilter" style="font-weight: bold;">Material Ativo:</label>
                     <select id="materialFilter" onchange="changeMaterial()" style="width: auto; padding: 8px;">
+                        <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                        	<option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+                        </c:forEach>
+                        
+                        <!-- 
                         <option value="Plástico PET">Plástico PET</option>
                         <option value="Alumínio">Alumínio</option>
                         <option value="Papelão">Papelão</option>
+                         -->
                     </select>
                     <button class="btn-delete" onclick="exitKanban()" style="padding: 8px 15px;">Encerrar Sessão</button>
                 </div>
@@ -75,9 +82,15 @@
             <div class="form-group">
                 <label for="initialMaterial">Qual material vai processar agora?</label>
                 <select id="initialMaterial">
+                	<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
+                        <option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+                    </c:forEach>
+                    
+                    <!-- 
                     <option value="Plástico PET">Plástico PET</option>
                     <option value="Alumínio">Alumínio</option>
                     <option value="Papelão">Papelão</option>
+                     -->
                 </select>
             </div>
             <div class="modal-footer">
@@ -122,6 +135,8 @@
            LÓGICA DO QUADRO KANBAN E MUDANÇA DE ESTADO
            ========================================================= */
 
+        const contexto = "${pageContext.request.contextPath}";
+           
         // 1. Variáveis de Estado
         const viewOverview = document.getElementById('view-overview');
         const viewKanban = document.getElementById('view-kanban');
@@ -251,7 +266,7 @@
             // Define o que está a ser arrastado (necessário para Firefox)
             event.dataTransfer.setData('text/plain', loteId);
             setTimeout(() => {
-                document.getElementById(`card-${loteId}`).style.opacity = '0.5';
+                document.getElementById(`card-\${loteId}`).style.opacity = '0.5';
             }, 0);
         }
 
@@ -320,6 +335,19 @@
                    body: JSON.stringify({ loteId: pendingTransition.loteId, etapaId: pendingTransition.destino, peso: novoPeso })
                }).then(...)
             */
+            
+            fetch((contexto + '/AtualizarEtapaProcessamento'), {
+            	method: 'POST',
+            	body: JSON.stringify({ // simulando um objeto EtapaProcessamento
+            		loteProcessado: {
+            			id: pendingTransition.loteId.replace("LP-", ""),
+            			pesoAtualKg: novoPeso
+            		},
+            		categoriaProcessamento: {
+            			id: pendingTransition.destino
+            		}
+            	})
+            }).then(response => response.ok ? console.log('enviado') : console.log('alguma coisa'));
 
             // Simulando o Sucesso da Requisição:
             const lote = lotesDB.find(l => l.id === pendingTransition.loteId);
