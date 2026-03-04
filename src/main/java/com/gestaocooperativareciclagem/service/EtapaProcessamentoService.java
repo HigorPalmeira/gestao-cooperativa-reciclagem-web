@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.gestaocooperativareciclagem.dao.EtapaProcessamentoDAO;
 import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
 import com.gestaocooperativareciclagem.model.EtapaProcessamento;
 import com.gestaocooperativareciclagem.model.LoteProcessado;
+import com.gestaocooperativareciclagem.model.TipoMaterial;
 
 public class EtapaProcessamentoService {
 	
@@ -62,6 +64,15 @@ public class EtapaProcessamentoService {
 		categoriaProcessamento.setId(idCategoriaProcessamento);
 		
 		return etapaProcessamentoDao.listarEtapasProcessamentoPorCategoriaProcessamento(categoriaProcessamento);
+		
+	}
+	
+	public List<EtapaProcessamento> listarEtapasProcessamentoPorTipoMaterialENaoConcluidas(int idTipoMaterial) throws SQLException {
+		
+		TipoMaterial tipoMaterial = new TipoMaterial();
+		tipoMaterial.setId(idTipoMaterial);
+		
+		return etapaProcessamentoDao.listarEtapasProcessamentoPorTipoMaterialENaoConcluidas(tipoMaterial);
 		
 	}
 	

@@ -18,6 +18,8 @@
         <div class="brand">ERP System &rsaquo; Área de Produção</div>
         <div class="nav-links">
             <a href="${pageContext.request.contextPath}/Home">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
             <a href="#" onclick="alert('Navegar para Relatórios de Operação')">Meus Relatórios</a>
         </div>
     </nav>
@@ -51,7 +53,7 @@
                     <label for="materialFilter" style="font-weight: bold;">Material Ativo:</label>
                     <select id="materialFilter" onchange="changeMaterial()" style="width: auto; padding: 8px;">
                         <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
-                        	<option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+                        	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
                         </c:forEach>
                         
                         <!-- 
@@ -83,7 +85,7 @@
                 <label for="initialMaterial">Qual material vai processar agora?</label>
                 <select id="initialMaterial">
                 	<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
-                        <option value="${tipoMaterial.nome}">${tipoMaterial.nome}</option>
+                        <option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
                     </c:forEach>
                     
                     <!-- 
@@ -131,239 +133,284 @@
     </div>
 
     <script>
-        /* =========================================================
-           LÓGICA DO QUADRO KANBAN E MUDANÇA DE ESTADO
-           ========================================================= */
-
-        const contexto = "${pageContext.request.contextPath}";
-           
-        // 1. Variáveis de Estado
-        const viewOverview = document.getElementById('view-overview');
-        const viewKanban = document.getElementById('view-kanban');
-        const kanbanBoard = document.getElementById('kanbanBoard');
-        const materialFilter = document.getElementById('materialFilter');
         
-        let draggedCardId = null; 
-        let pendingTransition = null; // Guarda os dados temporários do Drag and Drop
 
-        // 2. Mock de Dados (Simulando o que viria do Jakarta EE via fetch)
-        
-        // Categorias de Processamento (Serão as Colunas)
-        const categorias = [
-            { id: 1, nome: "Triagem" },
-            { id: 2, nome: "Lavagem" },
-            { id: 3, nome: "Trituração" },
-            { id: 4, nome: "Prensagem" }
-        ];
+ // /gestao-cooperativa-reciclagem-web
+ const contexto = '${pageContext.request.contextPath}';
 
-        // Lotes Processados em andamento
-        let lotesDB = [
-            { id: "LP-101", material: "Plástico PET", etapaAtual: "Triagem", peso: 500, fornecedor: "Coop A" },
-            { id: "LP-102", material: "Plástico PET", etapaAtual: "Lavagem", peso: 480, fornecedor: "Coop B" },
-            { id: "LP-105", material: "Plástico PET", etapaAtual: "Lavagem", peso: 200, fornecedor: "Avulso" },
-            { id: "LP-201", material: "Alumínio", etapaAtual: "Prensagem", peso: 150, fornecedor: "Coop A" }
-        ];
+ const viewOverview = document.getElementById('view-overview');
+ const viewKanban = document.getElementById('view-kanban');
+ const kanbanBoard = document.getElementById('kanbanBoard');
+ const materialFilter = document.getElementById('materialFilter');
 
-        /* --- NAVEGAÇÃO ENTRE VISTAS --- */
+ let draggedCardId = null;
+ let pendingTransition = null;
 
-        function openStartModal() {
-            document.getElementById('startModal').style.display = 'flex';
-        }
+ let categorias = [];
+ let etapasProcessamento = [];
+ let lotesDB = [];
 
-        function closeStartModal() {
-            document.getElementById('startModal').style.display = 'none';
-        }
+ async function carregarCategorias() {
+ 	
+     await fetch((contexto + '/ListarCategoriasProducao'))
+     	.then(response => {
+     		if (!response.ok) {
+     			throw new Error('Erro no servidor');
+     		}
+     		
+     		return response.json();
+     	})
+     	.then(data => {
+     		categorias = data;
+     	})
+     	.catch(error => console.error('Erro:', error));
+ 	
+ }
 
-        function startProduction() {
-            const matSelect = document.getElementById('initialMaterial').value;
-            materialFilter.value = matSelect; // Sincroniza o select do topo
-            
-            closeStartModal();
-            
-            // Troca as Views
-            viewOverview.style.display = 'none';
-            viewKanban.style.display = 'block';
+ window.onload = () => {
+     carregarCategorias();
+ };
 
-            // Carrega os dados
-            renderKanban(matSelect);
-        }
+ /* NAVEGAÇÃO ENTRE VISITAS */
 
-        function exitKanban() {
-            if(confirm("Deseja voltar para a visão geral?")) {
-                viewKanban.style.display = 'none';
-                viewOverview.style.display = 'block';
-            }
-        }
+ function openStartModal() {
+     document.getElementById('startModal').style.display = 'flex';
+ }
 
-        function changeMaterial() {
-            const mat = materialFilter.value;
-            // No mundo real, faria um fetch() aqui pedindo os lotes do material selecionado
-            renderKanban(mat);
-        }
+ function closeStartModal() {
+     document.getElementById('startModal').style.display = 'none';
+ }
 
-        /* --- RENDERIZAÇÃO DO KANBAN --- */
+ function startProduction() {
 
-        function renderKanban(material) {
-            kanbanBoard.innerHTML = ''; // Limpa o quadro
+     const materialSelect = document.getElementById('initialMaterial').value;
+     materialFilter.value = materialSelect;
 
-            // Filtra os lotes pelo material selecionado
-            const lotesDoMaterial = lotesDB.filter(lote => lote.material === material);
+     closeStartModal();
 
-            // Cria cada coluna baseada na tabela Categorias
-            categorias.forEach(cat => {
-                // Filtra os lotes que estão nesta categoria
-                const lotesNestaEtapa = lotesDoMaterial.filter(l => l.etapaAtual === cat.nome);
+     viewOverview.style.display = 'none';
+     viewKanban.style.display = 'block';
 
-                const colDiv = document.createElement('div');
-                colDiv.className = 'kanban-column';
-                
-                // HTML da Coluna e da Zona de Drop
-                colDiv.innerHTML = `
-                    <div class="kanban-col-header">
-                        \${cat.nome}
-                        <span class="kanban-col-count" id="count-\${cat.nome}">\${lotesNestaEtapa.length}</span>
-                    </div>
-                    <div class="kanban-dropzone" id="stage-\${cat.nome}" 
-                         ondragover="onDragOver(event)" 
-                         ondragleave="onDragLeave(event)" 
-                         ondrop="onDrop(event, '\${cat.nome}')">
-                    </div>
-                `;
+     changeMaterial();
 
-                kanbanBoard.appendChild(colDiv);
+ }
 
-                const dropzone = colDiv.querySelector('.kanban-dropzone');
+ function exitKanban() {
 
-                // Adiciona os Cards dentro da Dropzone
-                lotesNestaEtapa.forEach(lote => {
-                    const card = criarCardHTML(lote);
-                    dropzone.appendChild(card);
-                });
-            });
-        }
+     if (confirm('Deseja voltar para a visão geral?')) {
+         viewKanban.style.display = 'none';
+         viewOverview.style.display = 'block';
+     }
 
-        function criarCardHTML(lote) {
-            const card = document.createElement('div');
-            card.className = 'kanban-card';
-            card.id = `card-\${lote.id}`;
-            card.setAttribute('draggable', 'true');
-            card.ondragstart = (event) => onDragStart(event, lote.id);
+ }
 
-            card.innerHTML = `
-                <div class="kanban-card-title">#\${lote.id}</div>
-                <div class="kanban-card-info">
-                    <span>\${lote.fornecedor}</span>
-                    <span class="kanban-card-weight">\${lote.peso} Kg</span>
-                </div>
-            `;
-            return card;
-        }
 
-        /* --- DRAG AND DROP API --- */
+ function changeMaterial() {
 
-        function onDragStart(event, loteId) {
-            draggedCardId = loteId;
-            // Define o que está a ser arrastado (necessário para Firefox)
-            event.dataTransfer.setData('text/plain', loteId);
-            setTimeout(() => {
-                document.getElementById(`card-\${loteId}`).style.opacity = '0.5';
-            }, 0);
-        }
+     const material = materialFilter.value;
 
-        function onDragOver(event) {
-            event.preventDefault(); // Necessário para permitir o Drop
-            const dropzone = event.currentTarget;
-            dropzone.classList.add('drag-over'); // Feedback visual
-        }
+     // carregar itens relacionados ao material selecionado
+     var etapasProcessamento = [];
 
-        function onDragLeave(event) {
-            const dropzone = event.currentTarget;
-            dropzone.classList.remove('drag-over');
-        }
+     fetch((contexto + '/ListarEtapasProducao?idTipoMaterial=' + material))
+         .then(response => {
 
-        function onDrop(event, targetStageNome) {
-            event.preventDefault();
-            const dropzone = event.currentTarget;
-            dropzone.classList.remove('drag-over');
+             if (!response.ok) {
+                 throw new Error('Erro no servidor');
+             }
 
-            // Retorna a opacidade do card
-            const cardElement = document.getElementById(`card-\${draggedCardId}`);
-            cardElement.style.opacity = '1';
+             return response.json();
 
-            // Localizar o Lote na "Base de Dados"
-            const lote = lotesDB.find(l => l.id === draggedCardId);
+         })
+         .then(data => {
+             etapasProcessamento = data;
+         })
+         .catch(error => console.error('Erro: ', error));
 
-            // Se soltou na mesma etapa que já estava, ignora
-            if (lote.etapaAtual === targetStageNome) return;
+     renderKanban(material);
 
-            // Armazena a transação pendente e ABRE O MODAL
-            pendingTransition = {
-                loteId: lote.id,
-                pesoAtual: lote.peso,
-                origem: lote.etapaAtual,
-                destino: targetStageNome
-            };
+ }
 
-            abrirModalTransicao();
-        }
+ function renderKanban(etapas) {
 
-        /* --- LÓGICA DO MODAL DE TRANSIÇÃO --- */
+     kanbanBoard.innerHTML = '';
 
-        function abrirModalTransicao() {
-            document.getElementById('transLoteId').textContent = pendingTransition.loteId;
-            document.getElementById('transTargetStage').textContent = pendingTransition.destino;
-            document.getElementById('newWeight').value = pendingTransition.pesoAtual;
-            document.getElementById('operatorNotes').value = "";
+     categorias.forEach(categoria => {
 
-            document.getElementById('transitionModal').style.display = 'flex';
-        }
+         const lotesNaEtapa = etapas.filter(etapa => {
+             etapa.categoriaProcessamento.id === categoria.id;
+         });
 
-        function cancelTransition() {
-            document.getElementById('transitionModal').style.display = 'none';
-            pendingTransition = null;
-            // O card continua visualmente na origem porque não mexemos no DOM ainda.
-        }
+         const colDiv = document.createElement('div');
+         colDiv.className = 'kanban-column';
 
-        function confirmTransition(event) {
-            event.preventDefault();
-            
-            const novoPeso = document.getElementById('newWeight').value;
+         colDiv.innerHTML = `
+             <div class="kanban-col-header">
+                 \${categoria.nome}
+                 <span class="kanban-col-count" id="count-\${categoria.nome}">\${lotesNaEtapa.length}</span>
+             </div>
+             <div class="kanban-dropzone" id="stage-\${categoria.nome}"
+                 ondragover="onDragOver(event)"
+                 ondragleave="onDragLeave(event)"
+                 ondrop="onDrop(event, '\${categoria.id}')">
+             </div>
+         `
 
-            /* AQUI ENTRA O FETCH NO MUNDO REAL:
-               fetch('/api/lote/etapa', {
-                   method: 'POST',
-                   body: JSON.stringify({ loteId: pendingTransition.loteId, etapaId: pendingTransition.destino, peso: novoPeso })
-               }).then(...)
-            */
-            
-            fetch((contexto + '/AtualizarEtapaProcessamento'), {
-            	method: 'POST',
-            	body: JSON.stringify({ // simulando um objeto EtapaProcessamento
-            		loteProcessado: {
-            			id: pendingTransition.loteId.replace("LP-", ""),
-            			pesoAtualKg: novoPeso
-            		},
-            		categoriaProcessamento: {
-            			id: pendingTransition.destino
-            		}
-            	})
-            }).then(response => response.ok ? console.log('enviado') : console.log('alguma coisa'));
+         kanbanBoard.appendChild(colDiv);
 
-            // Simulando o Sucesso da Requisição:
-            const lote = lotesDB.find(l => l.id === pendingTransition.loteId);
-            lote.etapaAtual = pendingTransition.destino;
-            lote.peso = novoPeso;
+         const dropzone = colDiv.querySelector('.kanban-dropzone');
 
-            // Atualiza a interface
-            document.getElementById('transitionModal').style.display = 'none';
-            pendingTransition = null;
-            
-            alert(`Lote processado salvo na etapa: ${lote.etapaAtual}`);
-            
-            // Re-renderiza o quadro para mover o card visualmente e atualizar as contagens
-            renderKanban(materialFilter.value);
-        }
+         lotesNaEtapa.forEach(etapa => {
 
+             const card = criarCardHTML(etapa.loteProcessado);
+             dropzone.appendChild(card);
+
+         });
+
+     });
+
+ }
+
+
+ function criarCardHTML(loteProcessado) {
+
+     const card = document.createElement('div');
+     card.className = 'kanban-card';
+     card.id = `card-\${loteProcessado.id}`;
+     card.setAttribute('draggable', 'true');
+     card.ondragstart = (event) => onDragStart(event, loteProcessado.id);
+
+     card.innerHTML = `
+         <div class="kanban-card-title">#LP-\${loteProcessado.id}</div>
+         <div class="kanban-card-info">
+             <span>\${loteProcessado.fornecedor.nome}</span>
+             <span class="kanban-card-weight">\${loteProcessado.pesoAtualKg} Kg</span>
+         </div>
+     `
+
+     return card;
+
+ }
+
+
+ /* DRAG AND DROP API */
+
+ function onDragStart(event, loteId) {
+
+     draggedCardId = loteId;
+
+     event.dataTransfer.setData('text/plain', loteId);
+     setTimeout(() => {
+         document.getElementById(`card-\${loteId}`).style.opacity = '0.5';
+     }, 0);
+
+ }
+
+ function onDragOver(event) {
+
+     event.preventDefault();
+     const dropzone = event.currentTarget;
+     dropzone.classList.add('drag-over');
+
+ }
+
+ function onDragLeave(event) {
+
+     const dropzone = event.currentTarget;
+     dropzone.classList.remove('drag-over');
+
+ }
+
+ function onDrop(event, targetStageId) {
+
+     event.preventDefault();
+
+     const dropzone = event.currentTarget;
+     dropzone.classList.remove('drag-over');
+
+     const cardElement = document.getElementById(`card-\${draggedCardId}`);
+     cardElement.style.opacity = '1';
+
+     const etapaLote = etapasProcessamento.find(etapa => etapa.loteProcessado.id === draggedCardId);
+
+     if (etapaLote.categoriaProcessamento.id == targetStageId) return
+
+     pendingTransition = {
+         loteId: etapaLote.loteProcessado.id,
+         pesoAtual: etapaLote.loteProcessado.pesoAtualKg,
+         idCategoriaOrigem: etapaLote.categoriaProcessamento.id,
+         idCategoriaDestino: targetStageId
+     };
+
+     abrirModalTransicao();
+
+ }
+
+
+ /* LÓGICA DO MODAL DE TRANSIÇÃO */
+
+ function abrirModalTransicao() {
+
+     document.getElementById('transLoteId').textContent = pendingTransition.loteId;
+     document.getElementById('transTargetStage').textContent = categorias.find(cat => cat.id === pendingTransition.idCategoriaDestino).nome;
+     document.getElementById('newWeight').value = pendingTransition.pesoAtual;
+     document.getElementById('operatorNotes').value = 'RETIRAR ISSO';
+     document.getElementById('transitionModal').style.display = 'flex';
+
+ }
+
+ function cancelTransition() {
+
+     document.getElementById('transitionModal').style.display = 'none';
+     pendingTransition = null;
+
+ }
+
+ function confirmTransition(event) {
+
+     event.preventDefault();
+
+     const novoPeso = parseFloat(document.getElementById('newWeight').value);
+
+     fetch((contexto + '/AtualizarEtapaProcessamento'), {
+         method: 'POST',
+         body: JSON.stringify({
+             loteProcessado: {
+                 id: pendingTransition.loteId,
+                 pesoAtualKg: novoPeso
+             },
+             categoriaProcessamento: {
+                 id: pendingTransition.idCategoriaDestino
+             }
+         })
+     })
+         .then(response => {
+
+             if (!response.ok) {
+                 throw new Error('Erro no servidor');
+             }
+
+         })
+         .catch(error => console.error('Erro: ', error));
+
+     const etapaLote = etapasProcessamento.find(etapa => {
+         etapa.loteProcessado.id === pendingTransition.loteId;
+     });
+
+     etapaLote.categoriaProcessamento = categorias.find(categoria => categoria.id === pendingTransition.idCategoriaDestino);
+     etapaLote.loteProcessado.pesoAtualKg = novoPeso;
+
+     document.getElementById(`transitionModal`).style.display = 'none';
+     pendingTransition = null;
+
+     alert(`Lote processado salvo na etapa: \${etapaLote.categoriaProcessamento.nome}`);
+
+     renderKanban(materialFilter.value);
+
+ }
+
+
+    
     </script>
 </body>
 </html>
