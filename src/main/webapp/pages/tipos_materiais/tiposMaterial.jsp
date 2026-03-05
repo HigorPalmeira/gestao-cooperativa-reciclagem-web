@@ -47,7 +47,7 @@
                 </div>
                 <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
             </div>
-            <div id="feedback-msg">Preencha pelo menos um campo para realizar a pesquisa.</div>
+            <div id="feedback-msg" style="display: none;">Preencha pelo menos um campo para realizar a pesquisa.</div>
         </section>
 
         <!-- Tabela de Resultados -->
@@ -150,11 +150,11 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
-                        <span class="name-link" onclick="openModal('edit', ${item.id})">
-                            ${item.name}
+                        <span class="name-link" onclick="openModal('edit', \${item.id})">
+                            \${item.nome}
                         </span>
                     </td>
-                    <td>${item.desc}</td>
+                    <td>\${item.descricao}</td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -259,13 +259,36 @@
             } else {
                 feedback.style.display = 'none';
             }
+            
+            let parametros = `nome=\${sName}&descricao=\${sDesc}`;
+            
+            fetch((ctx + '/ListagemTiposMaterial?' + parametros))
+            	.then(response => {
+            		
+            		if (!response.ok) {
+            			return response.json().then(err => {
+            				throw new Error(err.error);
+            			});
+            		}
+            		
+            		return response.json();
+            		
+            	})
+            	.then(data => {
+            		renderTable(data);
+            	})
+            	.catch(error => {
+            		console.error('Erro no fetch:', error.message);
+            		alert('Erro: ' + error.message);
+            	})
 
+            /*
             const filtered = materialsDB.filter(item => {
                 const matchName = item.name.toLowerCase().includes(sName);
                 const matchDesc = item.desc.toLowerCase().includes(sDesc);
                 return matchName && matchDesc;
             });
-
+*/
             // renderTable(filtered);
         }
 

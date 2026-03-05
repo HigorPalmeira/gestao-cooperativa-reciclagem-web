@@ -3,6 +3,7 @@ package com.gestaocooperativareciclagem.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -211,6 +212,62 @@ public class TipoMaterialDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public List<TipoMaterial> listarTiposMaterialComParametros(Integer idTipoMaterial, String nomeTipoMaterial, String descricaoTipoMaterial) throws SQLException {
+		
+		List<TipoMaterial> listaTiposMateriais = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					int id = rset.getInt("id_tipomaterial");
+					String nome = rset.getString("nome_tipomaterial");
+					String descricao = rset.getString("descricao_tipomaterial");
+					
+					listaTiposMateriais.add(new TipoMaterial(id, nome, descricao));					
+				}
+				
+			}
+			
+		}
+		
+		return listaTiposMateriais;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idTipoMaterial, String nomeTipoMaterial, String descricaoTipoMaterial) {
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("select * from tipo_material where 1=1");
+		
+		if (idTipoMaterial != null && idTipoMaterial != 0) {
+			builder.append(" and id_tipomaterial = ?");
+			parametros.add(idTipoMaterial);
+		}
+		
+		if (nomeTipoMaterial != null && !nomeTipoMaterial.isBlank()) {
+			builder.append(" and nome_tipomaterial like ?");
+			parametros.add("%" + nomeTipoMaterial + "%");
+		}
+		
+		if (descricaoTipoMaterial != null && !descricaoTipoMaterial.isBlank()) {
+			builder.append(" and descricao_tipomaterial like ?");
+			parametros.add("%" + descricaoTipoMaterial + "%");
+		}
+		
+		return builder.toString();
 		
 	}
 

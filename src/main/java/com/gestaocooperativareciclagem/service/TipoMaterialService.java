@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
@@ -11,6 +12,12 @@ public class TipoMaterialService {
 
 	public TipoMaterialService(TipoMaterialDAO tipoMaterialDao) {
 		this.tipoMaterialDao = tipoMaterialDao;
+	}
+	
+	public List<TipoMaterial> listarTiposMaterialComParametros(Integer idTipoMaterial, String nomeTipoMaterial, String descricaoTipoMaterial) throws SQLException {
+		
+		return tipoMaterialDao.listarTiposMaterialComParametros(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+		
 	}
 	
 	public void inserirTipoMaterial(String nome, String descricao) {

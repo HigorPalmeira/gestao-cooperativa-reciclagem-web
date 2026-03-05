@@ -1,6 +1,8 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.gestaocooperativareciclagem.dao.TipoMaterialDAO;
 import com.gestaocooperativareciclagem.model.TipoMaterial;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class TipoMaterialController
@@ -23,11 +26,13 @@ import com.gestaocooperativareciclagem.service.TipoMaterialService;
 		name="TipoMaterialController",
 		urlPatterns={ "/TipoMaterialController", "/ListarTiposMateriais", 
 	"/DetalharTipoMaterial", "/InserirTipoMaterial", 
-	"/AtualizarTipoMaterial", "/DeletarTipoMaterial" })
+	"/AtualizarTipoMaterial", "/DeletarTipoMaterial",
+	"/ListagemTiposMaterial"})
 public class TipoMaterialController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private TipoMaterialService tipoMaterialService;
+	private Gson gson;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,8 +49,9 @@ public class TipoMaterialController extends HttpServlet {
 		
 		try {
 			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar TipoMaterialService", e);
+			throw new ServletException("Erro ao inicializar TipoMaterialService e/ou Gson", e);
 		}
 		
 	}
@@ -55,6 +61,8 @@ public class TipoMaterialController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -64,8 +72,12 @@ public class TipoMaterialController extends HttpServlet {
 					System.out.println("Sem implementação...");
 					break;
 					
-				default:
+				case "/ListagemTiposMaterial":
 					listarTiposMateriais(request, response);
+					break;
+					
+				default:
+					pageListarTiposMateriais(request, response);
 					break;
 			}
 			
@@ -80,6 +92,8 @@ public class TipoMaterialController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -98,7 +112,7 @@ public class TipoMaterialController extends HttpServlet {
 					break;
 					
 				default:
-					listarTiposMateriais(request, response);
+					pageListarTiposMateriais(request, response);
 					break;
 			}
 			
@@ -145,14 +159,69 @@ public class TipoMaterialController extends HttpServlet {
 		
 	}
 
+	protected void pageListarTiposMateriais(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+
+			List<TipoMaterial> listaTiposMateriais = listarTipos(request); 
+			//tipoMaterialService.listarTiposMaterial();
+			
+			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/tipos_materiais/tiposMaterial.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		
+	}
+	
 	protected void listarTiposMateriais(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 		
-		request.setAttribute("listaTiposMateriais", listaTiposMateriais);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/tipos_materiais/tiposMaterial.jsp");
+		try {
+			
+			List<TipoMaterial> listaTiposMateriais = listarTipos(request);
+			
+			String tiposJson = gson.toJson(listaTiposMateriais);
+			
+			PrintWriter out = response.getWriter();
+			out.print(tiposJson);
+			out.flush();
+			
+		} catch (Exception e) {
+
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar as categorias de processamento. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+
+		}
 		
-		reqDis.forward(request, response);
+	}
+	
+	private List<TipoMaterial> listarTipos(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idTipoMaterialTxt = request.getParameter("idTipoMaterial");
+		String nomeTipoMaterial = request.getParameter("nome");
+		String descricaoTipoMaterial = request.getParameter("descricao");
+		
+		Integer idTipoMaterial = null;
+		if (idTipoMaterialTxt != null) {
+			idTipoMaterial = Integer.parseInt(idTipoMaterialTxt);
+		}
+		
+		return tipoMaterialService.listarTiposMaterialComParametros(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
 		
 	}
 	
