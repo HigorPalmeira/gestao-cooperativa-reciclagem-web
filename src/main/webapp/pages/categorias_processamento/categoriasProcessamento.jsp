@@ -166,11 +166,11 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
-                        <span class="name-link" onclick="openModal('edit', ${cat.id})">
-                            ${cat.name}
+                        <span class="name-link" onclick="openModal('edit', \${cat.id})">
+                            \${cat.nome}
                         </span>
                     </td>
-                    <td>${cat.desc}</td>
+                    <td>\${cat.descricao}</td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -275,13 +275,36 @@
             } else {
                 feedback.style.display = 'none';
             }
-
+            
+            let parametros = `nome=\${sName}&descricao=\${sDesc}`;
+            
+            fetch((ctx + '/ListagemCategoriasProcessamento?' + parametros))
+            	.then(response => {
+            		
+            		if (!response.ok) {
+            			return response.json().then(err => {
+            				throw new Error(err.error);
+            			});
+            		}
+            		
+            		return response.json();
+            		
+            	})
+            	.then(data => {
+            		console.log('Categorias: ', data);
+            		renderTable(data);
+            	})
+            	.catch(error => {
+            		console.error('Erro no fetch:', error.message);
+            		alert('Erro: ' + error.message);
+            	})
+/*
             const filtered = categoriesDB.filter(cat => {
                 const matchName = cat.name.toLowerCase().includes(sName);
                 const matchDesc = cat.desc.toLowerCase().includes(sDesc);
                 return matchName && matchDesc; // Lógica E, pode ser alterada para OU se preferir
             });
-
+*/
             // renderTable(filtered);
         }
 

@@ -1,6 +1,8 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.gestaocooperativareciclagem.dao.CategoriaProcessamentoDAO;
 import com.gestaocooperativareciclagem.model.CategoriaProcessamento;
 import com.gestaocooperativareciclagem.service.CategoriaProcessamentoService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class CategoriaProcessamentoController
@@ -23,11 +26,13 @@ import com.gestaocooperativareciclagem.service.CategoriaProcessamentoService;
 		name="CategoriaProcessamentoController",
 		urlPatterns={ "/CategoriaProcessamentoController", "/ListarCategoriasProcessamento", 
 	"/DetalharCategoriaProcessamento", "/InserirCategoriaProcessamento",
-	"/DeletarCategoriaProcessamento", "/AtualizarCategoriaProcessamento"})
+	"/DeletarCategoriaProcessamento", "/AtualizarCategoriaProcessamento",
+	"/ListagemCategoriasProcessamento"})
 public class CategoriaProcessamentoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	private CategoriaProcessamentoService categoriaProcessamentoService;
+	private Gson gson;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,8 +49,9 @@ public class CategoriaProcessamentoController extends HttpServlet {
 
 		try {
 			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar CategoriaProcessamentoService", e);
+			throw new ServletException("Erro ao inicializar CategoriaProcessamentoService e/ou Gson", e);
 		}
 		
 	}
@@ -64,8 +70,12 @@ public class CategoriaProcessamentoController extends HttpServlet {
 					System.out.println("Sem implementação...");
 					break;
 					
-				default:
+				case "/ListagemCategoriasProcessamento":
 					listarCategoriasProcessamento(request, response);
+					break;
+					
+				default:
+					pageListarCategoriasProcessamento(request, response);
 					break;
 			}
 			
@@ -98,7 +108,7 @@ public class CategoriaProcessamentoController extends HttpServlet {
 					break;
 					
 				default:
-					listarCategoriasProcessamento(request, response);
+					pageListarCategoriasProcessamento(request, response);
 					break;
 			}
 			
@@ -145,22 +155,13 @@ public class CategoriaProcessamentoController extends HttpServlet {
 		
 	}
 
-	protected void listarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("UTF-8");
 		
 		try {
 			
-			String idCategoriaTxt = request.getParameter("idCategoria");
-			String nomeCategoria = request.getParameter("nome");
-			String descricaoCategoria = request.getParameter("descricao");
-			
-			Integer idCategoria = null;
-			if (idCategoriaTxt != null) {
-				idCategoria = Integer.parseInt(idCategoriaTxt);
-			}
-			
-			List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamentoPorParametros(idCategoria, nomeCategoria, descricaoCategoria);
+			List<CategoriaProcessamento> listaCategoriasProcessamento = listarCategorias(request);
 			
 			request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
 			RequestDispatcher reqDis = request.getRequestDispatcher("pages/categorias_processamento/categoriasProcessamento.jsp");
@@ -173,6 +174,55 @@ public class CategoriaProcessamentoController extends HttpServlet {
 			response.sendRedirect(request.getHeader("referer"));
 			
 		}
+		
+	}
+	
+	protected void listarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+
+		try {
+			
+			List<CategoriaProcessamento> listaCategoriasProcessamento = listarCategorias(request);
+			
+			String categoriasJson = gson.toJson(listaCategoriasProcessamento);
+			
+			
+			PrintWriter out = response.getWriter();
+			out.print(categoriasJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar as categorias de processamento. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<CategoriaProcessamento> listarCategorias(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idCategoriaTxt = request.getParameter("idCategoria");
+		String nomeCategoria = request.getParameter("nome");
+		String descricaoCategoria = request.getParameter("descricao");
+		
+		Integer idCategoria = null;
+		if (idCategoriaTxt != null) {
+			idCategoria = Integer.parseInt(idCategoriaTxt);
+		}
+		
+		return categoriaProcessamentoService.listarCategoriasProcessamentoPorParametros(idCategoria, nomeCategoria, descricaoCategoria);
 		
 	}
 	
