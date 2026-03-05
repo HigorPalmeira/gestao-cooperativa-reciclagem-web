@@ -60,7 +60,7 @@ public class AutenticacaoFilter extends HttpFilter implements Filter {
 		
 		String uriAtual = uriCompleta.substring(contextPath.length());
 		
-		if (rotasPublicas.contains(uriAtual) || uriAtual.startsWith("/assets/_css")) {
+		if (rotasPublicas.contains(uriAtual) || uriAtual.startsWith("/assets/")) {
 			
 			chain.doFilter(request, response);
 			
