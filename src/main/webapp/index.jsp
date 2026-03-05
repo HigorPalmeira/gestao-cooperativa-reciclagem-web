@@ -24,6 +24,7 @@
             <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
+            <a href="${pageContext.request.contextPath}/Producao">Produção</a>
             <a href="${pageContext.request.contextPath}/ListarVendas">Vendas</a>
             <a href="${pageContext.request.contextPath}/ListarClientes">Clientes</a>
             <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Financeiro</a>

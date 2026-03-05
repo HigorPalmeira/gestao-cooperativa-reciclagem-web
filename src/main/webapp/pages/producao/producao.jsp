@@ -25,6 +25,20 @@
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+    	</c:if>
         
         <!-- VISÃO 1: VISÃO GERAL (Abre por padrão) -->
         <div id="view-overview">
@@ -52,15 +66,11 @@
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label for="materialFilter" style="font-weight: bold;">Material Ativo:</label>
                     <select id="materialFilter" onchange="changeMaterial()" style="width: auto; padding: 8px;">
+                        
                         <c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
                         	<option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
                         </c:forEach>
                         
-                        <!-- 
-                        <option value="Plástico PET">Plástico PET</option>
-                        <option value="Alumínio">Alumínio</option>
-                        <option value="Papelão">Papelão</option>
-                         -->
                     </select>
                     <button class="btn-delete" onclick="exitKanban()" style="padding: 8px 15px;">Encerrar Sessão</button>
                 </div>
@@ -84,15 +94,11 @@
             <div class="form-group">
                 <label for="initialMaterial">Qual material vai processar agora?</label>
                 <select id="initialMaterial">
+                	
                 	<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
                         <option value="${tipoMaterial.id}">${tipoMaterial.nome}</option>
                     </c:forEach>
                     
-                    <!-- 
-                    <option value="Plástico PET">Plástico PET</option>
-                    <option value="Alumínio">Alumínio</option>
-                    <option value="Papelão">Papelão</option>
-                     -->
                 </select>
             </div>
             <div class="modal-footer">
