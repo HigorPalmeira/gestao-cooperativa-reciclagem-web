@@ -210,7 +210,7 @@
      const material = materialFilter.value;
 
      // carregar itens relacionados ao material selecionado
-     var etapasProcessamento = [];
+     // var etapasProcessamento = [];
 
      fetch((contexto + '/ListarEtapasProducao?idTipoMaterial=' + material))
          .then(response => {
@@ -224,22 +224,23 @@
          })
          .then(data => {
              etapasProcessamento = data;
+             renderKanban();
          })
          .catch(error => console.error('Erro: ', error));
 
-     renderKanban(material);
+     // renderKanban(/*etapasProcessamento*/);
 
  }
 
- function renderKanban(etapas) {
+ function renderKanban(/*etapas*/) {
 
      kanbanBoard.innerHTML = '';
 
      categorias.forEach(categoria => {
 
-         const lotesNaEtapa = etapas.filter(etapa => {
-             etapa.categoriaProcessamento.id === categoria.id;
-         });
+         const lotesNaEtapa = etapasProcessamento.filter(etapa =>
+             etapa.categoriaProcessamento.id === categoria.id
+         );
 
          const colDiv = document.createElement('div');
          colDiv.className = 'kanban-column';
@@ -280,10 +281,12 @@
      card.setAttribute('draggable', 'true');
      card.ondragstart = (event) => onDragStart(event, loteProcessado.id);
 
+     let idString = `\${loteProcessado.id}`.padStart(3, "0");
+     
      card.innerHTML = `
-         <div class="kanban-card-title">#LP-\${loteProcessado.id}</div>
+         <div class="kanban-card-title">#LP-\${idString}</div>
          <div class="kanban-card-info">
-             <span>\${loteProcessado.fornecedor.nome}</span>
+             <span>\${loteProcessado.loteBruto.fornecedor.nome}</span>
              <span class="kanban-card-weight">\${loteProcessado.pesoAtualKg} Kg</span>
          </div>
      `
@@ -352,7 +355,7 @@
  function abrirModalTransicao() {
 
      document.getElementById('transLoteId').textContent = pendingTransition.loteId;
-     document.getElementById('transTargetStage').textContent = categorias.find(cat => cat.id === pendingTransition.idCategoriaDestino).nome;
+     document.getElementById('transTargetStage').textContent = categorias.find(cat => cat.id === parseInt(pendingTransition.idCategoriaDestino, 10)).nome;
      document.getElementById('newWeight').value = pendingTransition.pesoAtual;
      document.getElementById('operatorNotes').value = 'RETIRAR ISSO';
      document.getElementById('transitionModal').style.display = 'flex';
@@ -374,6 +377,9 @@
 
      fetch((contexto + '/AtualizarEtapaProcessamento'), {
          method: 'POST',
+         headers: {
+        	 'Content-Type': 'application/json' 
+         },
          body: JSON.stringify({
              loteProcessado: {
                  id: pendingTransition.loteId,
@@ -389,23 +395,26 @@
              if (!response.ok) {
                  throw new Error('Erro no servidor');
              }
+             
+             const etapaLote = etapasProcessamento.find(etapa =>
+	             etapa.loteProcessado.id === parseInt(pendingTransition.loteId, 10)
+	         );
+             
+             etapaLote.categoriaProcessamento = categorias.find(categoria => categoria.id === parseInt(pendingTransition.idCategoriaDestino, 10));
+             etapaLote.loteProcessado.pesoAtualKg = novoPeso;
+
+             document.getElementById(`transitionModal`).style.display = 'none';
+             pendingTransition = null;
+
+             alert(`Lote processado salvo na etapa: \${etapaLote.categoriaProcessamento.nome}`);
+
+             renderKanban(materialFilter.value);
 
          })
-         .catch(error => console.error('Erro: ', error));
-
-     const etapaLote = etapasProcessamento.find(etapa => {
-         etapa.loteProcessado.id === pendingTransition.loteId;
-     });
-
-     etapaLote.categoriaProcessamento = categorias.find(categoria => categoria.id === pendingTransition.idCategoriaDestino);
-     etapaLote.loteProcessado.pesoAtualKg = novoPeso;
-
-     document.getElementById(`transitionModal`).style.display = 'none';
-     pendingTransition = null;
-
-     alert(`Lote processado salvo na etapa: \${etapaLote.categoriaProcessamento.nome}`);
-
-     renderKanban(materialFilter.value);
+         .catch(error => {
+        	 console.error('Erro ao salvar etapa: ', error);
+        	 alert('Ocorreu um erro ao tentar salvar. Tente novamente.');
+         });
 
  }
 

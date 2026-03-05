@@ -3,6 +3,9 @@ package com.gestaocooperativareciclagem.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -34,6 +37,7 @@ import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Servlet implementation class Producao
@@ -182,20 +186,19 @@ public class ProducaoController extends HttpServlet {
 			
 			String body = strBuilder.toString();
 			
-			System.out.println(body);
-			/*
-			Gson gson = new Gson();
 			
-			EtapaProcessamento etapaProcessamento = gson.fromJson(null, null)
+			Type typeEtapa = new TypeToken<EtapaProcessamento>() {}.getType();
+			EtapaProcessamento etapaProcessamento = gson.fromJson(body, typeEtapa);
 			
-			int idLoteProcessado = Integer.parseInt(request.getParameter("loteId"));
-			int idCategoriaProcessamento = Integer.parseInt(request.getParameter("etapaId"));
-			BigDecimal pesoAtual = new BigDecimal(request.getParameter("peso"));
 			
-			loteProcessadoService.atualizarLoteProcessado(idLoteProcessado, pesoAtual);
-			loteProcessadoService.atualizarEtapaProcessamentoLoteProcessado(idLoteProcessado, idCategoriaProcessamento, Date.valueOf(LocalDate.now()), "Em Andamento");
-			// etapaProcessamentoService.atualizarEtapaProcessamento(idLoteProcessado, idCategoriaProcessamento, Date.valueOf(LocalDate.now()), "Em Andamento");
-			*/
+			loteProcessadoService.atualizarLoteProcessado(etapaProcessamento.getLoteProcessado().getId(), 
+					etapaProcessamento.getLoteProcessado().getPesoAtualKg());
+			loteProcessadoService.atualizarEtapaProcessamentoLoteProcessado(
+					etapaProcessamento.getLoteProcessado().getId(), 
+					etapaProcessamento.getCategoriaProcessamento().getId(), 
+					Date.valueOf(LocalDate.now()), 
+					"Em Andamento");
+			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}

@@ -76,7 +76,7 @@ public class LoteProcessadoService {
 		LoteProcessado loteProcessado = new LoteProcessado(pesoAtualKg, tipoMaterial, loteBruto);
 		
 		loteProcessadoDao.inserirLoteProcessado(loteProcessado);
-		etapaProcessamentoService.inserirEtapaProcessamentoService(loteProcessado.getId(), categoriaProcessamento.getId(), Date.valueOf(LocalDate.now()), "Em Andamento");
+		etapaProcessamentoService.inserirEtapaProcessamento(loteProcessado.getId(), categoriaProcessamento.getId(), Date.valueOf(LocalDate.now()), "Em Andamento");
 
 		gerarTransacaoCompra(loteBruto, tipoMaterial, loteProcessado.getPesoAtualKg());
 			
@@ -93,12 +93,18 @@ public class LoteProcessadoService {
 		LoteProcessado loteProcessadoAtualizado = new LoteProcessado();
 		loteProcessadoAtualizado.setId(idLoteProcessado);
 		
+		if (pesoAtualKg.compareTo(BigDecimal.ZERO) > 0) {
+			loteProcessadoAtualizado.setPesoAtualKg(pesoAtualKg);
+		} else {
+			loteProcessadoAtualizado.setPesoAtualKg(loteProcessado.getPesoAtualKg());
+		}
+		/*
 		loteProcessadoAtualizado.setPesoAtualKg(
 				pesoAtualKg.compareTo(BigDecimal.ZERO) > 0
 				? pesoAtualKg
 				: loteProcessado.getPesoAtualKg()
 				);
-		
+		*/
 		loteProcessadoDao.atualizarLoteProcessado(loteProcessadoAtualizado);
 		
 	}
@@ -121,7 +127,7 @@ public class LoteProcessadoService {
 		} else {
 			
 			etapaProcessamentoService.atualizarEtapaProcessamento(etapaProcessamentoAtual.getLoteProcessado().getId(), etapaProcessamentoAtual.getCategoriaProcessamento().getId(), dtProcessamento, "Concluído");
-			etapaProcessamentoService.inserirEtapaProcessamentoService(idLoteProcessado, idCategoriaProcessamento, dtProcessamento, statusProcessamento);
+			etapaProcessamentoService.inserirEtapaProcessamento(idLoteProcessado, idCategoriaProcessamento, dtProcessamento, statusProcessamento);
 			
 		}
 		

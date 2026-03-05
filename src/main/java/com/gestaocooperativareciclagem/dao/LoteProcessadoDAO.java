@@ -291,7 +291,7 @@ public class LoteProcessadoDAO {
 	
 	public void atualizarLoteProcessado(LoteProcessado loteProcessado) {
 		
-		String update = "update lote_processado set peso_atual_kg_loteprocessado = ?, "
+		String update = "update lote_processado set peso_atual_kg_loteprocessado = ? "
 				+ "where id_loteprocessado = ?";
 		
 		try {

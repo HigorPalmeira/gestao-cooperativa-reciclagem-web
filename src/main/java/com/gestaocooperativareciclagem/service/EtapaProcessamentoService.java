@@ -19,10 +19,14 @@ public class EtapaProcessamentoService {
 		this.etapaProcessamentoDao = etapaProcessamentoDao;
 	}
 	
-	public void inserirEtapaProcessamentoService(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
+	public void inserirEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
 		
-		if (status == null || status.isBlank()) {
+		if (status == null) {
 			throw new RuntimeException("Status inválido! É necessário informar um status válido para criar uma nova etapa de processamento.");
+		}
+		
+		if (status.isBlank()) {
+			status = "Em Andamento";
 		}
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
