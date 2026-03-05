@@ -3,6 +3,7 @@ package com.gestaocooperativareciclagem.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,42 +45,6 @@ public class CategoriaProcessamentoDAO {
 			
 			Connection conexao = Conexao.getConnection();
 			PreparedStatement pst = conexao.prepareStatement(select);
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
-				
-				int id = rset.getInt("id_categoriaprocessamento");
-				String nome = rset.getString("nome_categoriaprocessamento");
-				String descricao = rset.getString("descricao_categoriaprocessamento");
-				
-				listaCategoriasProcessamento.add(new CategoriaProcessamento(id, nome, descricao));
-				
-			}
-			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return listaCategoriasProcessamento;
-		
-	}
-	
-	public List<CategoriaProcessamento> listarCategoriasProcessamentoPorDescricao(String descricaoCategoria) {
-		
-		List<CategoriaProcessamento> listaCategoriasProcessamento = new ArrayList<>();
-		
-		String select = "select * from categoria_processamento where descricao_categoriaprocessamento = ?";
-		
-		try {
-			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
-			pst.setString(1, descricaoCategoria);
-			
 			ResultSet rset = pst.executeQuery();
 			
 			while(rset.next()) {
@@ -209,6 +174,66 @@ public class CategoriaProcessamentoDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public List<CategoriaProcessamento> listarCategoriasProcessamentoPorParametros(Integer idCategoria, String nomeCategoria, String descricaoCategoria) throws SQLException {
+		
+		List<CategoriaProcessamento> listaCategoriasProcessamento = new ArrayList<>();
+		
+		List<Object> listaParametros = new ArrayList<>();
+		String select = buildQuerySelect(listaParametros, idCategoria, nomeCategoria, descricaoCategoria); 
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<listaParametros.size(); i++) {
+				pst.setObject(i+1, listaParametros.get(i));
+			}
+			
+			
+			try (ResultSet rset = pst.executeQuery();) {
+
+				while(rset.next()) {
+					
+					int id = rset.getInt("id_categoriaprocessamento");
+					String nome = rset.getString("nome_categoriaprocessamento");
+					String descricao = rset.getString("descricao_categoriaprocessamento");
+					
+					listaCategoriasProcessamento.add(new CategoriaProcessamento(id, nome, descricao));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaCategoriasProcessamento;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idCategoria, String nomeCategoria, String descricaoCategoria) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from categoria_processamento where 1=1");
+		
+		if (idCategoria != null && idCategoria != 0) {
+			builder.append(" and id_categoriaprocessamento = ?");
+			parametros.add(idCategoria);
+		}
+		
+		if (nomeCategoria != null && !nomeCategoria.isBlank()) {
+			builder.append(" and nome_categoriaprocessamento like ?");
+			parametros.add("%" + nomeCategoria + "%");
+		}
+		
+		if (descricaoCategoria != null && !descricaoCategoria.isBlank()) {
+			builder.append(" and descricao_categoriaprocessamento like ?");
+			parametros.add("%" + descricaoCategoria + "%");
+		}
+		
+		return builder.toString();
 		
 	}
 

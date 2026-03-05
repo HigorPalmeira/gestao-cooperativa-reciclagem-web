@@ -24,6 +24,20 @@
     </nav>
 
     <main class="container">
+    
+    	<c:if test="${not empty sessionScope.msgSucesso}">
+    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    			${sessionScope.msgSucesso}
+    		</div>
+    		<% session.removeAttribute("msgSucesso"); %>
+    	</c:if>
+    	
+    	<c:if test="${not empty sessionScope.msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+    	</c:if>
         
         <!-- Cabeçalho -->
         <div class="page-header">
@@ -47,7 +61,7 @@
                 </div>
                 <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
             </div>
-            <div id="feedback-msg">Preencha pelo menos um campo.</div>
+            <div id="feedback-msg" style="display: none;">Preencha pelo menos um campo.</div>
         </section>
 
         <!-- Tabela de Resultados -->

@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.CategoriaProcessamentoDAO;
@@ -11,6 +12,12 @@ public class CategoriaProcessamentoService {
 
 	public CategoriaProcessamentoService(CategoriaProcessamentoDAO categoriaProcessamentoDao) {
 		this.categoriaProcessamentoDao = categoriaProcessamentoDao;
+	}
+	
+	public List<CategoriaProcessamento> listarCategoriasProcessamentoPorParametros(Integer idCategoria, String nomeCategoria, String descricaoCategoria) throws SQLException {
+		
+		return categoriaProcessamentoDao.listarCategoriasProcessamentoPorParametros(idCategoria, nomeCategoria, descricaoCategoria);
+		
 	}
 	
 	public void inserirCategoriaProcessamento(String nome, String descricao) {
@@ -57,16 +64,6 @@ public class CategoriaProcessamentoService {
 	public List<CategoriaProcessamento> listarCategoriasProcessamento() {
 		
 		return categoriaProcessamentoDao.listarCategoriasProcessamento();
-		
-	}
-	
-	public List<CategoriaProcessamento> listarCategoriasProcessamentoPorDescricao(String descricao) {
-		
-		if (descricao == null || descricao.isBlank()) {
-			throw new RuntimeException("É necessário informar uma descrição válida para realizar uma busca!");
-		}
-		
-		return categoriaProcessamentoDao.listarCategoriasProcessamentoPorDescricao(descricao);
 		
 	}
 	

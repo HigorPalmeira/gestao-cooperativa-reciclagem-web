@@ -60,7 +60,7 @@ public class CategoriaProcessamentoController extends HttpServlet {
 		try {
 			
 			switch(path) {
-				case "DetalharCategoriaProcessamento":
+				case "/DetalharCategoriaProcessamento":
 					System.out.println("Sem implementação...");
 					break;
 					
@@ -147,12 +147,32 @@ public class CategoriaProcessamentoController extends HttpServlet {
 
 	protected void listarCategoriasProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamento();
+		request.setCharacterEncoding("UTF-8");
 		
-		request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/categorias_processamento/categoriasProcessamento.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+			
+			String idCategoriaTxt = request.getParameter("idCategoria");
+			String nomeCategoria = request.getParameter("nome");
+			String descricaoCategoria = request.getParameter("descricao");
+			
+			Integer idCategoria = null;
+			if (idCategoriaTxt != null) {
+				idCategoria = Integer.parseInt(idCategoriaTxt);
+			}
+			
+			List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamentoPorParametros(idCategoria, nomeCategoria, descricaoCategoria);
+			
+			request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/categorias_processamento/categoriasProcessamento.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar as categorias de processamento.<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
