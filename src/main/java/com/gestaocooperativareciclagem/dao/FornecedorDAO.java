@@ -328,7 +328,7 @@ public class FornecedorDAO {
 		
 		if (tipoFornecedor != null) {
 			builder.append(" and tipo_fornecedor = ?");
-			parametros.add(tipoFornecedor);
+			parametros.add(tipoFornecedor.name());
 		}
 		
 		if (dtCadastroFornecedor != null) {

@@ -27,6 +27,7 @@ import com.gestaocooperativareciclagem.service.LoteBrutoService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 import com.gestaocooperativareciclagem.utils.Formatador;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Servlet implementation class FornecedorController
@@ -50,7 +51,9 @@ public class FornecedorController extends HttpServlet {
 			fornecedorService = new FornecedorService(new FornecedorDAO());
 			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
-			gson = new Gson();
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar FornecedorService e/ou LoteBrutoService e/ou TransacaoCompraService e/ou Gson", e);
 		}
@@ -189,25 +192,27 @@ public class FornecedorController extends HttpServlet {
 			out.print(builder.toString());
 			out.flush();
 			
+			e.printStackTrace();
+			
 		}
 		
 	}
 	
 	private List<Fornecedor> listarFornecedores(HttpServletRequest request) throws ServletException, IOException, SQLException {
 		
-		String documento = request.getParameter("doc").trim();
-		String nome = request.getParameter("nome").trim();
+		String documento = request.getParameter("doc");
+		String nome = request.getParameter("nome");
 		String tipoTxt = request.getParameter("tipo");
 		String dtCadastroTxt = request.getParameter("dataCadastro");
 		
 		TipoFornecedor tipo = null;
 		if (tipoTxt != null && !tipoTxt.isBlank()) {
-			tipo = TipoFornecedor.valueOf(tipoTxt);
+			tipo = TipoFornecedor.fromDescricao(tipoTxt.trim());
 		}
 		
 		Date dtCadastro = null;
 		if (dtCadastroTxt != null && !dtCadastroTxt.isBlank()) {
-			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt));
+			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt.trim()));
 		}
 		
 		return fornecedorService.listarFornecedoresComParametro(documento, nome, tipo, dtCadastro);
