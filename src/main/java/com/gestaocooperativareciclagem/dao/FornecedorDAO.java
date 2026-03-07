@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -271,6 +272,71 @@ public class FornecedorDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public List<Fornecedor> listarFornecedoresComParametro(String paramDocumentoFornecedor, String paramNomeFornecedor, TipoFornecedor paramTipoFornecedor, Date paramDtCadastroFornecedor) throws SQLException {
+		
+		List<Fornecedor> listaFornecedores = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramDocumentoFornecedor, paramNomeFornecedor, paramTipoFornecedor, paramDtCadastroFornecedor);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					
+					String documento = rset.getString("documento_fornecedor");
+					String nome = rset.getString("nome_fornecedor");
+					TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
+
+					listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaFornecedores;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, String documentoFornecedor, String nomeFornecedor, TipoFornecedor tipoFornecedor, Date dtCadastroFornecedor) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from fornecedor where 1=1");
+		
+		if (documentoFornecedor != null && !documentoFornecedor.isBlank()) {
+			builder.append(" and documento_fornecedor like ?");
+			parametros.add("%" + documentoFornecedor.trim() + "%");
+		}
+		
+		if (nomeFornecedor != null && !nomeFornecedor.isBlank()) {
+			builder.append(" and nome_fornecedor like ?");
+			parametros.add("%" + nomeFornecedor.trim() + "%");
+		}
+		
+		if (tipoFornecedor != null) {
+			builder.append(" and tipo_fornecedor = ?");
+			parametros.add(tipoFornecedor);
+		}
+		
+		if (dtCadastroFornecedor != null) {
+			builder.append(" and dtCadastro_fornecedor = ?");
+			parametros.add(dtCadastroFornecedor);
+		}
+		
+		return builder.toString();
 		
 	}
 }
