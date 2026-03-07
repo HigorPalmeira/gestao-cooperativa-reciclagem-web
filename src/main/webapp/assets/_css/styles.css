@@ -250,7 +250,7 @@ tr:hover { background-color: #f1f1f1; }
 .status-pend, .status-pendente, .badge-warning, .stage-trituracao, .role-operator {
     background-color: #fff3cd; color: #856404;
 }
-.status-atrasado {
+.status-atrasado, .stage-descarte {
     background-color: #f8d7da; color: #721c24;
 }
 .status-recebido, .stage-triagem, .role-admin {

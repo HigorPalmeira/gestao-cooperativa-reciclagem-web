@@ -39,6 +39,7 @@ import com.gestaocooperativareciclagem.service.PrecoMaterialService;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Servlet implementation class LoteProcessadoController
@@ -79,7 +80,9 @@ public class LoteProcessadoController extends HttpServlet {
 					etapaProcessamentoService,
 					loteBrutoService);
 			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
-			gson = new Gson();
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService e/ou EtapaProcessamentoService e/ou Gson", e);
 		}
