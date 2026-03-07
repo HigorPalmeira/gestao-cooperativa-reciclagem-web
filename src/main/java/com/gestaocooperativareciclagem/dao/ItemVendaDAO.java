@@ -323,5 +323,97 @@ public class ItemVendaDAO {
 		}
 		
 	}
+	
+	public List<ItemVenda> listarItensVendaComParametro(Integer paramIdItemVenda, Integer paramIdVenda, Integer paramIdTipoMaterial, BigDecimal paramPesoVendido, BigDecimal paramPrecoVendido, Date paramDtVenda) throws SQLException {
+		
+		List<ItemVenda> listaItensVenda = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdItemVenda, paramIdVenda, paramIdTipoMaterial, paramPesoVendido, paramPrecoVendido, paramDtVenda);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					
+					int idItemVenda = rset.getInt("id_itemvenda");
+					BigDecimal pesoVendidoKgItemVenda = rset.getBigDecimal("peso_vendido_kg_itemvenda");
+					BigDecimal precoUnitarioKgItemVenda = rset.getBigDecimal("preco_unitario_kg_itemvenda");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					int idVenda = rset.getInt("id_venda");
+					Date dtVenda = rset.getDate("dtVenda_venda");
+					BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
+					
+					String cnpjCliente = rset.getString("cnpj_cliente");
+					String nomeEmpresaCliente = rset.getString("nome_empresa_cliente");
+					String contatoPrincipalCliente = rset.getString("contato_principal_cliente");
+					String emailContatoCliente = rset.getString("email_contato_cliente");
+					Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+					
+					Cliente cliente = new Cliente(cnpjCliente, nomeEmpresaCliente, contatoPrincipalCliente, emailContatoCliente, dtCadastroCliente);
+					Venda venda = new Venda(idVenda, dtVenda, valorTotalVenda, cliente);
+					
+					listaItensVenda.add(new ItemVenda(idItemVenda, tipoMaterial, venda, pesoVendidoKgItemVenda, precoUnitarioKgItemVenda));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaItensVenda;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idItemVenda, Integer idVenda, Integer idTipoMaterial, BigDecimal pesoVendido, BigDecimal precoVendido, Date dtVenda) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_item_venda where 1=1");
+		
+		if (idItemVenda != null && idItemVenda != 0) {
+			builder.append(" and id_itemvenda = ?");
+			parametros.add(idItemVenda);
+		}
+		
+		if (idVenda != null && idVenda != 0) {
+			builder.append(" and id_venda = ?");
+			parametros.add(idVenda);
+		}
+		
+		if (idTipoMaterial != null && idTipoMaterial != 0) {
+			builder.append(" and id_tipomaterial = 0");
+			parametros.add(idTipoMaterial);
+		}
+		
+		if (pesoVendido != null) {
+			builder.append(" and peso_vendido_kg_itemvenda = ?");
+			parametros.add(pesoVendido);
+		}
+		
+		if (precoVendido != null) {
+			builder.append(" and preco_unitario_kg_itemvenda = ?");
+			parametros.add(precoVendido);
+		}
+		
+		if (dtVenda != null) {
+			builder.append(" and dtVenda_venda = ?");
+			parametros.add(dtVenda);
+		}
+		
+		return builder.toString();
+		
+	}
 
 }
