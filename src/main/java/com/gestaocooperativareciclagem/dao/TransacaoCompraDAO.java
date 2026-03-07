@@ -351,4 +351,84 @@ public class TransacaoCompraDAO {
 		
 	}
 
+	public List<TransacaoCompra> listarTransacoesCompraComParametros(Integer paramIdTransacaoCompra, Integer paramIdLoteBruto, BigDecimal paramValorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra paramStatusPagamentoTransacaoCompra) throws SQLException {
+		
+		List<TransacaoCompra> listaTransacoesCompra = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdTransacaoCompra, paramIdLoteBruto, paramValorTotalCalculadoTransacaoCompra, paramStatusPagamentoTransacaoCompra);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery()) {
+				
+				while (rset.next()) {
+					
+					int idTransacaoCompra = rset.getInt("id_transacaocompra");
+					BigDecimal valorTotalCalculado = rset.getBigDecimal("valor_total_calculado_transacaocompra");
+					StatusPagamentoTransacaoCompra statusPagamento = StatusPagamentoTransacaoCompra
+							.valueOf(rset.getString("status_pagamento_transacaocompra"));
+					Date dtCalculo = rset.getDate("dtCalculo_transacaocompra");
+					Date dtPagamento = rset.getDate("dtPagamento_transacaocompra");
+					
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKg = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKg, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					listaTransacoesCompra.add(new TransacaoCompra(idTransacaoCompra, valorTotalCalculado, statusPagamento, dtCalculo, dtPagamento, loteBruto));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaTransacoesCompra;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idTransacaoCompra, Integer idLoteBruto, BigDecimal valorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_transacao_compra where 1=1");
+		
+		if (idTransacaoCompra != null && idTransacaoCompra != 0) {
+			builder.append(" and id_transacaocompra = ?");
+			parametros.add(idTransacaoCompra);
+		}
+		
+		if (idLoteBruto != null && idLoteBruto != 0) {
+			builder.append(" and id_lotebruto = ?");
+			parametros.add(idLoteBruto);
+		}
+		
+		if (valorTotalCalculadoTransacaoCompra != null) {
+			builder.append(" and valor_total_calculado_transacaocompra = ?");
+			parametros.add(valorTotalCalculadoTransacaoCompra);
+		}
+		
+		if (statusPagamentoTransacaoCompra != null) {
+			builder.append(" and status_pagamento_transacaocompra = ?");
+			parametros.add(statusPagamentoTransacaoCompra);
+		}
+
+		return builder.toString();
+		
+	}
+	
 }
