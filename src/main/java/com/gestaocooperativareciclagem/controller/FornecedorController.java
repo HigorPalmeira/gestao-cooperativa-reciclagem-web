@@ -1,7 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,7 @@ import com.gestaocooperativareciclagem.service.FornecedorService;
 import com.gestaocooperativareciclagem.service.LoteBrutoService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 import com.gestaocooperativareciclagem.utils.Formatador;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class FornecedorController
@@ -32,21 +36,23 @@ import com.gestaocooperativareciclagem.utils.Formatador;
 		urlPatterns={"/FornecedorController", "/ListarFornecedores", 
 		"/DetalharFornecedor", "/InserirFornecedor", 
 		"/AtualizarFornecedor", "/DeletarFornecedor",
-		"/VerificarFornecedor"})
+		"/VerificarFornecedor", "/ListagemFornecedores"})
 public class FornecedorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private FornecedorService fornecedorService;
 	private LoteBrutoService loteBrutoService;
 	private TransacaoCompraService transacaoCompraService;
+	private Gson gson;
 	
 	public void init() throws ServletException {
 		try {
 			fornecedorService = new FornecedorService(new FornecedorDAO());
 			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar FornecedorService e/ou LoteBrutoService e/ou TransacaoCompraService", e);
+			throw new ServletException("Erro ao inicializar FornecedorService e/ou LoteBrutoService e/ou TransacaoCompraService e/ou Gson", e);
 		}
 	}
        
@@ -64,6 +70,9 @@ public class FornecedorController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -77,8 +86,11 @@ public class FornecedorController extends HttpServlet {
 					verificarFornecedor(request, response);
 					break;
 					
+				case "/ListagemFornecedores":
+					break;
+					
 				default:
-					listarFornecedores(request, response);
+					pageListarFornecedores(request, response);
 					break;
 			}
 			
@@ -93,6 +105,9 @@ public class FornecedorController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -114,7 +129,7 @@ public class FornecedorController extends HttpServlet {
 				
 					
 				default:
-					listarFornecedores(request, response);
+					pageListarFornecedores(request, response);
 					break;
 			}
 			
@@ -124,14 +139,77 @@ public class FornecedorController extends HttpServlet {
 		
 	}
 	
-	protected void listarFornecedores(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarFornecedores(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Fornecedor> fornecedores = fornecedorService.listarFornecedores();
+		try {
+			
+			List<Fornecedor> fornecedores = listarFornecedores(request);
+
+			request.setAttribute("listaFornecedores", fornecedores);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (ServletException | IOException | SQLException e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar os fornecedores cadastrados!<br>Erro: " +e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+
+		}
 		
-		request.setAttribute("listaFornecedores", fornecedores);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarFornecedoresJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<Fornecedor> listaFornecedores = listarFornecedores(request);
+			
+			String fornecedoresJson = gson.toJson(listaFornecedores);
+			
+			PrintWriter out = response.getWriter();
+			out.print(fornecedoresJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar os fornecedores. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<Fornecedor> listarFornecedores(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String documento = request.getParameter("doc").trim();
+		String nome = request.getParameter("nome").trim();
+		String tipoTxt = request.getParameter("tipo");
+		String dtCadastroTxt = request.getParameter("dataCadastro");
+		
+		TipoFornecedor tipo = null;
+		if (tipoTxt != null && !tipoTxt.isBlank()) {
+			tipo = TipoFornecedor.valueOf(tipoTxt);
+		}
+		
+		Date dtCadastro = null;
+		if (dtCadastroTxt != null && !dtCadastroTxt.isBlank()) {
+			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt));
+		}
+		
+		return fornecedorService.listarFornecedoresComParametro(documento, nome, tipo, dtCadastro);
 		
 	}
 	
