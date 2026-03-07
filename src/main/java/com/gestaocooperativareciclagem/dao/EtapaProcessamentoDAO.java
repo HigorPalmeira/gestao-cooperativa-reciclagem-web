@@ -548,4 +548,101 @@ public class EtapaProcessamentoDAO {
 		
 	}
 	
+	public List<EtapaProcessamento> listarEtapasProcessamentoComParametro(Integer paramIdLoteProcessado, Integer paramIdCategoriaProcessamento, Integer paramIdTipoMaterial, String paramStatus, Date paramDtProcessamento) throws SQLException {
+		
+		List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdLoteProcessado, paramIdCategoriaProcessamento, paramIdTipoMaterial, paramStatus, paramDtProcessamento);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					
+					Date dtProcessamento = rset.getDate("dtProcessamento_etapaprocessamento");
+					String statusProcessamento = rset.getString("status_processamento_etapaprocessamento");
+					
+					int idCategoriaProcessamento = rset.getInt("id_categoriaprocessamento");
+					String nomeCategoriaProcessamento = rset.getString("nome_categoriaprocessamento");
+					String descricaoCategoriaProcessamento = rset.getString("descricao_categoriaprocessamento");				
+					CategoriaProcessamento categoriaProcessamento = new CategoriaProcessamento(idCategoriaProcessamento, nomeCategoriaProcessamento, descricaoCategoriaProcessamento);
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf( rset.getString("tipo_fornecedor") );
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+					
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf( rset.getString("status_lotebruto") );
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					int idLoteProcessado = rset.getInt("id_loteprocessado");
+					BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
+					Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
+					LoteProcessado loteProcessado = new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto);
+					
+					listaEtapasProcessamento.add(new EtapaProcessamento(loteProcessado, categoriaProcessamento, dtProcessamento, statusProcessamento));
+					
+				}
+				
+			}
+			
+			
+		}
+		
+		return listaEtapasProcessamento;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idLoteProcessado, Integer idCategoriaProcessamento, Integer idTipoMaterial, String status, Date dtProcessamento) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_etapa_processamento where 1=1");
+		
+		if (idLoteProcessado != null && idLoteProcessado != 0) {
+			builder.append(" and id_loteprocessado = ?");
+			parametros.add(idLoteProcessado);
+		}
+		
+		if (idCategoriaProcessamento != null && idCategoriaProcessamento != 0) {
+			builder.append(" and id_categoriaprocessamento = ?");;
+			parametros.add(idCategoriaProcessamento);
+		}
+		
+		if (idTipoMaterial != null && idTipoMaterial != 0) {
+			builder.append(" and id_tipomaterial = ?");
+			parametros.add(idTipoMaterial);
+		}
+		
+		if (status != null && !status.isBlank()) {
+			builder.append(" and status_processamento_etapaprocessamento like ?");
+			parametros.add("%" + status.trim() + "%");
+		}
+		
+		if (dtProcessamento != null) {
+			builder.append(" and dtProcessamento_etapaprocessamento = ?");
+			parametros.add(dtProcessamento);
+		}
+		
+		builder.append(" order by dtProcessamento_etapaprocessamento desc");
+		
+		return builder.toString();
+	}
+	
 }
