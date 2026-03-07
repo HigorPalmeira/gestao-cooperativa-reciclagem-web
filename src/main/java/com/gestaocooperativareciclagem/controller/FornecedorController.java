@@ -87,6 +87,7 @@ public class FornecedorController extends HttpServlet {
 					break;
 					
 				case "/ListagemFornecedores":
+					listarFornecedoresJson(request, response);
 					break;
 					
 				default:
