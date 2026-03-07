@@ -1,8 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import com.gestaocooperativareciclagem.dao.TransacaoCompraDAO;
 import com.gestaocooperativareciclagem.model.TransacaoCompra;
 import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class TransacaoCompraController
@@ -27,11 +30,12 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 		name="TransacaoCompraController",
 		urlPatterns={ "/TransacaoCompraController", "/ListarTransacoesCompra", 
 	"/DetalharTransacaoCompra", "/AtualizarTransacaoCompra",
-	"/DeletarTransacaoCompra"})
+	"/DeletarTransacaoCompra", "/ListagemTransacoesCompra"})
 public class TransacaoCompraController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private TransacaoCompraService transacaoCompraService;
+	private Gson gson;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -49,9 +53,10 @@ public class TransacaoCompraController extends HttpServlet {
 		try {
 			
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
+			gson = new Gson();
 			
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar TransacaoCompraService", e);
+			throw new ServletException("Erro ao inicializar TransacaoCompraService e/ou Gson", e);
 		}
 		
 	}
@@ -60,6 +65,9 @@ public class TransacaoCompraController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -70,8 +78,12 @@ public class TransacaoCompraController extends HttpServlet {
 					buscarTransacaoCompra(request, response);
 					break;
 					
+				case "/ListagemTransacoesCompra":
+					listarTransacoesCompraJson(request, response);
+					break;
+					
 				default:
-					listarTransacoesCompra(request, response);
+					pageListarTransacoesCompra(request, response);
 					break;
 			}
 			
@@ -85,6 +97,9 @@ public class TransacaoCompraController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getContextPath();
 		
@@ -100,7 +115,7 @@ public class TransacaoCompraController extends HttpServlet {
 					break;
 					
 				default:
-					listarTransacoesCompra(request, response);
+					pageListarTransacoesCompra(request, response);
 					break;
 			}
 			
@@ -167,14 +182,87 @@ public class TransacaoCompraController extends HttpServlet {
 		
 	}
 	
-	protected void listarTransacoesCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarTransacoesCompra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<TransacaoCompra> listaTransacoesCompra = transacaoCompraService.listarTransacoesCompra();
+		try {
+
+			List<TransacaoCompra> listaTransacoesCompra = listarTransacoesCompra(request);
+			
+			request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/transacoes_compra/transacoesCompra.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar as transações de compra!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/transacoes_compra/transacoesCompra.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarTransacoesCompraJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<TransacaoCompra> listaTransacoesCompra = listarTransacoesCompra(request);
+			
+			String transacoesCompraJson = gson.toJson(listaTransacoesCompra);
+			
+			PrintWriter out = response.getWriter();
+			out.print(transacoesCompraJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar as transações de compra. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<TransacaoCompra> listarTransacoesCompra(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idTransacaoCompraTxt = request.getParameter("id");
+		String idLoteBrutoTxt = request.getParameter("idLoteBruto");
+		String valorTotalCalculadoTxt = request.getParameter("valor");
+		String statusPagamentoTxt = request.getParameter("status");
+		
+		Integer idTransacaoCompra = null;
+		if (idTransacaoCompraTxt != null && !idTransacaoCompraTxt.isBlank()) {
+			idTransacaoCompra = Integer.parseInt(idTransacaoCompraTxt.trim());
+		}
+		
+		Integer idLoteBruto = null;
+		if (idLoteBrutoTxt != null && !idLoteBrutoTxt.isBlank()) {
+			idLoteBruto = Integer.parseInt(idLoteBrutoTxt.trim());
+		}
+		
+		BigDecimal valorTotalCalculado = null;
+		if (valorTotalCalculadoTxt != null && !valorTotalCalculadoTxt.isBlank()) {
+			valorTotalCalculado = new BigDecimal(valorTotalCalculadoTxt.trim());
+		}
+		
+		StatusPagamentoTransacaoCompra statusPagamento = null;
+		if (statusPagamentoTxt != null && !statusPagamentoTxt.isBlank()) {
+			statusPagamento = StatusPagamentoTransacaoCompra.valueOf(statusPagamentoTxt.trim());
+		}
+		
+		return transacaoCompraService.listarTransacoesCompraComParametro(idTransacaoCompra, idLoteBruto, valorTotalCalculado, statusPagamento);
 		
 	}
 
