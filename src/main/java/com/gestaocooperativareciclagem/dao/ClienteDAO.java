@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,6 +253,78 @@ public class ClienteDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public List<Cliente> listarClientesComParametro(String cnpjCliente, String nomeEmpresaCliente, String contatoPrincipalCliente, String emailContatoCliente, Date dtCadastroCliente) throws SQLException {
+		
+		List<Cliente> listaClientes = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		
+		String select = buildQuerySelect(parametros, cnpjCliente, nomeEmpresaCliente, contatoPrincipalCliente, emailContatoCliente, dtCadastroCliente);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					
+					String cnpj = rset.getString("cnpj_cliente");
+					String nomeEmpresa = rset.getString("nome_empresa_cliente");
+					String contatoPrincipal = rset.getString("contato_principal_cliente");
+					String emailContato = rset.getString("email_contato_cliente");
+					Date dtCadastro = rset.getDate("dtCadastro_cliente");
+					
+					listaClientes.add(new Cliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato, dtCadastro));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaClientes;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, String cnpjCliente, String nomeEmpresaCliente, String contatoPrincipalCliente, String emailContatoCliente, Date dtCadastroCliente) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from cliente where 1=1");
+		
+		if (cnpjCliente != null && !cnpjCliente.isBlank()) {
+			builder.append(" and cnpj_cliente like ?");
+			parametros.add("%" + cnpjCliente.trim() + "%");
+		}
+		
+		if (nomeEmpresaCliente != null && !nomeEmpresaCliente.isBlank()) {
+			builder.append(" and nome_empresa_cliente like ?");
+			parametros.add("%" + nomeEmpresaCliente.trim() + "%");
+		}
+		
+		if (contatoPrincipalCliente != null && !contatoPrincipalCliente.isBlank()) {
+			builder.append(" and contato_principal_cliente like ?");
+			parametros.add("%" + contatoPrincipalCliente.trim() + "%");
+		}
+		
+		if (emailContatoCliente != null && !emailContatoCliente.isBlank()) {
+			builder.append(" and email_contato_cliente like ?");
+			parametros.add("%" + emailContatoCliente.trim() + "%");
+		}
+		
+		if (dtCadastroCliente != null) {
+			builder.append(" and dtCadastro_cliente = ?");
+			parametros.add(dtCadastroCliente);
+		}
+		
+		return builder.toString();
 		
 	}
 
