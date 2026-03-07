@@ -343,4 +343,83 @@ public class LoteBrutoDAO {
 		
 	}
 
+	public List<LoteBruto> listarLotesBrutoComParametro(Integer paramIdLoteBruto, String paramDocumentoFornecedor, StatusLoteBruto paramStatusLoteBruto, BigDecimal paramPesoEntrada, Date paramDtEntradaLoteBruto) throws SQLException {
+		
+		List<LoteBruto> listaLotesBruto = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdLoteBruto, paramDocumentoFornecedor, paramStatusLoteBruto, paramPesoEntrada, paramDtEntradaLoteBruto);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery()) {
+				
+				while (rset.next()) {
+					
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+					
+					listaLotesBruto.add(new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaLotesBruto;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idLoteBruto, String documentoFornecedor, StatusLoteBruto statusLoteBruto, BigDecimal pesoEntrada, Date dtEntradaLoteBruto) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_lote_bruto where 1=1");
+		
+		if (idLoteBruto != null && idLoteBruto != 0) {
+			builder.append(" and id_lotebruto = ?");
+			parametros.add(idLoteBruto);
+		}
+		
+		if (documentoFornecedor != null && !documentoFornecedor.isBlank()) {
+			builder.append(" and documento_fornecedor like ?");
+			parametros.add("%" + documentoFornecedor.trim() + "%");
+		}
+		
+		if (statusLoteBruto != null) {
+			builder.append(" and status_lotebruto = ?");
+			parametros.add(statusLoteBruto);
+		}
+		
+		if (pesoEntrada != null) {
+			builder.append(" and peso_entrada_kg_lotebruto = ?");
+			parametros.add(pesoEntrada);
+		}
+		
+		if (dtEntradaLoteBruto != null) {
+			builder.append(" and dtEntrada_lotebruto = ?");
+			parametros.add(dtEntradaLoteBruto);
+		}
+		
+		builder.append(" order by dtEntrada_lotebruto desc");
+		
+		return builder.toString();
+		
+	}
+	
 }
