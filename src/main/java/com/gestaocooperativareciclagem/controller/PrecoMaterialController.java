@@ -26,6 +26,7 @@ import com.gestaocooperativareciclagem.model.TipoMaterial;
 import com.gestaocooperativareciclagem.service.PrecoMaterialService;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Servlet implementation class PrecoMaterialController
@@ -61,7 +62,9 @@ public class PrecoMaterialController extends HttpServlet {
 			precoMaterialService = new PrecoMaterialService(
 					new PrecoMaterialDAO(), 
 					tipoMaterialService);
-			gson = new Gson();
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar PrecoMaterialService e/ou TipoMaterialService e/ou Gson", e);
 		}
