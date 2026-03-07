@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -412,6 +413,79 @@ public class PrecoMaterialDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer paramIdPrecoMaterial, BigDecimal paramPrecoCompraMaterial, Date dtVigenciaMaterial, Integer paramIdTipoMaterial, String paramNomeTipoMaterial) throws SQLException {
+		
+		List<PrecoMaterial> listaPrecosMaterial = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdPrecoMaterial, paramPrecoCompraMaterial, dtVigenciaMaterial, paramIdTipoMaterial, paramNomeTipoMaterial);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while(rset.next()) {
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecosMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				}
+				
+			}
+			
+		}
+		
+		return listaPrecosMaterial;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idPrecoMaterial, BigDecimal precoCompraMaterial, Date dtVigenciaMaterial, Integer idTipoMaterial, String nomeTipoMaterial) {
+	
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_preco_material where 1=1");
+		
+		if (idPrecoMaterial != null && idPrecoMaterial != 0) {
+			builder.append(" and id_precomaterial = ?");
+			parametros.add(idPrecoMaterial);
+		}
+		
+		if (precoCompraMaterial != null) {
+			builder.append(" and preco_compra_kg_precomaterial = ?");
+			parametros.add(precoCompraMaterial);
+		}
+		
+		if (dtVigenciaMaterial != null) {
+			builder.append(" and dtVigencia_precomaterial = ?");
+			parametros.add(dtVigenciaMaterial);
+		}
+		
+		if (idTipoMaterial != null && idTipoMaterial != 0) {
+			builder.append(" and id_tipomaterial = ?");
+			parametros.add(idTipoMaterial);
+		}
+		
+		if (nomeTipoMaterial != null && !nomeTipoMaterial.isBlank()) {
+			builder.append(" and nome_tipomaterial like ?");
+			parametros.add("%" + nomeTipoMaterial + "%");
+		}
+		
+		return builder.toString();
 		
 	}
 	
