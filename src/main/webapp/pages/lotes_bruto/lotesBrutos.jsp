@@ -11,6 +11,8 @@
     <title>Gestão de Lotes Brutos</title>
     
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
+
+     <script>const ctx = "${pageContext.request.contextPath}";</script>
      
 </head>
 <body>
@@ -21,8 +23,9 @@
         <div>
             <!-- Links atualizados para evitar erro de navegação no preview -->
             <a href="${pageContext.request.contextPath}/Home">Início</a>
-            <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
             <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a>
+            <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
+            <a href="${pageContext.request.contextPath}/Producao">Produção</a>
         </div>
     </nav>
 
@@ -65,7 +68,7 @@
                 <button class="btn-search" onclick="searchBatches()">Pesquisar</button>
             </div>
             
-            <div id="feedback-message">
+            <div id="feedback-message" style="display: none;">
                 Por favor, preencha pelo menos um campo para realizar a pesquisa.
             </div>
         </section>
@@ -109,89 +112,7 @@
 
     </main>
 
-    <script>
-        
-        const listaLotesBruto = [
-        	<c:forEach var="loteBruto" items="${listaLotesBrutos}" varStatus="loop">
-        		{
-        			"id": "${loteBruto.id}",
-        			"weight": "${loteBruto.pesoEntradaKg}",
-        			"date": "${loteBruto.dtEntrada}",
-        			"status": "${loteBruto.status}"
-        		}
-        	</c:forEach>
-        ];
+    <script src="${pageContext.request.contextPath}/assets/_js/script-lote-bruto.js"></script>
 
-        function searchBatches() {
-            // 1. Obter inputs
-            const dateStart = document.getElementById('dateStart').value;
-            const dateEnd = document.getElementById('dateEnd').value;
-            const weightMin = document.getElementById('weightMin').value;
-            const weightMax = document.getElementById('weightMax').value;
-            
-            const feedbackMsg = document.getElementById('feedback-message');
-            const tbody = document.getElementById('resultsTableBody');
-
-        	// 2. Validação: A pesquisa só é executada quando pelo menos um campo for preenchido
-            const isDateEmpty = !dateStart && !dateEnd;
-            const isWeightEmpty = !weightMin && !weightMax;
-
-            if (isDateEmpty && isWeightEmpty) {
-                feedbackMsg.style.display = 'block';
-                return; // Interrompe a execução
-            } else {
-                feedbackMsg.style.display = 'none';
-            }
-
-            // 3. Filtragem
-            const filteredData = listaLotesBruto.filter(batch => {
-                let dateValid = true;
-                let weightValid = true;
-
-                // Filtrar Data
-                const batchDate = new Date(batch.date);
-                if (dateStart) dateValid = dateValid && (batchDate >= new Date(dateStart));
-                if (dateEnd) dateValid = dateValid && (batchDate <= new Date(dateEnd));
-
-                // Filtrar Peso
-                if (weightMin) weightValid = weightValid && (batch.weight >= parseFloat(weightMin));
-                if (weightMax) weightValid = weightValid && (batch.weight <= parseFloat(weightMax));
-
-                return dateValid && weightValid;
-            });
-
-            // 4. Renderizar Tabela
-            tbody.innerHTML = ''; // Limpar
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #777;">Nenhum lote encontrado.</td></tr>`;
-                return;
-            }
-
-            filteredData.forEach(batch => {
-                // Formatação
-                const formattedDate = new Date(batch.date).toLocaleDateString('pt-BR');
-                const formattedWeight = batch.weight.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                
-                // Define classe CSS do status
-                let statusClass = 'status-recebido';
-                if (batch.status === 'PROCESSADO') statusClass = 'status-concluido';
-                if (batch.status === 'EM_TRIAGEM') statusClass = 'status-processamento';
-                
-                const row = document.createElement('tr');
-                row.innerHTML = ```
-                    <td>
-                        <a href="${pageContext.request.contextPath}/DetalharLoteBruto?id=${batch.id}" class="id-link">
-                            #LB-\${String(batch.id).padStart(3, '0')}
-                        </a>
-                    </td>
-                    <td>${formattedWeight}</td>
-                    <td>${formattedDate}</td>
-                    <td><span class="status-badge ${statusClass}">${batch.status}</span></td>
-                ```;
-                tbody.appendChild(row);
-            });
-        }
-    </script>
 </body>
 </html>

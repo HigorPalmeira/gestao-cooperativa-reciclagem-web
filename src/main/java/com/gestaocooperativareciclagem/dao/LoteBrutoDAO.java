@@ -403,7 +403,7 @@ public class LoteBrutoDAO {
 		
 		if (statusLoteBruto != null) {
 			builder.append(" and status_lotebruto = ?");
-			parametros.add(statusLoteBruto);
+			parametros.add(statusLoteBruto.name());
 		}
 		
 		if (pesoEntrada != null) {
