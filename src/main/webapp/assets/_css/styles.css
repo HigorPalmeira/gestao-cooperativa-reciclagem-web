@@ -235,7 +235,7 @@ tr:hover { background-color: #f1f1f1; }
 .text-right { text-align: right; }
 
 /* --- 8. Badges e Status --- */
-.badge, .status-badge, .stage-badge {
+.badge, .status-badge, .stage-badge, .role-badge {
     padding: 4px 10px;
     border-radius: 12px;
     font-size: 0.85rem;
@@ -247,7 +247,7 @@ tr:hover { background-color: #f1f1f1; }
 .status-ok, .status-pago, .status-concluido, .badge-success, .stage-extrusao {
     background-color: #d4edda; color: #155724;
 }
-.status-pend, .status-pendente, .badge-warning, .stage-trituracao {
+.status-pend, .status-pendente, .badge-warning, .stage-trituracao, .role-operator {
     background-color: #fff3cd; color: #856404;
 }
 .status-atrasado {

@@ -12,6 +12,8 @@
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
+    <script>const ctx = "${pageContext.request.contextPath}";</script>
+
 </head>
 <body>
 
@@ -42,14 +44,14 @@
                     <label for="searchRole">Papel</label>
                     <select id="searchRole">
                         <option value="">Selecione...</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Gerente">Gerente</option>
-                        <option value="Operador">Operador</option>
+                        <option value="administrador">Administrador</option>
+                        <option value="gerente">Gerente</option>
+                        <option value="operador">Operador</option>
                     </select>
                 </div>
                 <button class="btn-search" onclick="searchUsers()">Pesquisar</button>
             </div>
-            <div id="feedback-message">Por favor, preencha pelo menos um campo para realizar a pesquisa.</div>
+            <div id="feedback-message" style="display: none;">Por favor, preencha pelo menos um campo para realizar a pesquisa.</div>
         </section>
 
         <section class="table-container">
@@ -79,57 +81,7 @@
 
     </main>
 
-    <script>
-        /* --- JavaScript: Lógica --- */
+    <script src="${pageContext.request.contextPath}/assets/_js/script-usuario.js"></script>
 
-        function searchUsers() {
-            const nameInput = document.getElementById('searchName').value.trim().toLowerCase();
-            const roleInput = document.getElementById('searchRole').value;
-            const feedbackMsg = document.getElementById('feedback-message');
-            const tbody = document.getElementById('resultsTableBody');
-
-            // 1. Regra de Validação: Pesquisa só executa se houver input
-            if (nameInput === "" && roleInput === "") {
-                feedbackMsg.style.display = 'block';
-                return; 
-            } else {
-                feedbackMsg.style.display = 'none';
-            }
-
-            // 2. Filtragem
-            const filteredData = usersDatabase.filter(user => {
-                const matchName = nameInput ? user.name.toLowerCase().includes(nameInput) : true;
-                const matchRole = roleInput ? user.role === roleInput : true;
-                return matchName && matchRole;
-            });
-
-            // 3. Renderização
-            tbody.innerHTML = ''; // Limpa tabela
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #777;">Nenhum utilizador encontrado com estes critérios.</td></tr>`;
-                return;
-            }
-
-            filteredData.forEach(user => {
-                // Define classe do badge baseada no papel
-                let badgeClass = 'role-user'; // padrão
-                if (user.role === 'Administrador') badgeClass = 'role-admin';
-                if (user.role === 'Gerente') badgeClass = 'role-manager';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a href="DetalharUsuario?id=${user.id}" class="user-link">
-                            ${user.name}
-                        </a>
-                    </td>
-                    <td>${user.email}</td>
-                    <td><span class="role-badge ${badgeClass}">${user.role}</span></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-    </script>
 </body>
 </html>

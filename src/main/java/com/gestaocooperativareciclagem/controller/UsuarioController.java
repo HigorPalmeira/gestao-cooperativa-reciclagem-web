@@ -39,6 +39,7 @@ public class UsuarioController extends HttpServlet {
 	public void init() throws ServletException {
 		try {
 			usuarioService = new UsuarioService(new UsuarioDAO());
+			gson = new Gson();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar UsuarioService e/ou Gson", e);
 		}
