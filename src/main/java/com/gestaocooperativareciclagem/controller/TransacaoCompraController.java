@@ -22,6 +22,7 @@ import com.gestaocooperativareciclagem.model.TransacaoCompra;
 import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Servlet implementation class TransacaoCompraController
@@ -53,8 +54,9 @@ public class TransacaoCompraController extends HttpServlet {
 		try {
 			
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
-			gson = new Gson();
-			
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar TransacaoCompraService e/ou Gson", e);
 		}

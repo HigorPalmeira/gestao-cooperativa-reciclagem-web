@@ -11,6 +11,8 @@
     <title>Gestão de Transações de Compra</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
+
+    <script>const ctx = "${pageContext.request.contextPath}";</script>
     
 </head>
 <body>
@@ -62,10 +64,10 @@
                     <div class="inputs-row">
                         <select id="statusSelect" style="width: 100%;">
                             <option value="">Todos</option>
-                            <option value="Pago">Pago</option>
-                            <option value="Pendente">Pendente</option>
-                            <option value="Atrasado">Atrasado</option>
-                            <option value="Cancelado">Cancelado</option>
+                            <option value="PAGO">Pago</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="ATRASADO">Atrasado</option>
+                            <option value="CANCELADO">Cancelado</option>
                         </select>
                     </div>
                 </div>
@@ -74,7 +76,7 @@
                 <button class="btn-search" onclick="searchTransactions()">Pesquisar</button>
             </div>
             
-            <div id="feedback-message">
+            <div id="feedback-message" style="display: none;">
                 Por favor, preencha pelo menos um campo para realizar a pesquisa.
             </div>
         </section>
@@ -138,96 +140,7 @@
 
     </main>
 
-    <script>
-        /* --- JavaScript: Lógica de Filtragem --- */
+    <script src="${pageContext.request.contextPath}/assets/_js/script-transacao-compra.js"></script>
 
-        // Dados simulados (Mock Database)
-        // Formato de data ISO (YYYY-MM-DD) para lógica
-        const transactionsDB = [
-            { id: 555, date: '2026-01-15', value: 1500.00, status: 'Pago' },
-            { id: 558, date: '2026-01-20', value: 850.50, status: 'Pendente' },
-            { id: 560, date: '2026-01-10', value: 3200.00, status: 'Atrasado' },
-            { id: 565, date: '2026-02-01', value: 500.00, status: 'Pago' },
-            { id: 570, date: '2025-12-20', value: 1200.00, status: 'Cancelado' }
-        ];
-
-        function searchTransactions() {
-            // 1. Obter inputs
-            const dateStart = document.getElementById('dateStart').value;
-            const dateEnd = document.getElementById('dateEnd').value;
-            const valMin = document.getElementById('valMin').value;
-            const valMax = document.getElementById('valMax').value;
-            const status = document.getElementById('statusSelect').value;
-            
-            const feedbackMsg = document.getElementById('feedback-message');
-            const tbody = document.getElementById('resultsTableBody');
-
-            // 2. Validação: Pelo menos um campo deve estar preenchido
-            const isDateEmpty = !dateStart && !dateEnd;
-            const isValEmpty = !valMin && !valMax;
-            const isStatusEmpty = !status;
-
-            if (isDateEmpty && isValEmpty && isStatusEmpty) {
-                feedbackMsg.style.display = 'block';
-                return;
-            } else {
-                feedbackMsg.style.display = 'none';
-            }
-
-            // 3. Filtragem
-            const filteredData = transactionsDB.filter(item => {
-                let dateValid = true;
-                let valValid = true;
-                let statusValid = true;
-
-                // Filtro Data
-                const itemDate = new Date(item.date);
-                if (dateStart) dateValid = dateValid && (itemDate >= new Date(dateStart));
-                if (dateEnd) dateValid = dateValid && (itemDate <= new Date(dateEnd));
-
-                // Filtro Valor
-                if (valMin) valValid = valValid && (item.value >= parseFloat(valMin));
-                if (valMax) valValid = valValid && (item.value <= parseFloat(valMax));
-
-                // Filtro Status
-                if (status) statusValid = statusValid && (item.status === status);
-
-                return dateValid && valValid && statusValid;
-            });
-
-            // 4. Renderização
-            tbody.innerHTML = ''; // Limpar tabela
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #777;">Nenhuma transação encontrada com os critérios selecionados.</td></tr>`;
-                return;
-            }
-
-            filteredData.forEach(item => {
-                // Formatação (pt-BR para data, BRL para moeda conforme pedido R$)
-                const formattedDate = new Date(item.date).toLocaleDateString('pt-BR');
-                const formattedValue = item.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                
-                // Classe CSS do badge
-                let statusClass = 'status-pendente';
-                if (item.status === 'Pago') statusClass = 'status-pago';
-                if (item.status === 'Atrasado') statusClass = 'status-atrasado';
-                if (item.status === 'Cancelado') statusClass = 'status-cancelado';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a href="./transacao_compra.html?id=${item.id}" onclick="alert('Ver detalhes da transação #TR-${item.id}')" class="id-link">
-                            #TR-${item.id}
-                        </a>
-                    </td>
-                    <td>${formattedDate}</td>
-                    <td class="text-right">${formattedValue}</td>
-                    <td><span class="status-badge ${statusClass}">${item.status}</span></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-    </script>
 </body>
 </html>

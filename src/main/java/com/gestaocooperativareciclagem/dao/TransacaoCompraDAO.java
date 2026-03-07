@@ -424,7 +424,7 @@ public class TransacaoCompraDAO {
 		
 		if (statusPagamentoTransacaoCompra != null) {
 			builder.append(" and status_pagamento_transacaocompra = ?");
-			parametros.add(statusPagamentoTransacaoCompra);
+			parametros.add(statusPagamentoTransacaoCompra.name());
 		}
 
 		return builder.toString();
