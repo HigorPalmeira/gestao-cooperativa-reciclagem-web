@@ -1,8 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ import com.gestaocooperativareciclagem.service.LoteProcessadoService;
 import com.gestaocooperativareciclagem.service.PrecoMaterialService;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class LoteBrutoController
@@ -45,7 +48,7 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 		urlPatterns={ "/LoteBrutoController", "/ListarLotesBruto",
 			"/InserirLoteBruto", "/DetalharLoteBruto",
 			"/AtualizarLoteBruto", "/DeletarLoteBruto",
-			"/BuscarFornecedorLote"})
+			"/BuscarFornecedorLote", "/ListagemLotesBruto"})
 public class LoteBrutoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -54,6 +57,7 @@ public class LoteBrutoController extends HttpServlet {
     private LoteProcessadoService loteProcessadoService;
     private TransacaoCompraService transacaoCompraService;
     private EtapaProcessamentoService etapaProcessamentoService;
+    private Gson gson;
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -79,8 +83,9 @@ public class LoteBrutoController extends HttpServlet {
 													new TipoMaterialService(new TipoMaterialDAO())),
 											etapaProcessamentoService,
 											loteBrutoService);
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou FornecedorService e/ou LoteProcessadoService e/ou TransacaoCompraService e/ou EtapaProcessamentoService", e);
+			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou FornecedorService e/ou LoteProcessadoService e/ou TransacaoCompraService e/ou EtapaProcessamentoService e/ou Gson", e);
 		}
 	}
 
@@ -89,6 +94,9 @@ public class LoteBrutoController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -103,8 +111,12 @@ public class LoteBrutoController extends HttpServlet {
 					buscarFornecedorDoLoteBruto(request, response);
 					break;
 					
+				case "/ListagemLotesBruto":
+					listarLotesBrutoJson(request, response);
+					break;
+					
 				default:
-					listarLotesBruto(request, response);
+					pageListarLotesBruto(request, response);
 					break;
 			}
 			
@@ -118,6 +130,9 @@ public class LoteBrutoController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -137,7 +152,7 @@ public class LoteBrutoController extends HttpServlet {
 					break;
 					
 				default:
-					listarLotesBruto(request, response);
+					pageListarLotesBruto(request, response);
 					break;
 			}
 			
@@ -273,14 +288,56 @@ public class LoteBrutoController extends HttpServlet {
 		
 	}
 	
-	protected void listarLotesBruto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarLotesBruto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<LoteBruto> lotesBrutos = loteBrutoService.listarLotesBrutos();
+		try {
+
+			List<LoteBruto> lotesBrutos = listarLotesBruto(request);
+			
+			request.setAttribute("listaLotesBrutos", lotesBrutos);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/lotesBrutos.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar os lotes brutos registrados!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		request.setAttribute("listaLotesBrutos", lotesBrutos);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/lotesBrutos.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarLotesBrutoJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<LoteBruto> listarLotesBruto = listarLotesBruto(request);
+			
+			String lotesBrutoJson = gson.toJson(listarLotesBruto);
+			
+			PrintWriter out = response.getWriter();
+			out.print(lotesBrutoJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar os lotes brutos. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
 		
 	}
 	
@@ -299,6 +356,38 @@ public class LoteBrutoController extends HttpServlet {
 		request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
 		request.setAttribute("listaLotesProcessados", listaLotesProcessados);
 		request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
+		
+	}
+	
+	private List<LoteBruto> listarLotesBruto(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idLoteBrutoTxt = request.getParameter("id");
+		String documentoFornecedor = request.getParameter("doc");
+		String statusTxt = request.getParameter("status");
+		String pesoEntradaTxt = request.getParameter("pesoEntrada");
+		String dtEntradaTxt = request.getParameter("dataEntrada");
+		
+		Integer idLoteBruto = null;
+		if (idLoteBrutoTxt != null && !idLoteBrutoTxt.isBlank()) {
+			idLoteBruto = Integer.parseInt(idLoteBrutoTxt.trim());
+		}
+		
+		StatusLoteBruto status = null;
+		if (statusTxt != null && !statusTxt.isBlank()) {
+			status = StatusLoteBruto.valueOf(statusTxt.trim());
+		}
+		
+		BigDecimal pesoEntrada = null;
+		if (pesoEntradaTxt != null && !pesoEntradaTxt.isBlank()) {
+			pesoEntrada = new BigDecimal(pesoEntradaTxt.trim());
+		}
+		
+		Date dtEntrada = null;
+		if (dtEntradaTxt != null && !dtEntradaTxt.isBlank()) {
+			dtEntrada = Date.valueOf(LocalDate.parse(dtEntradaTxt.trim()));
+		}
+		
+		return loteBrutoService.listarLotesBrutoComParametro(idLoteBruto, documentoFornecedor, status, pesoEntrada, dtEntrada);
 		
 	}
 
