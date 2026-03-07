@@ -1,9 +1,15 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,6 +38,7 @@ import com.gestaocooperativareciclagem.service.LoteProcessadoService;
 import com.gestaocooperativareciclagem.service.PrecoMaterialService;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.TransacaoCompraService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class LoteProcessadoController
@@ -41,7 +48,7 @@ import com.gestaocooperativareciclagem.service.TransacaoCompraService;
 		urlPatterns= {"/LoteProcessadoController", "/ListarLotesProcessados", 
 		"/DetalharLoteProcessado", "/NovoLoteProcessado",
 		"/InserirLoteProcessado", "/AtualizarLoteProcessado",
-		"/DeletarLoteProcessado"})
+		"/DeletarLoteProcessado", "/ListagemLotesProcessado"})
 public class LoteProcessadoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -50,6 +57,7 @@ public class LoteProcessadoController extends HttpServlet {
 	private TipoMaterialService tipoMaterialService;
 	private CategoriaProcessamentoService categoriaProcessamentoService;
 	private EtapaProcessamentoService etapaProcessamentoService;
+	private Gson gson;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -71,8 +79,9 @@ public class LoteProcessadoController extends HttpServlet {
 					etapaProcessamentoService,
 					loteBrutoService);
 			categoriaProcessamentoService = new CategoriaProcessamentoService(new CategoriaProcessamentoDAO());
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService e/ou EtapaProcessamentoService", e);
+			throw new ServletException("Erro ao inicializar LoteProcessadoService e/ou LoteBrutoService e/ou TipoMaterialService e/ou CategoriaProcessamentoService e/ou EtapaProcessamentoService e/ou Gson", e);
 		}
 	}
 
@@ -80,6 +89,9 @@ public class LoteProcessadoController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -94,8 +106,12 @@ public class LoteProcessadoController extends HttpServlet {
 					pageNovoLoteProcessado(request, response);
 					break;
 					
+				case "/ListagemLotesProcessado":
+					listarLotesProcessadosJson(request, response);
+					break;
+					
 				default:
-					listarLotesProcessados(request, response);
+					pageListarLotesProcessados(request, response);
 					break;
 			}
 			
@@ -109,6 +125,9 @@ public class LoteProcessadoController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -128,7 +147,7 @@ public class LoteProcessadoController extends HttpServlet {
 					break;
 					
 				default:
-					listarLotesProcessados(request, response);
+					pageListarLotesProcessados(request, response);
 					break;
 			}
 			
@@ -253,7 +272,7 @@ public class LoteProcessadoController extends HttpServlet {
 		
 	}
 	
-	protected void listarLotesProcessados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarLotesProcessados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessado();
 		List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
@@ -268,6 +287,85 @@ public class LoteProcessadoController extends HttpServlet {
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/lotesProcessados.jsp");
 		
 		reqDis.forward(request, response);
+		
+	}
+	
+	protected void listarLotesProcessadosJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<LoteProcessado> listaLotesProcessado = listarLotesProcessado(request);
+			List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessado.size());
+			
+			for (LoteProcessado loteProcessado : listaLotesProcessado) {
+				EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
+				listaEtapasProcessamento.add(etapa);
+			}
+			
+			Map<String, Object> container = new HashMap<>();
+			container.put("lotesProcessados", listaLotesProcessado);
+			container.put("etapasProcessamento", listaEtapasProcessamento);
+			
+			String dadosJson = gson.toJson(container);
+			
+			PrintWriter out = response.getWriter();
+			out.print(dadosJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar os lotes processados. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<LoteProcessado> listarLotesProcessado(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idLoteProcessadoTxt = request.getParameter("id");
+		String idLoteBrutoTxt = request.getParameter("idLoteBruto");
+		String idTipoMaterialTxt = request.getParameter("idTipoMaterial");
+		String pesoAtualTxt = request.getParameter("pesoAtual");
+		String dtCriacaoTxt = request.getParameter("dataCriacao");
+		
+		Integer idLoteProcessado = null;
+		if (idLoteProcessadoTxt != null && !idLoteProcessadoTxt.isBlank()) {
+			idLoteProcessado = Integer.parseInt(idLoteProcessadoTxt.trim());
+		}
+		
+		Integer idLoteBruto = null;
+		if (idLoteBrutoTxt != null && !idLoteBrutoTxt.isBlank()) {
+			idLoteBruto = Integer.parseInt(idLoteBrutoTxt.trim());
+		}
+		
+		Integer idTipoMaterial = null;
+		if (idTipoMaterialTxt != null && !idTipoMaterialTxt.isBlank()) {
+			idTipoMaterial = Integer.parseInt(idTipoMaterialTxt.trim());
+		}
+		
+		BigDecimal pesoAtual = null;
+		if (pesoAtualTxt != null && !pesoAtualTxt.isBlank()) {
+			pesoAtual = new BigDecimal(pesoAtualTxt.trim());
+		}
+		
+		Date dtCriacao = null;
+		if (dtCriacaoTxt != null && !dtCriacaoTxt.isBlank()) {
+			dtCriacao = Date.valueOf(LocalDate.parse(dtCriacaoTxt.trim()));
+		}
+		
+		return loteProcessadoService.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, pesoAtual, dtCriacao);
 		
 	}
 
