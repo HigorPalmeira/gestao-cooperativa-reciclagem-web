@@ -3,6 +3,7 @@ package com.gestaocooperativareciclagem.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,4 +266,70 @@ public class UsuarioDAO {
 		
 	}
 
+	public List<Usuario> listarUsuariosComParametro(Integer idUsuario, String nomeUsuario, String emailUsuario, String papelUsuario) throws SQLException {
+		
+		List<Usuario> listaUsuarios = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, idUsuario, nomeUsuario, emailUsuario, papelUsuario);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery()) {
+				
+				while(rset.next()) {
+					
+					int id = rset.getInt("id_usuario");
+					String nome = rset.getString("nome_usuario");
+					String email = rset.getString("email_usuario");
+					String senha = rset.getString("senha_usuario");
+					String papel = rset.getString("papel");
+					
+					listaUsuarios.add(new Usuario(id, nome, email, senha, papel));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaUsuarios;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idUsuario, String nomeUsuario, String emailUsuario, String papelUsuario) {
+		// nome_usuario, email_usuario, senha_usuario, papel
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from usuario where 1=1");
+		
+		if (idUsuario != null && idUsuario != 0) {
+			builder.append(" and id_usuario = ?");
+			parametros.add(idUsuario);
+		}
+		
+		if (nomeUsuario != null && !nomeUsuario.isBlank()) {
+			builder.append(" and nome_usuario like ?");
+			parametros.add("%" + nomeUsuario.trim() + "%");
+		}
+		
+		if (emailUsuario != null && !emailUsuario.isBlank()) {
+			builder.append(" and email_usuario like ?");
+			parametros.add("%" + emailUsuario.trim() + "%");
+		}
+		
+		if (papelUsuario != null && !papelUsuario.isBlank()) {
+			builder.append(" and papel like ?");
+			parametros.add("%" + papelUsuario.trim() + "%");
+		}
+		
+		return builder.toString();
+		
+	}
+	
 }
