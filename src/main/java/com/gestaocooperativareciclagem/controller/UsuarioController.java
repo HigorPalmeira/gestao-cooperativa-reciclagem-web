@@ -1,8 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +19,7 @@ import com.gestaocooperativareciclagem.model.Usuario;
 import com.gestaocooperativareciclagem.service.UsuarioService;
 import com.gestaocooperativareciclagem.utils.Criptografia;
 import com.gestaocooperativareciclagem.utils.Validador;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class UsuarioController
@@ -25,17 +28,19 @@ import com.gestaocooperativareciclagem.utils.Validador;
 		name="UsuarioController",
 		urlPatterns = {"/UsuarioController", "/ListarUsuarios", 
 		"/DetalharUsuario", "/InserirUsuario",
-		"/AtualizarUsuario", "/DeletarUsuario"})
+		"/AtualizarUsuario", "/DeletarUsuario",
+		"/ListagemUsuarios"})
 public class UsuarioController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private UsuarioService usuarioService;
+	private Gson gson;
 	
 	public void init() throws ServletException {
 		try {
 			usuarioService = new UsuarioService(new UsuarioDAO());
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar UsuarioService", e);
+			throw new ServletException("Erro ao inicializar UsuarioService e/ou Gson", e);
 		}
 	}
        
@@ -52,6 +57,9 @@ public class UsuarioController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -60,9 +68,13 @@ public class UsuarioController extends HttpServlet {
 				case "/DetalharUsuario":
 					buscarUsuarioPorId(request, response);
 					break;
+					
+				case "/ListagemUsuarios":
+					listarUsuariosJson(request, response);
+					break;
 				
 				default:
-					listarUsuarios(request, response);
+					pageListarUsuarios(request, response);
 					break;
 			}
 			
@@ -76,6 +88,9 @@ public class UsuarioController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -95,7 +110,7 @@ public class UsuarioController extends HttpServlet {
 					break;
 					
 				default:
-					listarUsuarios(request, response);
+					pageListarUsuarios(request, response);
 					break;
 			}
 			
@@ -207,14 +222,73 @@ public class UsuarioController extends HttpServlet {
 		
 	}
 	
-	protected void listarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Usuario> usuarios = usuarioService.listarUsuarios();
+		try {
+			
+			List<Usuario> usuarios = listarUsuarios(request);
+			
+			request.setAttribute("listaUsuarios", usuarios);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
+			
+			reqDis.forward(request, response);
+			
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar os usuários registrados!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		request.setAttribute("listaUsuarios", usuarios);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarUsuariosJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<Usuario> listaUsuarios = listarUsuarios(request);
+			
+			String usuariosJson = gson.toJson(listaUsuarios);
+			
+			PrintWriter out = response.getWriter();
+			out.print(usuariosJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar os usuários. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<Usuario> listarUsuarios(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idUsuarioTxt = request.getParameter("id");
+		String nome = request.getParameter("nome");
+		String email = request.getParameter("email");
+		String papel = request.getParameter("papel");
+		
+		Integer idUsuario = null;
+		if (idUsuarioTxt != null && !idUsuarioTxt.isBlank()) {
+			idUsuario = Integer.parseInt(idUsuarioTxt.trim());
+		}
+		
+		return usuarioService.listarUsuariosComParametro(idUsuario, nome, email, papel);
 		
 	}
 	
