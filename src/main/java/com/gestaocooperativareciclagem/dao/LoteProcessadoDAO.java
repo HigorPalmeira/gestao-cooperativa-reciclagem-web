@@ -334,4 +334,93 @@ public class LoteProcessadoDAO {
 		}
 		
 	}
+	
+	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer paramIdLoteProcessado, Integer paramIdLoteBruto, Integer paramIdTipoMaterial, BigDecimal paramPesoAtualLoteProcessado, Date paramDtCriacaoLoteProcessado) throws SQLException {
+		
+		List<LoteProcessado> listaLotesProcessado = new ArrayList<>();
+		
+		List<Object> parametros = new ArrayList<>();
+		String select = buildQuerySelect(parametros, paramIdLoteProcessado, paramIdLoteBruto, paramIdTipoMaterial, paramPesoAtualLoteProcessado, paramDtCriacaoLoteProcessado);
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
+			
+			for (int i=0; i<parametros.size(); i++) {
+				pst.setObject(i+1, parametros.get(i));
+			}
+			
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while (rset.next()) {
+					
+					int idLoteProcessado = rset.getInt("id_loteprocessado");
+					BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
+					Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					listaLotesProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					
+				}
+				
+			}
+			
+		}
+		
+		return listaLotesProcessado;
+		
+	}
+	
+	private String buildQuerySelect(List<Object> parametros, Integer idLoteProcessado, Integer idLoteBruto, Integer idTipoMaterial, BigDecimal pesoAtualLoteProcessado, Date dtCriacaoLoteProcessado) {
+	
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("select * from info_lote_processado where 1=1");
+		
+		if (idLoteProcessado != null && idLoteProcessado != 0) {
+			builder.append(" and id_loteprocessado = ?");
+			parametros.add(idLoteProcessado);
+		}
+		
+		if (idLoteBruto != null && idLoteBruto != 0) {
+			builder.append(" and id_lotebruto = ?");
+			parametros.add(idLoteBruto);
+		}
+		
+		if (idTipoMaterial != null && idTipoMaterial != 0) {
+			builder.append(" and id_tipomaterial = ?");
+			parametros.add(idTipoMaterial);
+		}
+		
+		if (pesoAtualLoteProcessado != null) {
+			builder.append(" and peso_atual_kg_loteprocessado = ?");
+			parametros.add(pesoAtualLoteProcessado);
+		}
+		
+		if (dtCriacaoLoteProcessado != null) {
+			builder.append(" and dtCriacao_loteprocessado = ?");
+			parametros.add(dtCriacaoLoteProcessado);
+		}
+		
+		builder.append(" order by dtCriacao_loteprocessado desc");
+		
+		return builder.toString();
+		
+	}
+	
 }
