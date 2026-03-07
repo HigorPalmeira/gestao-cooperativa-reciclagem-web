@@ -11,6 +11,8 @@
     <title>Gestão de Vendas</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
+
+    <script>const ctx = "${pageContext.request.contextPath}";</script>
     
 </head>
 <body>
@@ -57,7 +59,7 @@
                 <button class="btn-search" onclick="searchSales()">Pesquisar</button>
             </div>
             
-            <div id="feedback-message">
+            <div id="feedback-message" style="display: none;">
                 Por favor, preencha pelo menos um campo (data ou valor) para realizar a pesquisa.
             </div>
         </section>
@@ -75,113 +77,18 @@
                 
                 	<c:forEach items="${listaVendas}" var="venda">
                 		<tr>
-                			<td><a href="${pageContext.request.contextPath}/DetalharVenda?id=${venda.id}">${String.format("#VD-%03d", venda.id)}</a></td>
+                			<td><a href="${pageContext.request.contextPath}/DetalharVenda?id=${venda.id}" class="id-link">${String.format("#VD-%03d", venda.id)}</a></td>
                 			<td>${venda.dtVenda}</td>
-                			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
+                			<td class="text-right">${String.format("R$ %.2f", venda.valorTotal)}</td>
                 		</tr>
                 	</c:forEach>
                 
-                <!--
-                    <tr>
-                        <td colspan="3" style="text-align: center; padding: 3rem; color: #777;">
-                            Utilize os filtros acima para buscar registros de vendas.
-                        </td>
-                    </tr>
-                 -->
-                    
                 </tbody>
             </table>
         </section>
 
     </main>
 
-    <script>
-        /* --- JavaScript: Lógica de Negócio --- */
-
-        // Dados simulados (Base de dados)
-        // Datas no formato ISO (YYYY-MM-DD) para facilitar comparação
-        const salesDatabase = [
-            { id: 1001, date: '2024-01-10', value: 1500.00 },
-            { id: 1002, date: '2024-01-15', value: 250.50 },
-            { id: 1003, date: '2024-02-01', value: 5000.00 },
-            { id: 1004, date: '2024-02-20', value: 890.90 },
-            { id: 1005, date: '2024-03-05', value: 12000.00 }
-        ];
-
-        function searchSales() {
-            // 1. Obter Valores dos Inputs
-            const dateStart = document.getElementById('dateStart').value;
-            const dateEnd = document.getElementById('dateEnd').value;
-            const valMin = document.getElementById('valMin').value;
-            const valMax = document.getElementById('valMax').value;
-            
-            const feedbackMsg = document.getElementById('feedback-message');
-            const tbody = document.getElementById('resultsTableBody');
-
-            // 2. Validação: Verifica se TODOS estão vazios
-            const isDateEmpty = !dateStart && !dateEnd;
-            const isValEmpty = !valMin && !valMax;
-
-            if (isDateEmpty && isValEmpty) {
-                feedbackMsg.style.display = 'block';
-                return; // Para a execução
-            } else {
-                feedbackMsg.style.display = 'none';
-            }
-
-            // 3. Filtragem Lógica
-            const filteredData = salesDatabase.filter(sale => {
-                let dateValid = true;
-                let valueValid = true;
-
-                // Comparação de Datas
-                const saleDateObj = new Date(sale.date);
-                if (dateStart) {
-                    dateValid = dateValid && (saleDateObj >= new Date(dateStart));
-                }
-                if (dateEnd) {
-                    dateValid = dateValid && (saleDateObj <= new Date(dateEnd));
-                }
-
-                // Comparação de Valores
-                if (valMin) {
-                    valueValid = valueValid && (sale.value >= parseFloat(valMin));
-                }
-                if (valMax) {
-                    valueValid = valueValid && (sale.value <= parseFloat(valMax));
-                }
-
-                return dateValid && valueValid;
-            });
-
-            // 4. Renderização da Tabela
-            tbody.innerHTML = ''; // Limpa resultados anteriores
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #777;">Nenhuma venda encontrada com estes critérios.</td></tr>`;
-                return;
-            }
-
-            filteredData.forEach(sale => {
-                // Formatação de data (pt-BR)
-                const formattedDate = new Date(sale.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-                
-                // Formatação de moeda (BRL)
-                const formattedValue = sale.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a href="DetalharVenda?id=${sale.id}" class="id-link">
-                            #${sale.id}
-                        </a>
-                    </td>
-                    <td>${formattedDate}</td>
-                    <td class="text-right">${formattedValue}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-    </script>
+    <script src="${pageContext.request.contextPath}/assets/_js/script-venda.js"></script>
 </body>
 </html>

@@ -30,6 +30,7 @@ import com.gestaocooperativareciclagem.service.ClienteService;
 import com.gestaocooperativareciclagem.service.TipoMaterialService;
 import com.gestaocooperativareciclagem.service.VendaService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -67,7 +68,9 @@ public class VendaController extends HttpServlet {
 					new ItemVendaDAO(), 
 					new ClienteService(new ClienteDAO()));
 			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
-			gson = new Gson();
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar VendaService e/ou TipoMaterialService e/ou Gson", e);
 		}
