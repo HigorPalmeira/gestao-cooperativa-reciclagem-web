@@ -26,6 +26,7 @@ import com.gestaocooperativareciclagem.service.VendaService;
 import com.gestaocooperativareciclagem.utils.Formatador;
 import com.gestaocooperativareciclagem.utils.Validador;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Servlet implementation class ClienteController
@@ -59,7 +60,9 @@ public class ClienteController extends HttpServlet {
 		try {
 			clienteService = new ClienteService(new ClienteDAO());
 			vendaService = new VendaService(new VendaDAO(), new ItemVendaDAO(), clienteService);
-			gson = new Gson();
+			gson = new GsonBuilder()
+					.setDateFormat("YYYY-MM-dd")
+					.create();
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar ClienteService e/ou VendaService e/ou Gson", e);
 		}
@@ -313,15 +316,15 @@ public class ClienteController extends HttpServlet {
 	
 	private List<Cliente> listarClientes(HttpServletRequest request) throws ServletException, IOException, SQLException {
 		
-		String cnpjCliente = request.getParameter("cnpj").trim();
-		String nomeEmpresa = request.getParameter("nome").trim();
-		String contatoPrincipal = request.getParameter("contato").trim();
-		String emailContato = request.getParameter("email").trim();
-		String dtCadastroTxt = request.getParameter("dataCadastro").trim();
+		String cnpjCliente = request.getParameter("cnpj");
+		String nomeEmpresa = request.getParameter("nome");
+		String contatoPrincipal = request.getParameter("contato");
+		String emailContato = request.getParameter("email");
+		String dtCadastroTxt = request.getParameter("dataCadastro");
 		
 		Date dtCadastro = null;
 		if (dtCadastroTxt != null && !dtCadastroTxt.isBlank()) {
-			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt));
+			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt.trim()));
 		}
 		
 		return clienteService.listarClientesComParametro(cnpjCliente, nomeEmpresa, contatoPrincipal, emailContato, dtCadastro);

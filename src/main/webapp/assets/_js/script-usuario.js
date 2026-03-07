@@ -41,7 +41,6 @@ function searchUsers() {
     const nameInput = document.getElementById('searchName').value.trim().toLowerCase();
     const roleInput = document.getElementById('searchRole').value;
     const feedbackMsg = document.getElementById('feedback-message');
-    const tbody = document.getElementById('resultsTableBody');
 
     // 1. Regra de Validação: Pesquisa só executa se houver input
     if (nameInput === "" && roleInput === "" && countNullSearch >= 3) {
