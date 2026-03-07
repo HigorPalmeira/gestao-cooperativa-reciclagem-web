@@ -27,6 +27,12 @@ public class VendaService {
 		this.clienteService = clienteService;
 	}
 	
+	public List<Venda> listarVendasComParametro(Integer idVenda, Date dtVenda, BigDecimal valorTotalVenda, String cnpjCliente) throws SQLException {
+		
+		return vendaDao.listarVendasComParametro(idVenda, dtVenda, valorTotalVenda, cnpjCliente);
+		
+	}
+	
 	private void conectarItensDaVenda(Venda venda, List<ItemVenda> listaItensVenda) {
 		
 		if (venda == null) {

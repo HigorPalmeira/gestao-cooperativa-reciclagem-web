@@ -33,6 +33,12 @@ public class LoteProcessadoService {
 		this.etapaProcessamentoService = etapaProcessamentoService;
 		this.loteBrutoService = loteBrutoService;
 	}
+	
+	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer idLoteProcessado, Integer idLoteBruto, Integer idTipoMaterial, BigDecimal pesoAtualLoteProcessado, Date dtCriacaoLoteProcessado) throws SQLException {
+		
+		return loteProcessadoDao.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, pesoAtualLoteProcessado, dtCriacaoLoteProcessado);
+		
+	}
 
 	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, BigDecimal pesoKg) {
 		

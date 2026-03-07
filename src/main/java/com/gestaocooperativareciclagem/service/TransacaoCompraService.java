@@ -19,6 +19,12 @@ public class TransacaoCompraService {
 		this.transacaoCompraDao = transacaoCompraDao;
 	}
 	
+	public List<TransacaoCompra> listarTransacoesCompraComParametro(Integer idTransacaoCompra, Integer idLoteBruto, BigDecimal valorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) throws SQLException {
+		
+		return transacaoCompraDao.listarTransacoesCompraComParametros(idTransacaoCompra, idLoteBruto, valorTotalCalculadoTransacaoCompra, statusPagamentoTransacaoCompra);
+		
+	}
+	
 	public void inserirTransacaoCompra(BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo, LoteBruto loteBruto) {
 		
 		// adicionar validacao no model

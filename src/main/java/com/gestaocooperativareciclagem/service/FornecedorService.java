@@ -1,6 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +17,12 @@ public class FornecedorService {
 	
 	public FornecedorService(FornecedorDAO fornecedorDao) {
 		this.fornecedorDao = fornecedorDao;
+	}
+	
+	public List<Fornecedor> listarFornecedoresComParametro(String documentoFornecedor, String nomeFornecedor, TipoFornecedor tipoFornecedor, Date dtCadastroFornecedor) throws SQLException {
+		
+		return fornecedorDao.listarFornecedoresComParametro(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+		
 	}
 	
 	public void inserirFornecedor(String documento, String nome, TipoFornecedor tipo) {

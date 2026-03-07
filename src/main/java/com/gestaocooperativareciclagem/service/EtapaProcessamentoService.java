@@ -19,6 +19,12 @@ public class EtapaProcessamentoService {
 		this.etapaProcessamentoDao = etapaProcessamentoDao;
 	}
 	
+	public List<EtapaProcessamento> listarEtapasProcessamentoComParametro(Integer idLoteProcessado, Integer idCategoriaProcessamento, Integer idTipoMaterial, String status, Date dtProcessamento) throws SQLException {
+		
+		return etapaProcessamentoDao.listarEtapasProcessamentoComParametro(idLoteProcessado, idCategoriaProcessamento, idTipoMaterial, status, dtProcessamento);
+		
+	}
+	
 	public void inserirEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
 		
 		if (status == null) {

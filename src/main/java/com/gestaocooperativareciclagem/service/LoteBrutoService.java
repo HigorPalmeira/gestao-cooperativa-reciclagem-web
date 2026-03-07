@@ -19,6 +19,12 @@ public class LoteBrutoService {
 		this.loteBrutoDao = loteBrutoDao;
 	}
 	
+	public List<LoteBruto> listarLotesBrutoComParametro(Integer idLoteBruto, String documentoFornecedor, StatusLoteBruto statusLoteBruto, BigDecimal pesoEntradaLoteBruto, Date dtEntradaLoteBruto) throws SQLException {
+		
+		return loteBrutoDao.listarLotesBrutoComParametro(idLoteBruto, documentoFornecedor, statusLoteBruto, pesoEntradaLoteBruto, dtEntradaLoteBruto);
+		
+	}
+	
 	public void inserirLoteBruto(BigDecimal pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) throws SQLException {
 		
 		LoteBruto loteBruto = new LoteBruto(pesoEntradaKg, dtEntrada, status, fornecedor);

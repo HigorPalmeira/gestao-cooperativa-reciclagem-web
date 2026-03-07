@@ -1,5 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.ClienteDAO;
@@ -12,6 +14,12 @@ public class ClienteService {
 	
 	public ClienteService(ClienteDAO clienteDao) {
 		this.clienteDao = clienteDao;
+	}
+	
+	public List<Cliente> listarClientesComParametro(String cnpjCliente, String nomeEmpresaCliente, String contatoPrincipalCliente, String emailContatoCliente, Date dtCadastroCliente) throws SQLException {
+		
+		return clienteDao.listarClientesComParametro(cnpjCliente, nomeEmpresaCliente, contatoPrincipalCliente, emailContatoCliente, dtCadastroCliente);
+		
 	}
 	
 	public void inserirCliente(String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) {

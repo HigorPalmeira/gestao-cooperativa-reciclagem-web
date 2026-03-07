@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.gestaocooperativareciclagem.dao.UsuarioDAO;
@@ -11,6 +12,12 @@ public class UsuarioService {
 	
 	public UsuarioService(UsuarioDAO usuarioDao) {
 		this.usuarioDao = usuarioDao;
+	}
+	
+	public List<Usuario> listarUsuariosComParametro(Integer idUsuario, String nomeUsuario, String emailUsuario, String papelUsuario) throws SQLException {
+		
+		return usuarioDao.listarUsuariosComParametro(idUsuario, nomeUsuario, emailUsuario, papelUsuario);
+		
 	}
 	
 	public void inserirUsuario(String nome, String email, String senha, String papel) {

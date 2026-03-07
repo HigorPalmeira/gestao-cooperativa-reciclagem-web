@@ -2,6 +2,7 @@ package com.gestaocooperativareciclagem.service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +18,12 @@ public class PrecoMaterialService {
 	public PrecoMaterialService(PrecoMaterialDAO precoMaterialDao, TipoMaterialService tipoMaterialService) {
 		this.precoMaterialDao = precoMaterialDao;
 		this.tipoMaterialService = tipoMaterialService;
+	}
+	
+	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer idPrecoMaterial, BigDecimal precoCompraMaterial, Date dtVigenciaMaterial, Integer idTipoMaterial, String nomeTipoMaterial) throws SQLException {
+		
+		return precoMaterialDao.listarPrecosMaterialComParametro(idPrecoMaterial, precoCompraMaterial, dtVigenciaMaterial, idTipoMaterial, nomeTipoMaterial);
+		
 	}
 	
 	public void inserirPrecoMaterial(BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) {
