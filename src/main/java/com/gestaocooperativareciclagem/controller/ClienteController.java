@@ -1,6 +1,10 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -21,6 +25,7 @@ import com.gestaocooperativareciclagem.service.ClienteService;
 import com.gestaocooperativareciclagem.service.VendaService;
 import com.gestaocooperativareciclagem.utils.Formatador;
 import com.gestaocooperativareciclagem.utils.Validador;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class ClienteController
@@ -30,12 +35,13 @@ import com.gestaocooperativareciclagem.utils.Validador;
 		urlPatterns={ "/ClienteController", "/ListarClientes", 
 				"/DetalharCliente", "/InserirCliente",
 				"/AtualizarCliente", "/DeletarCliente",
-				"/VerificarCliente"})
+				"/VerificarCliente", "/ListagemClientes"})
 public class ClienteController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	private ClienteService clienteService;
 	private VendaService vendaService;
+	private Gson gson;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -53,8 +59,9 @@ public class ClienteController extends HttpServlet {
 		try {
 			clienteService = new ClienteService(new ClienteDAO());
 			vendaService = new VendaService(new VendaDAO(), new ItemVendaDAO(), clienteService);
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar ClienteService e/ou VendaService", e);
+			throw new ServletException("Erro ao inicializar ClienteService e/ou VendaService e/ou Gson", e);
 		}
 		
 	}
@@ -64,6 +71,9 @@ public class ClienteController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -77,8 +87,12 @@ public class ClienteController extends HttpServlet {
 					verificarCliente(request, response);
 					break;
 					
+				case "/ListagemClientes":
+					listarClientesJson(request, response);
+					break;
+					
 				default:
-					listarClientes(request, response);
+					pageListarClientes(request, response);
 					break;
 			}
 			
@@ -92,6 +106,9 @@ public class ClienteController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -111,7 +128,7 @@ public class ClienteController extends HttpServlet {
 					break;
 					
 				default:
-					listarClientes(request, response);
+					pageListarClientes(request, response);
 					break;
 			}
 			
@@ -241,14 +258,73 @@ public class ClienteController extends HttpServlet {
 		
 	}
 	
-	protected void listarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarClientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Cliente> listaClientes = clienteService.listarClientes();
+		try {
+			
+			List<Cliente> listaClientes = listarClientes(request);
+			
+			request.setAttribute("listaClientes", listaClientes);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (ServletException | IOException | SQLException e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar os clientes cadastrados!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		request.setAttribute("listaClientes", listaClientes);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/clientes.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarClientesJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		
+		try {
+			
+			List<Cliente> listaClientes = listarClientes(request);
+			
+			String clientesJson = gson.toJson(listaClientes);
+			
+			PrintWriter out = response.getWriter();
+			out.print(clientesJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar os clientes. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<Cliente> listarClientes(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String cnpjCliente = request.getParameter("cnpj").trim();
+		String nomeEmpresa = request.getParameter("nome").trim();
+		String contatoPrincipal = request.getParameter("contato").trim();
+		String emailContato = request.getParameter("email").trim();
+		String dtCadastroTxt = request.getParameter("dataCadastro").trim();
+		
+		Date dtCadastro = null;
+		if (dtCadastroTxt != null && !dtCadastroTxt.isBlank()) {
+			dtCadastro = Date.valueOf(LocalDate.parse(dtCadastroTxt));
+		}
+		
+		return clienteService.listarClientesComParametro(cnpjCliente, nomeEmpresa, contatoPrincipal, emailContato, dtCadastro);
 		
 	}
 
