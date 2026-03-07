@@ -1,8 +1,11 @@
 package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +39,14 @@ import com.google.gson.reflect.TypeToken;
 		name="VendaController",
 		urlPatterns={ "/VendaController", "/ListarVendas", 
 	"/DetalharVenda", "/NovaVenda", "/InserirVenda",
-	"/AtualizarVenda", "/DeletarVenda"})
+	"/AtualizarVenda", "/DeletarVenda",
+	"/ListagemVendas"})
 public class VendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private VendaService vendaService;
 	private TipoMaterialService tipoMaterialService;
+	private Gson gson;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -62,8 +67,9 @@ public class VendaController extends HttpServlet {
 					new ItemVendaDAO(), 
 					new ClienteService(new ClienteDAO()));
 			tipoMaterialService = new TipoMaterialService(new TipoMaterialDAO());
+			gson = new Gson();
 		} catch (Exception e) {
-			throw new ServletException("Erro ao inicializar VendaService e/ou TipoMaterialService", e);
+			throw new ServletException("Erro ao inicializar VendaService e/ou TipoMaterialService e/ou Gson", e);
 		}
 		
 	}
@@ -73,6 +79,9 @@ public class VendaController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String path = request.getServletPath();
 		
 		try {
@@ -86,8 +95,12 @@ public class VendaController extends HttpServlet {
 					pageNovaVenda(request, response);
 					break;
 					
+				case "/ListagemVendas":
+					listarVendasJson(request, response);
+					break;
+					
 				default:
-					listarVendas(request, response);
+					pageListarVendas(request, response);
 					break;
 			}
 			
@@ -101,6 +114,9 @@ public class VendaController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String path = request.getServletPath();
 		
@@ -233,14 +249,81 @@ public class VendaController extends HttpServlet {
 		
 	}
 	
-	protected void listarVendas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void pageListarVendas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Venda> listaVendas = vendaService.listarVendas();
+		try {
+
+			List<Venda> listaVendas = listarVendas(request);
+			
+			request.setAttribute("listaVendas", listaVendas);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/vendas.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar listar as vendas registradas!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		request.setAttribute("listaVendas", listaVendas);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/vendas.jsp");
 		
-		reqDis.forward(request, response);
+	}
+	
+	protected void listarVendasJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("application/json");
+		try {
+			
+			List<Venda> listaVendas = listarVendas(request);
+			
+			String vendasJson = gson.toJson(listaVendas);
+			
+			PrintWriter out = response.getWriter();
+			out.print(vendasJson);
+			out.flush();
+			
+		} catch (Exception e) {
+			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("{\"error\":");
+			builder.append(" \"Ocorreu um erro ao tentar listar as vendas. Erro: ");
+			builder.append(e.getMessage());
+			builder.append("\", \"code\": 400}");
+			
+			PrintWriter out = response.getWriter();
+			out.print(builder.toString());
+			out.flush();
+			
+		}
+		
+	}
+	
+	private List<Venda> listarVendas(HttpServletRequest request) throws ServletException, IOException, SQLException {
+		
+		String idVendaTxt = request.getParameter("id");
+		String dtVendaTxt = request.getParameter("dataVenda");
+		String valorTotalTxt = request.getParameter("valor");
+		String cnpjCliente = request.getParameter("cnpj");
+		
+		Integer idVenda = null;
+		if (idVendaTxt != null && !idVendaTxt.isBlank()) {
+			idVenda = Integer.parseInt(idVendaTxt.trim());
+		}
+		
+		Date dtVenda = null;
+		if (dtVendaTxt != null && !dtVendaTxt.isBlank()) {
+			dtVenda = Date.valueOf(LocalDate.parse(dtVendaTxt.trim()));
+		}
+		
+		BigDecimal valorTotal = null;
+		if (valorTotalTxt != null && !valorTotalTxt.isBlank()) {
+			valorTotal = new BigDecimal(valorTotalTxt.trim());
+		}
+		
+		return vendaService.listarVendasComParametro(idVenda, dtVenda, valorTotal, cnpjCliente);
 		
 	}
 	
