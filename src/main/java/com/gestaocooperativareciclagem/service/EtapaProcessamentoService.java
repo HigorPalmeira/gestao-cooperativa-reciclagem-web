@@ -25,7 +25,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public void inserirEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
+	public void inserirEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) throws SQLException {
 		
 		if (status == null) {
 			throw new RuntimeException("Status inválido! É necessário informar um status válido para criar uma nova etapa de processamento.");
@@ -47,19 +47,19 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public List<EtapaProcessamento> listarEtapasProcessamento() {
+	public List<EtapaProcessamento> listarEtapasProcessamento() throws SQLException {
 		
 		return etapaProcessamentoDao.listarEtapasProcessamento();
 		
 	}
 	
-	public List<EtapaProcessamento> listarEtapasProcessamentoPorStatus(String status) {
+	public List<EtapaProcessamento> listarEtapasProcessamentoPorStatus(String status) throws SQLException {
 		
 		return etapaProcessamentoDao.listarEtapasProcessamentoPorStatus(status);
 		
 	}
 	
-	public List<EtapaProcessamento> listarEtapasProcessamentoPorLoteProcessado(int idLoteProcessado) {
+	public List<EtapaProcessamento> listarEtapasProcessamentoPorLoteProcessado(int idLoteProcessado) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(idLoteProcessado);
@@ -68,7 +68,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public List<EtapaProcessamento> listarEtapasProcessamentoPorCategoriaProcessamento(int idCategoriaProcessamento) {
+	public List<EtapaProcessamento> listarEtapasProcessamentoPorCategoriaProcessamento(int idCategoriaProcessamento) throws SQLException {
 		
 		CategoriaProcessamento categoriaProcessamento = new CategoriaProcessamento();
 		categoriaProcessamento.setId(idCategoriaProcessamento);
@@ -86,7 +86,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public List<EtapaProcessamento> listarEtapasProcessamentoPorDataProcessamento(Date dataInicial, Date dataFinal) {
+	public List<EtapaProcessamento> listarEtapasProcessamentoPorDataProcessamento(Date dataInicial, Date dataFinal) throws SQLException {
 		
 		boolean afterInicial = dataInicial.after(Date.valueOf(LocalDate.now()));
 		
@@ -102,7 +102,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public EtapaProcessamento buscarEtapaProcessamentoPorLoteProcessadoECategoriaProcessamento(int idLoteProcessado, int idCategoriaProcessamento) {
+	public EtapaProcessamento buscarEtapaProcessamentoPorLoteProcessadoECategoriaProcessamento(int idLoteProcessado, int idCategoriaProcessamento) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(idLoteProcessado);
@@ -120,7 +120,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public EtapaProcessamento buscarEtapaProcessamentoAtualPorLoteProcessado(int idLoteProcessado) {
+	public EtapaProcessamento buscarEtapaProcessamentoAtualPorLoteProcessado(int idLoteProcessado) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(idLoteProcessado);
@@ -134,7 +134,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public void atualizarEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) {
+	public void atualizarEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String status) throws SQLException {
 		
 		EtapaProcessamento etapaProcessamentoOriginal = buscarEtapaProcessamentoPorLoteProcessadoECategoriaProcessamento(idLoteProcessado, idCategoriaProcessamento);
 		
@@ -157,7 +157,7 @@ public class EtapaProcessamentoService {
 		
 	}
 	
-	public void deletarEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento) {
+	public void deletarEtapaProcessamento(int idLoteProcessado, int idCategoriaProcessamento) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(idLoteProcessado);

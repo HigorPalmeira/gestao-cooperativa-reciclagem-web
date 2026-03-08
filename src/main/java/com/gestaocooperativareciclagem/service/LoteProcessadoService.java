@@ -115,7 +115,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public void atualizarEtapaProcessamentoLoteProcessado(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String statusProcessamento) {
+	public void atualizarEtapaProcessamentoLoteProcessado(int idLoteProcessado, int idCategoriaProcessamento, Date dtProcessamento, String statusProcessamento) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(idLoteProcessado);
@@ -139,7 +139,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public void deletarLoteProcessado(int id) {
+	public void deletarLoteProcessado(int id) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(id);

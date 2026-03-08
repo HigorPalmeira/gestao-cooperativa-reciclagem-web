@@ -286,19 +286,28 @@ public class LoteProcessadoController extends HttpServlet {
 	
 	protected void pageListarLotesProcessados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessado();
-		List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
-		
-		for (LoteProcessado loteProcessado : listaLotesProcessados) {
-			EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
-			listaEtapasProcessamento.add(etapa);
+		try {
+			
+			List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessado();
+			List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
+			
+			for (LoteProcessado loteProcessado : listaLotesProcessados) {
+				EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
+				listaEtapasProcessamento.add(etapa);
+			}
+			
+			request.setAttribute("listaLotesProcessados", listaLotesProcessados);
+			request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/lotesProcessados.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos lote processados no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
-		
-		request.setAttribute("listaLotesProcessados", listaLotesProcessados);
-		request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/lotesProcessados.jsp");
-		
-		reqDis.forward(request, response);
 		
 	}
 	

@@ -233,17 +233,26 @@ public class LoteBrutoController extends HttpServlet {
 	
 	protected void buscarLoteBruto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(id);
-		
-		request.setAttribute("loteBruto", loteBruto);
-		
-		carregarDependenciasDoLoteBruto(request, loteBruto);
-		
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/detalheLoteBruto.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("id"));
+			
+			LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(id);
+			
+			request.setAttribute("loteBruto", loteBruto);
+			
+			carregarDependenciasDoLoteBruto(request, loteBruto);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/detalheLoteBruto.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados do lote bruto!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
@@ -344,7 +353,7 @@ public class LoteBrutoController extends HttpServlet {
 		
 	}
 	
-	private void carregarDependenciasDoLoteBruto(HttpServletRequest request, LoteBruto loteBruto) {
+	private void carregarDependenciasDoLoteBruto(HttpServletRequest request, LoteBruto loteBruto) throws SQLException {
 		
 		List<TransacaoCompra> listaTransacoesCompra = transacaoCompraService.listarTransacoesCompraPorLoteBruto(loteBruto);
 
