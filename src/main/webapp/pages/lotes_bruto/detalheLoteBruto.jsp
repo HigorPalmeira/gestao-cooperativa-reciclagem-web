@@ -34,21 +34,22 @@
 
     <main class="container">
     
-    	<c:if test="${not empty msgErro}">
-    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
-    			<strong>Erro:</strong> ${msgErro}
+    	<c:if test="${not empty sessionScope.msgErro}">
+    		<div class="info-msg info-error">
+    			<strong>Erro:</strong> ${sessionScope.msgErro}
     		</div>
+			<% session.removeAttribute("msgErro"); %>
     	</c:if>
     	
     	<c:if test="${not empty sessionScope.msgSucesso}">
-    		<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
+    		<div class="info-msg info-sucess">
     			${sessionScope.msgSucesso}
     		</div>
     		<% session.removeAttribute("msgSucesso"); %>
     	</c:if>
     	
     	<c:if test="${isProcessado}">
-    		<div class="info-msg" style="display: block; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;">
+    		<div class="info-msg info-warning">
     			<strong>Aviso:</strong> Este lote está "Processado", a edição está restrita.
     		</div>
     	</c:if>
@@ -64,13 +65,13 @@
 				<div class="form-grid">
 				
 					<div class="form-group">
-						<label>ID</label>
-						<input type="text" value="${String.format('#LB-%03d', loteBruto.id)}" readonly>
+						<label for="idView">ID</label>
+						<input id="idView" type="text" value="${String.format('#LB-%03d', loteBruto.id)}" readonly>
 					</div>
 					
 					<div class="form-group">
-						<label>Data de Entrada</label>
-						<input type="text" value="${loteBruto.dtEntrada}" readonly>
+						<label for="dtEntradaView">Data de Entrada</label>
+						<input type="text" id="dtEntradaView" value="${loteBruto.dtEntrada}" readonly>
 					</div>
 					
 					<div class="form-group">
@@ -84,7 +85,7 @@
 						<label for="batchStatus">Status</label>
 						<c:choose>
 							<c:when test="${isProcessado}">
-								<input type="text" value="Processado" readonly class="form-control-plaintext">
+								<input type="text" id="batchStatus" value="Processado" readonly class="form-control-plaintext">
 								<input type="hidden" name="batchStatus" value="PROCESSADO">
 							</c:when>
 							<c:otherwise>
@@ -174,7 +175,45 @@
                     		<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}" class="table-link">${String.format("#LP-%03d", loteProcessado.id)}</a></td>
                     		<td>${String.format("%.2f", loteProcessado.pesoAtualKg)}</td>
                     		<td>${loteProcessado.tipoMaterial.nome}</td>
-                    		<td><span class="badge badge-info">${etapaProcessamento.categoriaProcessamento.nome}</span></td>
+                    		<td>
+
+								<c:choose>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Triagem'}">
+										<span class="stage-badge stage-triagem">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Trituração'}">
+										<span class="stage-badge stage-trituracao">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Limpeza'}">
+										<span class="stage-badge stage-lavagem">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Extrusão'}">
+										<span class="stage-badge stage-extrusao">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Armazenado'}">
+										<span class="stage-badge stage-armazenado">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Descarte'}">
+										<span class="stage-badge stage-descarte">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:when>
+
+									<c:otherwise>
+										<span class="stage-badge">${etapaProcessamento.categoriaProcessamento.nome}</span>
+									</c:otherwise>
+
+								</c:choose>
+								<!--
+								<span class="badge badge-info">${etapaProcessamento.categoriaProcessamento.nome}</span>
+								-->
+							</td>
+
+							<!-- badge badge-info -->
                     	</tr>
                     </c:forEach>
 

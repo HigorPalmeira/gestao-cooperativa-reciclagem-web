@@ -283,7 +283,7 @@ public class LoteBrutoController extends HttpServlet {
 				loteBruto.setFornecedor(fornecedor);
 			} else {
 				
-				request.setAttribute("msgErro", "Nenhum fornecedor encontrado com o documento: " + documento);
+				request.getSession().setAttribute("msgErro", "Nenhum fornecedor encontrado com o documento: " + documento);
 				
 				Fornecedor fornecedorFalso = new Fornecedor();
 				fornecedorFalso.setDocumento(documento);
@@ -295,8 +295,9 @@ public class LoteBrutoController extends HttpServlet {
 			request.setAttribute("loteBruto", loteBruto);
 			
 		} catch (Exception e) {
-			// throw new ServletException(e);
-			request.setAttribute("msgErro", "Ocorreu um erro na busca pelo fornecedor! Se o erro persistir contate o administrador do sistema.");
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro na busca pelo fornecedor! Se o erro persistir contate o administrador do sistema.");
+			
 		}
 		
 		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_bruto/detalheLoteBruto.jsp");
