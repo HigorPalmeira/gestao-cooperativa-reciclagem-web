@@ -159,7 +159,10 @@ public class TransacaoCompraController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/ListarTransacoesCompra");
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados da transação de compra! Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
@@ -179,7 +182,10 @@ public class TransacaoCompraController extends HttpServlet {
 			reqDis.forward(request, response);
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados da transação de compra! Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}

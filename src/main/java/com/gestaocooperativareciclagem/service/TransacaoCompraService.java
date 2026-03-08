@@ -25,7 +25,7 @@ public class TransacaoCompraService {
 		
 	}
 	
-	public void inserirTransacaoCompra(BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo, LoteBruto loteBruto) {
+	public void inserirTransacaoCompra(BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo, LoteBruto loteBruto) throws SQLException {
 		
 		// adicionar validacao no model
 		TransacaoCompra transacaoCompra = new TransacaoCompra(valorTotalCalculado, status, dtCalculo, null, loteBruto);
@@ -35,7 +35,7 @@ public class TransacaoCompraService {
 	}
 	
 	public void atualizarTransacaoCompra(int idTransacao, BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, 
-			Date dtCalculo, Date dtPagamento, LoteBruto loteBruto) {
+			Date dtCalculo, Date dtPagamento, LoteBruto loteBruto) throws SQLException {
 		
 		TransacaoCompra transacaoCompraOriginal = buscarTransacaoCompraPorId(idTransacao);
 		
@@ -78,19 +78,19 @@ public class TransacaoCompraService {
 		
 	}
 	
-	public void deletarTransacaoCompra(int id) {
+	public void deletarTransacaoCompra(int id) throws SQLException {
 		
 		transacaoCompraDao.deletarTransacaoCompra(id);
 		
 	}
 	
-	public List<TransacaoCompra> listarTransacoesCompra() {
+	public List<TransacaoCompra> listarTransacoesCompra() throws SQLException {
 		
 		return transacaoCompraDao.listarTransacoesCompra();
 		
 	}
 	
-	public List<TransacaoCompra> listarTransacoesCompraPorLoteBruto(LoteBruto loteBruto) {
+	public List<TransacaoCompra> listarTransacoesCompraPorLoteBruto(LoteBruto loteBruto) throws SQLException {
 		
 		if (loteBruto == null || loteBruto.getId() <= 0) {
 			throw new RuntimeException("Lote Bruto inválido para busca! Informe um lote bruto válido para realizar a busca das transações de compra.");
@@ -100,13 +100,13 @@ public class TransacaoCompraService {
 		
 	}
 	
-	public List<TransacaoCompra> listarTransacoesCompraPorStatusPagamento(StatusPagamentoTransacaoCompra status) {
+	public List<TransacaoCompra> listarTransacoesCompraPorStatusPagamento(StatusPagamentoTransacaoCompra status) throws SQLException {
 		
 		return transacaoCompraDao.listarTransacoesCompraPorStatusPagamento(status);
 		
 	}
 	
-	public TransacaoCompra buscarTransacaoCompraPorId(int id) {
+	public TransacaoCompra buscarTransacaoCompraPorId(int id) throws SQLException {
 		
 		TransacaoCompra transacaoCompra = new TransacaoCompra();
 		transacaoCompra.setId(id);
