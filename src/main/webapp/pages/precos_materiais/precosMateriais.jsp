@@ -75,11 +75,14 @@
                         </select>
                     </div>
                 </div>
-
+    
                 <div class="filter-group">
                     <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
                 </div>
             </div>
+
+            <div id="feedback-message" style="display: none;">Por favor, preencha pelo menos um campo para realizar a pesquisa.</div>
+
         </section>
 
         <!-- Tabela -->

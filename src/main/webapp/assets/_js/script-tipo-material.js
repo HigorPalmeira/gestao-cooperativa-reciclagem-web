@@ -131,17 +131,21 @@ function deleteType() {
 	}
 }
 
-// 7. Pesquisa
+let countNullSearch = 0;
 function handleSearch() {
 	const sName = document.getElementById('searchName').value.toLowerCase();
 	const sDesc = document.getElementById('searchDesc').value.toLowerCase();
 	const feedback = document.getElementById('feedback-msg');
 
 	// Validação mínima
-	if (!sName && !sDesc) {
+	if (!sName && !sDesc && countNullSearch >= 3) {
+		countNullSearch = 0;
 		feedback.style.display = 'block';
 		return;
 	} else {
+
+		if (!sName && !sDesc) countNullSearch++;
+		
 		feedback.style.display = 'none';
 	}
 

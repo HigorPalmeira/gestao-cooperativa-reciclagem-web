@@ -159,7 +159,8 @@ function deletePrice() {
 
 }
 
-// 6. Pesquisa
+
+let countNullSearch = 0;
 function handleSearch() {
     const dateStart = document.getElementById('searchDateStart').value;
     const dateEnd = document.getElementById('searchDateEnd').value;
@@ -167,11 +168,22 @@ function handleSearch() {
     const valMax = document.getElementById('searchValMax').value;
     const matId = document.getElementById('searchMaterial').value;
 
+    const feedbackMsg = document.getElementById('feedback-message');
+
     // Validação simples: exigir pelo menos 1
-    if (!dateStart && !dateEnd && !valMin && !valMax && !matId) {
-        alert("Preencha pelo menos um campo para pesquisar.");
+    if (!dateStart && !dateEnd && !valMin && !valMax && !matId && countNullSearch >= 3) {
+        countNullSearch = 0;
+        feedbackMsg.style.display = 'block';
         return;
+
+    } else {
+        
+        if (!dateStart && !dateEnd && !valMin && !valMax && !matId) countNullSearch++;
+        
+        feedbackMsg.style.display = 'none';
+
     }
+
 
     const parametros = `precoCompra=${valMin}&dataVigencia=${dateStart}&idTipoMaterial=${matId}`;
 
