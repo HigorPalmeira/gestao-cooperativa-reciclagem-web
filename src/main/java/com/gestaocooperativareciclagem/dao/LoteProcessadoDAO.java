@@ -31,13 +31,13 @@ public class LoteProcessadoDAO {
 			
 			pst.setString(1, etapaProcessamento);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			if (rset.next()) {
-				pesoTotal = rset.getBigDecimal(1);
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				if (rset.next()) {
+					pesoTotal = rset.getBigDecimal(1);
+				}
+
 			}
-			
-			rset.close();
 			
 		}
 		
@@ -45,16 +45,14 @@ public class LoteProcessadoDAO {
 		
 	}
 
-	public void inserirLoteProcessado(LoteProcessado loteProcessado) {
+	public void inserirLoteProcessado(LoteProcessado loteProcessado) throws SQLException {
 		
 		String insert = "insert into lote_processado (peso_atual_kg_loteprocessado, dtCriacao_loteprocessado, tipo_material, lote_bruto) "
 				+ "values (?, ?, ?, ?)";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			pst.setBigDecimal(1, loteProcessado.getPesoAtualKg());
 			pst.setDate(2, loteProcessado.getDtCriacao());
 			pst.setInt(3, loteProcessado.getTipoMaterial().getId());
@@ -63,274 +61,237 @@ public class LoteProcessadoDAO {
 			int linhasAfetadas = pst.executeUpdate();
 			
 			if (linhasAfetadas > 0) {
-				ResultSet rset = pst.getGeneratedKeys();
-				if (rset.next()) {
-					loteProcessado.setId(rset.getInt(1));
+				
+				try (ResultSet rset = pst.getGeneratedKeys();) {
+					
+					if (rset.next()) {
+						loteProcessado.setId(rset.getInt(1));
+					}
+					
 				}
 				
-				rset.close();
 			}
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessado() {
+	public List<LoteProcessado> listarLotesProcessado() throws SQLException {
 	
 		List<LoteProcessado> listaLoteProcessado = new ArrayList<>();
 		
 		String select = "select * from info_lote_processado";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
-				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				String documentoFornecedor = rset.getString("documento_fornecedor");
-				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
-				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
-				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				while(rset.next()) {
+					
+					int idLoteProcessado = rset.getInt("id_loteprocessado");
+					BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
+					Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
-				int idLoteBruto = rset.getInt("id_lotebruto");
-				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
-				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
-				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
-				
-				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaLoteProcessado;
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoPorTipoMaterial(TipoMaterial tipoMaterialBuscado) {
+	public List<LoteProcessado> listarLotesProcessadoPorTipoMaterial(TipoMaterial tipoMaterialBuscado) throws SQLException {
 		
 		List<LoteProcessado> listaLoteProcessado = new ArrayList<>();
 		
 		String select = "select * from info_lote_processado where id_tipomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, tipoMaterialBuscado.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
-				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				String documentoFornecedor = rset.getString("documento_fornecedor");
-				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
-				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
-				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				while(rset.next()) {
+					
+					int idLoteProcessado = rset.getInt("id_loteprocessado");
+					BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
+					Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
-				int idLoteBruto = rset.getInt("id_lotebruto");
-				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
-				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
-				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
-				
-				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaLoteProcessado;
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoPorLoteBruto(LoteBruto loteBrutoBuscado) {
+	public List<LoteProcessado> listarLotesProcessadoPorLoteBruto(LoteBruto loteBrutoBuscado) throws SQLException {
 		
 		List<LoteProcessado> listaLoteProcessado = new ArrayList<>();
 		
 		String select = "select * from info_lote_processado where id_lotebruto = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, loteBrutoBuscado.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idLoteProcessado = rset.getInt("id_loteprocessado");
-				BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
-				Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				String documentoFornecedor = rset.getString("documento_fornecedor");
-				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
-				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
-				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				while(rset.next()) {
+					
+					int idLoteProcessado = rset.getInt("id_loteprocessado");
+					BigDecimal pesoAtualKgLoteProcessado = rset.getBigDecimal("peso_atual_kg_loteprocessado");
+					Date dtCriacaoLoteProcessado = rset.getDate("dtCriacao_loteprocessado");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
-				int idLoteBruto = rset.getInt("id_lotebruto");
-				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
-				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
-				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
-				
-				listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					listaLoteProcessado.add(new LoteProcessado(idLoteProcessado, pesoAtualKgLoteProcessado, dtCriacaoLoteProcessado, tipoMaterial, loteBruto));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaLoteProcessado;
 		
 	}
 	
-	public void buscarLoteProcessadoPorId(LoteProcessado loteProcessado) {
+	public void buscarLoteProcessadoPorId(LoteProcessado loteProcessado) throws SQLException {
 		
 		String select = "select * from info_lote_processado where id_loteprocessado = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, loteProcessado.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				loteProcessado.setId( rset.getInt("id_loteprocessado") );
-				loteProcessado.setPesoAtualKg( rset.getBigDecimal("peso_atual_kg_loteprocessado") );
-				loteProcessado.setDtCriacao( rset.getDate("dtCriacao_loteprocessado") );
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				loteProcessado.setTipoMaterial(tipoMaterial);
-				
-				String documentoFornecedor = rset.getString("documento_fornecedor");
-				String nomeFornecedor = rset.getString("nome_fornecedor");
-				TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
-				Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
-				Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
+				while(rset.next()) {
+					
+					loteProcessado.setId( rset.getInt("id_loteprocessado") );
+					loteProcessado.setPesoAtualKg( rset.getBigDecimal("peso_atual_kg_loteprocessado") );
+					loteProcessado.setDtCriacao( rset.getDate("dtCriacao_loteprocessado") );
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					loteProcessado.setTipoMaterial(tipoMaterial);
+					
+					String documentoFornecedor = rset.getString("documento_fornecedor");
+					String nomeFornecedor = rset.getString("nome_fornecedor");
+					TipoFornecedor tipoFornecedor = TipoFornecedor.valueOf(rset.getString("tipo_fornecedor"));
+					Date dtCadastroFornecedor = rset.getDate("dtCadastro_fornecedor");
+					Fornecedor fornecedor = new Fornecedor(documentoFornecedor, nomeFornecedor, tipoFornecedor, dtCadastroFornecedor);
 
-				int idLoteBruto = rset.getInt("id_lotebruto");
-				BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
-				Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
-				StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
-				LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
-				
-				loteProcessado.setLoteBruto(loteBruto);
+					int idLoteBruto = rset.getInt("id_lotebruto");
+					BigDecimal pesoEntradaKgLoteBruto = rset.getBigDecimal("peso_entrada_kg_lotebruto");
+					Date dtEntradaLoteBruto = rset.getDate("dtEntrada_lotebruto");
+					StatusLoteBruto statusLoteBruto = StatusLoteBruto.valueOf(rset.getString("status_lotebruto"));
+					LoteBruto loteBruto = new LoteBruto(idLoteBruto, pesoEntradaKgLoteBruto, dtEntradaLoteBruto, statusLoteBruto, fornecedor);
+					
+					loteProcessado.setLoteBruto(loteBruto);
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void atualizarLoteProcessado(LoteProcessado loteProcessado) {
+	public void atualizarLoteProcessado(LoteProcessado loteProcessado) throws SQLException {
 		
 		String update = "update lote_processado set peso_atual_kg_loteprocessado = ? "
 				+ "where id_loteprocessado = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setBigDecimal(1, loteProcessado.getPesoAtualKg());
 			pst.setInt(2, loteProcessado.getId());
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void deletarLoteProcessado(int id) {
+	public void deletarLoteProcessado(int id) throws SQLException {
 		
 		String delete = "delete from lote_processado where id_loteprocessado = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}

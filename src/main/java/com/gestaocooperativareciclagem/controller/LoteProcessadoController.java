@@ -182,7 +182,10 @@ public class LoteProcessadoController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/ListarLotesProcessados");
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir os dados de um novo lote processado no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
@@ -194,13 +197,8 @@ public class LoteProcessadoController extends HttpServlet {
 		try {
 			
 			int idLoteProcessado = Integer.parseInt(request.getParameter("id"));
-			// int idTipoMaterial = Integer.parseInt(request.getParameter("materialType"));
-			// int idLoteBruto = Integer.parseInt(request.getParameter("rawBatchId"));
 			
 			BigDecimal pesoAtualKg = new BigDecimal(request.getParameter("currentWeight"));
-			
-			// TipoMaterial tipoMaterial = tipoMaterialService.buscarTipoMaterialPorId(idTipoMaterial);
-			// LoteBruto loteBruto = loteBrutoService.buscarLoteBrutoPorId(idLoteBruto);
 			
 			loteProcessadoService.atualizarLoteProcessado(idLoteProcessado, pesoAtualKg);
 			
@@ -253,7 +251,10 @@ public class LoteProcessadoController extends HttpServlet {
 			reqDis.forward(request, response);
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados do lote processado no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}

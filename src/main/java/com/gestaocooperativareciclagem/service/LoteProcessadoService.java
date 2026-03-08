@@ -92,7 +92,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public void atualizarLoteProcessado(int idLoteProcessado, BigDecimal pesoAtualKg) {
+	public void atualizarLoteProcessado(int idLoteProcessado, BigDecimal pesoAtualKg) throws SQLException {
 		
 		LoteProcessado loteProcessado = buscarLoteProcessadoPorId(idLoteProcessado);
 		
@@ -168,13 +168,13 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessado() {
+	public List<LoteProcessado> listarLotesProcessado() throws SQLException {
 	
 		return loteProcessadoDao.listarLotesProcessado();
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoPorTipoMaterial(TipoMaterial tipoMaterial) {
+	public List<LoteProcessado> listarLotesProcessadoPorTipoMaterial(TipoMaterial tipoMaterial) throws SQLException {
 		
 		if (tipoMaterial == null) {
 			throw new RuntimeException("Tipo de Material inválido! Não é possível realizar a busca com o tipo de material inválido!");
@@ -184,7 +184,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoPorLoteBruto(LoteBruto loteBruto) {
+	public List<LoteProcessado> listarLotesProcessadoPorLoteBruto(LoteBruto loteBruto) throws SQLException {
 		
 		if (loteBruto == null) {
 			throw new RuntimeException("Lote Bruto inválido! Não é possível realizar a busca com o lote bruto inválido!");
@@ -194,7 +194,7 @@ public class LoteProcessadoService {
 		
 	}
 	
-	public LoteProcessado buscarLoteProcessadoPorId(int id) {
+	public LoteProcessado buscarLoteProcessadoPorId(int id) throws SQLException {
 		
 		LoteProcessado loteProcessado = new LoteProcessado();
 		loteProcessado.setId(id);
