@@ -14,7 +14,7 @@
 <body>
 
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarUsuarios">Voltar para Gestão de Usuários</a>
         </div>
@@ -67,17 +67,19 @@
                          required>
                     </div>
 
-                    <div class="password-section form-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 0;">
-                        <div class="full-width">
-                            <h3>Alterar Senha <small>(Deixe em branco para manter a atual)</small></h3>
-                        </div>
-                        <div class="form-group">
-                            <label for="newPass">Nova Senha</label>
-                            <input type="password" id="newPass" name="newPass" placeholder="******">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPass">Repetir Nova Senha</label>
-                            <input type="password" id="confirmPass" name="confirmPass" placeholder="******">
+                    <div class="form-group">
+                        <div class="password-section form-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 0;">
+                            <div class="full-width">
+                                <h3>Alterar Senha <small>(Deixe em branco para manter a atual)</small></h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPass">Nova Senha</label>
+                                <input type="password" id="newPass" name="newPass" placeholder="******">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPass">Repetir Nova Senha</label>
+                                <input type="password" id="confirmPass" name="confirmPass" placeholder="******">
+                            </div>
                         </div>
                     </div>
 
@@ -98,7 +100,7 @@
         		<input type="hidden" name="userId" value="${not empty usuario ? usuario.id : ''}">
 	            
 	            <p style="float: left; color: #666; margin: 5px 0 0 0; font-size: 0.9rem;">
-	                Atenção: Esta ação é irreversível.
+	                Atenção: Esta ação é irreversível. 
 	            </p>
 	            <button type="button" class="btn-delete" onclick="deleteUser()">Excluir Usuário</button>
         	

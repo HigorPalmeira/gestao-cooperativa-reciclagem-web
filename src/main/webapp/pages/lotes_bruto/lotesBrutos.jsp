@@ -19,7 +19,7 @@
 
     <!-- Navegação Global -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <!-- Links atualizados para evitar erro de navegação no preview -->
             <a href="${pageContext.request.contextPath}/Home">Início</a>

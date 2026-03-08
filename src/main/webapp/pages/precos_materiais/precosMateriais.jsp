@@ -23,9 +23,10 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
+            <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
         </div>
     </nav>
 
@@ -75,7 +76,9 @@
                     </div>
                 </div>
 
-                <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
+                <div class="filter-group">
+                    <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
+                </div>
             </div>
         </section>
 

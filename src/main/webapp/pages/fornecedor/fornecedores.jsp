@@ -19,7 +19,7 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
@@ -52,7 +52,7 @@
                 </div>
                 <button class="btn-search" onclick="searchSuppliers()">Pesquisar</button>
             </div>
-            <div id="feedback-message">Preencha pelo menos um campo para pesquisar.</div>
+            <div id="feedback-message" style="display: none;">Preencha pelo menos um campo para pesquisar.</div>
         </section>
 
         <section class="table-container">
@@ -78,11 +78,6 @@
             </table>
         </section>
 
-        <div class="quick-links">
-            Navegar para: 
-            <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a> | 
-            <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Transações de Compra</a>
-        </div>
     </main>
 
     <script src="${pageContext.request.contextPath}/assets/_js/script-fornecedor.js"></script>

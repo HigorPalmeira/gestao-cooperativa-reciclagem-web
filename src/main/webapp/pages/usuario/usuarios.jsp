@@ -18,11 +18,10 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="#">Relatórios</a>
-            <a href="#">Configurações</a>
         </div>
     </nav>
 
@@ -49,7 +48,10 @@
                         <option value="operador">Operador</option>
                     </select>
                 </div>
-                <button class="btn-search" onclick="searchUsers()">Pesquisar</button>
+
+                <div class="form-group">
+                    <button class="btn-search" onclick="searchUsers()">Pesquisar</button>
+                </div>
             </div>
             <div id="feedback-message" style="display: none;">Por favor, preencha pelo menos um campo para realizar a pesquisa.</div>
         </section>

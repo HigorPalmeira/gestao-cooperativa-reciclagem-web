@@ -26,7 +26,7 @@
 	
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Lote Bruto ${String.format("#LB-%03d",loteBruto.id)}</div>
+        <div class="brand">ERP Reciclagem &rsaquo; Lote Bruto ${String.format("#LB-%03d",loteBruto.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Voltar para Gestão</a>
         </div>
@@ -68,19 +68,19 @@
 						<input type="text" value="${String.format('#LB-%03d', loteBruto.id)}" readonly>
 					</div>
 					
-					<div class="form-goup">
+					<div class="form-group">
 						<label>Data de Entrada</label>
 						<input type="text" value="${loteBruto.dtEntrada}" readonly>
 					</div>
 					
-					<div class="form-goup">
+					<div class="form-group">
 						<label for="entryWeight">Peso de Entrada (Kg)</label>
 						<input type="number" id="entryWeight" name="entryWeight" step="0.01"
 								value="${loteBruto.pesoEntradaKg}"
 								${isProcessado ? 'readonly' : ''}>
 					</div>
 					
-					<div class="form-goup">
+					<div class="form-group">
 						<label for="batchStatus">Status</label>
 						<c:choose>
 							<c:when test="${isProcessado}">
@@ -112,7 +112,7 @@
 				
 				<div class="form-grid">
 				
-					<div class="form-goup">
+					<div class="form-group">
 						<label for="supplierDoc">Documento (CPF/CNPJ)</label>
 						
 						<div style="display: flex; gap: 10px;">
@@ -133,7 +133,7 @@
 						</div>
 					</div>
 					
-					<div class="form-goup">
+					<div class="form-group">
 						<label for="supplierName">Nome do Fornecedor</label>
 						<input type="text" id="supplierName" name="supplierName" readonly
 								value="${loteBruto.fornecedor.nome}">

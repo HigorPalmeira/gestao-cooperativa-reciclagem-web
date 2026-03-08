@@ -14,7 +14,7 @@
 <body>
 
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Venda ${String.format("#%03d", venda.id)}</div>
+        <div class="brand">ERP Reciclagem &rsaquo; Venda ${String.format("#%03d", venda.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarVendas">Voltar para Gestão</a>
         </div>
@@ -109,33 +109,34 @@
 	                </button>
 	            </div>
     		
+				<h3 style="margin-bottom: 0.5rem; color: #444;">Itens da Venda</h3>
+				<table id="itemsTable">
+					<thead>
+						<tr>
+							<th>Tipo de Material</th>
+							<th>Peso Vendido (Kg)</th>
+							<th>Preço Unitário (R$)</th>
+							<th>Valor Total (R$)</th>
+							<th style="width: 150px;">Ações</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+					
+					</tbody>
+					<tfoot>
+						<tr style="background-color: #fafafa; font-weight: bold;">
+							<td colspan="3" style="text-align: right;">Total Geral:</td>
+							<td id="grandTotal">R$ 0,00</td>
+							<td></td>
+						</tr>
+					</tfoot>
+				</table>
+				
+				<input type="hidden" name="itensVendaJson" id="itensVendaJson">
+				<input type="hidden" name="itensVendaRemovidosJson" id="itensVendaRemovidosJson">
+				
     		</section>
     	
-    		<h3 style="margin-bottom: 0.5rem; color: #444;">Itens da Venda</h3>
-    		<table id="itemsTable">
-	            <thead>
-	                <tr>
-	                    <th>Tipo de Material</th>
-	                    <th>Peso Vendido (Kg)</th>
-	                    <th>Preço Unitário (R$)</th>
-	                    <th>Valor Total (R$)</th>
-	                    <th style="width: 150px;">Ações</th>
-	                </tr>
-	            </thead>
-	            <tbody id="tableBody">
-	            
-	            </tbody>
-	            <tfoot>
-	                <tr style="background-color: #fafafa; font-weight: bold;">
-	                    <td colspan="3" style="text-align: right;">Total Geral:</td>
-	                    <td id="grandTotal">R$ 0,00</td>
-	                    <td></td>
-	                </tr>
-	            </tfoot>
-	        </table>
-	        
-	        <input type="hidden" name="itensVendaJson" id="itensVendaJson">
-	        <input type="hidden" name="itensVendaRemovidosJson" id="itensVendaRemovidosJson">
     	
     	</form>
 

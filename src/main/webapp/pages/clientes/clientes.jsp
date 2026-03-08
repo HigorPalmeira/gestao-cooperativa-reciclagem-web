@@ -18,7 +18,7 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarVendas">Vendas</a>

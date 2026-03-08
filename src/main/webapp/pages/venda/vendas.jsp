@@ -18,7 +18,7 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarClientes">Clientes</a>
@@ -56,7 +56,9 @@
                     </div>
                 </div>
 
-                <button class="btn-search" onclick="searchSales()">Pesquisar</button>
+                <div class="filter-group">
+                    <button class="btn-search" onclick="searchSales()">Pesquisar</button>
+                </div>
             </div>
             
             <div id="feedback-message" style="display: none;">

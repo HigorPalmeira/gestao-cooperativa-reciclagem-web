@@ -15,14 +15,14 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>&rsaquo; Novo Lote Processado</div>
     </nav>
 
     <main class="container">
         <section class="form-card">
             <div class="form-header">
-                <h1>Registo de Processamento</h1>
+                <h1>Registro de Processamento</h1>
                 <p class="subtitle">Crie um novo lote processado a partir de um lote bruto.</p>
             </div>
 

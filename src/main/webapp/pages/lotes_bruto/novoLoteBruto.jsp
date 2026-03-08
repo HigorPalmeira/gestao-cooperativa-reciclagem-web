@@ -15,7 +15,7 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>&rsaquo; Novo Lote Bruto</div>
     </nav>
 
@@ -31,7 +31,7 @@
         <section class="form-card">
             <div class="form-header">
                 <h1>Entrada de Lote Bruto</h1>
-                <p class="subtitle">Registe a entrada de materiais de fornecedores.</p>
+                <p class="subtitle">Registre a entrada de materiais de fornecedores.</p>
             </div>
 
             <!-- Formulário -->

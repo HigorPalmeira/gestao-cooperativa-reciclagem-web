@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Senha - ERP Cooperativa</title>
+    <title>Recuperar Senha - ERP Reciclagem</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     

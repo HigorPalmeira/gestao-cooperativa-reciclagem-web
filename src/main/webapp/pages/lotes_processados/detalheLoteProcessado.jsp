@@ -15,7 +15,7 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Lote Processado ${String.format("#LP-%03d", loteProcessado.id)}</div>
+        <div class="brand">ERP Reciclagem &rsaquo; Lote Processado ${String.format("#LP-%03d", loteProcessado.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Voltar para Gestão</a>
         </div>
@@ -56,13 +56,6 @@
 						<label for="materialType">Tipo de Material *</label>
 						<input type="text" id="materialType" name="materialType" readonly 
 							value="${loteProcessado.tipoMaterial.nome}">
-							<!-- 
-						<select id="materialType" name="materialType">
-							<c:forEach items="${listaTiposMateriais}" var="tipoMaterial">
-                        		<option value="${tipoMaterial.id}" ${tipoMaterial.id == loteProcessado.tipoMaterial.id ? 'selected' : ''}>${tipoMaterial.nome}</option>
-                        	</c:forEach>
-						</select>
-						 -->
 					</div>
 					
 					<div class="form-group">
@@ -93,18 +86,7 @@
 						
 						<div style="display: flex; gap: 10px;">
 		                    <input type="text" id="rawBatchId" name="rawBatchId" placeholder="Ex: LB-101"
-		                    	value="${String.format('LB-%03d', loteProcessado.loteBruto.id)}" readonly> <!-- onblur="fetchRawBatch()" -->
-							
-							<!-- 
-							<button type="submit"
-									formaction="${pageContext.request.contextPath}/BuscarLoteBrutoProcessado"
-									formmethod="GET"
-									class="btn-search"
-									title="Buscar Lote Bruto do Lote Processado">
-								?
-							</button>
-							 -->
-							 
+		                    	value="${String.format('LB-%03d', loteProcessado.loteBruto.id)}" readonly> <!-- onblur="fetchRawBatch()" --> 
 						</div>
 						
 	                    <span id="rawBatchError" class="error-msg">Lote bruto não encontrado.</span>

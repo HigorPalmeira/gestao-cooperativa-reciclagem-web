@@ -15,7 +15,7 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System &rsaquo; Cliente</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem &rsaquo; Cliente</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarClientes">Voltar para Gestão</a>
         </div>
@@ -72,38 +72,40 @@
                     <!-- <span id="feedback-msg">Alterações salvas com sucesso!</span> -->
                 </div>
             </form>
+            
+            <h3 class="section-title">Histórico de Vendas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID da Venda</th>
+                        <th>Data da Venda</th>
+                        <th>Valor Total (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    <c:forEach items="${listaVendas}" var="venda">
+                        <tr>
+                            <td><a href="DetalharVenda?id=${venda.id}" class="sale-link">#VD-${String.format("%03d", venda.id)}</a></td>
+                            <td>${venda.dtVenda}</td>
+                            <td>${String.format("R$ %.2f", venda.valorTotal)}</td>
+                        </tr>
+                    </c:forEach>
+                    
+                    <!-- 
+                    <tr>
+                        <td><a href="DetalharVenda?id=1020" class="sale-link">#1020</a></td>
+                        <td>10/01/2026</td>
+                        <td>R$ 4.500,00</td>
+                    </tr>
+                    
+                     -->
+                     
+                </tbody>
+            </table>
+
         </section>
 
-        <h3 class="section-title">Histórico de Vendas</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID da Venda</th>
-                    <th>Data da Venda</th>
-                    <th>Valor Total (R$)</th>
-                </tr>
-            </thead>
-            <tbody>
-            
-            	<c:forEach items="${listaVendas}" var="venda">
-            		<tr>
-            			<td><a href="DetalharVenda?id=${venda.id}" class="sale-link">#${String.format("%04d", venda.id)}</a></td>
-            			<td>${venda.dtVenda}</td>
-            			<td>${String.format("R$ %.2f", venda.valorTotal)}</td>
-            		</tr>
-            	</c:forEach>
-            	
-            	<!-- 
-                <tr>
-                    <td><a href="DetalharVenda?id=1020" class="sale-link">#1020</a></td>
-                    <td>10/01/2026</td>
-                    <td>R$ 4.500,00</td>
-                </tr>
-                
-                 -->
-                 
-            </tbody>
-        </table>
 
         <div class="danger-zone">
         	<form id="formDeletar" action="${pageContext.request.contextPath}/DeletarCliente" method="POST">

@@ -24,13 +24,13 @@ function renderTable(data) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
                     <td>
-                        <span class="price-link" onclick="openPriceModal('edit', {id: ${item.id}, price: ${item.precoCompra}, date: '${item.dtVigencia}', materialId: ${item.tipoMaterial.id})">
+                        <span class="price-link" onclick="openPriceModal('edit', {id: ${item.id}, price: ${item.precoCompra}, date: '${item.dtVigencia}', materialId: ${item.tipoMaterial.id}})">
                             ${fmtPrice}
                         </span>
                     </td>
                     <td>${fmtDate}</td>
                     <td>
-                        <span class="material-link" onclick="openMaterialModal(${item.tipoMaterial.id})">
+                        <span class="material-link" onclick="openMaterialModal({id: ${item.tipoMaterial.id}, name: '${item.tipoMaterial.nome}', desc: '${item.tipoMaterial.descricao}'})">
                             ${item.tipoMaterial.nome}
                         </span>
                     </td>

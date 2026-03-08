@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Definir Nova Senha - ERP Cooperativa</title>
+    <title>Definir Nova Senha - ERP Reciclagem</title>
     <!-- Link para a folha de estilos global -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     <style>

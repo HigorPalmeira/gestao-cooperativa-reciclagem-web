@@ -15,7 +15,7 @@
 
     <!-- Navegação -->
     <nav class="main-nav">
-        <div class="brand">ERP System &rsaquo; Transação ${String.format("#TR-%03d", transacaoCompra.id)}</div>
+        <div class="brand">ERP Reciclagem &rsaquo; Transação ${String.format("#TR-%03d", transacaoCompra.id)}</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Voltar para Gestão</a>
         </div>
@@ -75,9 +75,7 @@
                         <!-- Único campo editável (se não for Pago) -->
                         <select id="paymentStatus" name="paymentStatus" onchange="handleStatusChange()">
                             <option value="PENDENTE" ${transacaoCompra.status == 'PENDENTE' ? 'selected' : ''}>Pendente</option>
-                            <option value="AGENDADO">Agendado</option>
                             <option value="PAGO" ${transacaoCompra.status == 'PAGO' ? 'selected' : ''}>Pago</option>
-                            <option value="CANCELADO">Cancelado</option>
                         </select>
                     </div>
                 </div>
@@ -140,7 +138,7 @@
         	<form action="${pageContext.request.contextPath}/DeletarTransacaoCompra" method="POST" onsubmit="return confirmDelete()">
         	
         		<input type="hidden" name="id" value="${transacaoCompra.id}">
-	            <span style="color: #666; font-size: 0.9rem; margin-right: 15px;">Deseja remover este registo permanentemente?</span>
+	            <span style="color: #666; font-size: 0.9rem; margin-right: 15px;">Deseja remover este registro permanentemente?</span>
 	            <button type="submit" id="btnDelete" class="btn-delete">Excluir Transação</button>
         	
         	</form>

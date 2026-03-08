@@ -14,7 +14,7 @@
 <body>
 
     <nav class="main-nav">
-        <div style="font-weight: bold; font-size: 1.2rem;">ERP System &rsaquo; Fornecedor</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem &rsaquo; Fornecedor</div>
         <div>
             <a href="${pageContext.request.contextPath}/ListarFornecedores">Voltar para Gestão</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
@@ -147,7 +147,7 @@
             						<span class="status-badge status-ok">Pago</span>
             					</c:when>
             					<c:otherwise>
-            						<span class="status-badge status-pen">Aguardando Pagamento</span>
+            						<span class="status-badge status-pend">Aguardando Pagamento</span>
             					</c:otherwise>
             				</c:choose>
             			</td>

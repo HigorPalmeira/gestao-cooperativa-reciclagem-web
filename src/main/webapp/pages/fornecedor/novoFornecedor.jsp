@@ -13,7 +13,7 @@
 <body>
 
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>&rsaquo; Novo Fornecedor</div>
     </nav>
 

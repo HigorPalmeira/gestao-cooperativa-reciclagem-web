@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ERP Cooperativa</title>
+    <title>Login - ERP Reciclagem</title>
     
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/_css/styles.css">
     
@@ -52,7 +52,7 @@
         </form>
 
         <!-- Mensagem de Erro -->
-        <div id="errorMsg" class="error-message">
+        <div id="errorMsg" class="error-message" style="display: none;">
             Credenciais inválidas. Verifique o email e a senha.
         </div>
 

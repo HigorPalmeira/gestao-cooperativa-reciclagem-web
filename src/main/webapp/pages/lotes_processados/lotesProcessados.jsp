@@ -20,7 +20,7 @@
 
     <!-- Navegação Global -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <!-- Links com alertas para simulação segura -->
             <a href="${pageContext.request.contextPath}/Home">Início</a>

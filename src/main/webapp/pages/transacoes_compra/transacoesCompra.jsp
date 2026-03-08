@@ -19,7 +19,7 @@
 
     <!-- Navegação Global -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <!-- Links com alertas para simulação -->
             <a href="${pageContext.request.contextPath}/Home">Início</a>
@@ -66,14 +66,15 @@
                             <option value="">Todos</option>
                             <option value="PAGO">Pago</option>
                             <option value="PENDENTE">Pendente</option>
-                            <option value="ATRASADO">Atrasado</option>
-                            <option value="CANCELADO">Cancelado</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Botão Pesquisar -->
-                <button class="btn-search" onclick="searchTransactions()">Pesquisar</button>
+                <div class="filter-group">
+                    <!-- Botão Pesquisar -->
+                    <button class="btn-search" onclick="searchTransactions()">Pesquisar</button>
+                </div>
+                
             </div>
             
             <div id="feedback-message" style="display: none;">

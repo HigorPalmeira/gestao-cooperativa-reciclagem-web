@@ -13,7 +13,7 @@
 <body>
 
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem/div>
         <div>&rsaquo; Novo Usuário</div>
     </nav>
 
@@ -21,7 +21,7 @@
         <section class="form-card">
             <div class="form-header">
                 <h1>Criar Usuário</h1>
-                <p class="subtitle">Adicione um novo operador ou administrador ao sistema.</p>
+                <p class="subtitle">Adicione um novo operador, gerente ou administrador ao sistema.</p>
             </div>
 
             <form id="createUserForm" action="${pageContext.request.contextPath}/InserirUsuario" method="POST">
@@ -54,7 +54,7 @@
                 <div class="form-group">
                     <label for="userPassConfirm">Repetir Senha *</label>
                     <input type="password" id="userPassConfirm" name="userPassConfirm" placeholder="******" required>
-                    <div id="passwordError" class="password-match-error">As senhas não coincidem.</div>
+                    <div id="passwordError" class="password-match-error" style="display: none;">As senhas não coincidem.</div>
                 </div>
 
                 <div class="form-actions">

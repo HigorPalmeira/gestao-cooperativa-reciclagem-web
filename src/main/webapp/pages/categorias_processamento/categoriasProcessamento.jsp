@@ -19,7 +19,7 @@
 
     <!-- Navegação Global -->
     <nav class="main-nav">
-        <div class="brand">ERP System</div>
+        <div class="brand">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
         </div>
@@ -61,7 +61,11 @@
                     <label for="searchDesc">Descrição</label>
                     <input type="text" id="searchDesc" placeholder="Pesquisar por descrição...">
                 </div>
-                <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
+
+                <div class="form-group">
+                    <button class="btn-search" onclick="handleSearch()">Pesquisar</button>
+                </div>
+
             </div>
             <div id="feedback-msg" style="display: none;">Preencha pelo menos um campo.</div>
         </section>
