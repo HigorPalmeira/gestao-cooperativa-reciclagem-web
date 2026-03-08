@@ -14,15 +14,13 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class FornecedorDAO {
 
-	public void inserirFornecedor(Fornecedor fornecedor) {
+	public void inserirFornecedor(Fornecedor fornecedor) throws SQLException {
 
 		String insert = "insert into fornecedor (documento_fornecedor, nome_fornecedor, tipo_fornecedor, dtCadastro_fornecedor) values (?, ?, ?, ?)";
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(insert);
 			pst.setString(1, fornecedor.getDocumento());
 			pst.setString(2, fornecedor.getNome());
 			pst.setString(3, fornecedor.getTipo().name());
@@ -30,157 +28,121 @@ public class FornecedorDAO {
 
 			pst.executeUpdate();
 
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
 
-	public List<Fornecedor> listarFornecedores() {
+	public List<Fornecedor> listarFornecedores() throws SQLException {
 
 		String select = "select * from fornecedor";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(select);
-
-			ResultSet rset = pst.executeQuery();
-
-			while (rset.next()) {
-
-				String documento = rset.getString("documento_fornecedor");
-				String nome = rset.getString("nome_fornecedor");
-				TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
-				Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
-
-				listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
-
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while (rset.next()) {
+					
+					String documento = rset.getString("documento_fornecedor");
+					String nome = rset.getString("nome_fornecedor");
+					TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
+					
+					listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
+					
+				}
+				
 			}
-
-			rset.close();
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
+			
 		}
 
 		return listaFornecedores;
 
 	}
 	
-	public void buscarFornecedorPorDocumento(Fornecedor fornecedor) {
+	public void buscarFornecedorPorDocumento(Fornecedor fornecedor) throws SQLException {
 		
 		String select = "select * from fornecedor where documento_fornecedor = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, fornecedor.getDocumento());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
-				
-				fornecedor.setDocumento(rset.getString("documento_fornecedor"));
-				fornecedor.setNome(rset.getString("nome_fornecedor"));
-				fornecedor.setTipo(TipoFornecedor
-						.fromDescricao(rset.getString("tipo_fornecedor")));
-				fornecedor.setDtCadastro(rset.getDate("dtCadastro_fornecedor"));
+			try (ResultSet rset = pst.executeQuery();) {
+
+				while(rset.next()) {
+					
+					fornecedor.setDocumento(rset.getString("documento_fornecedor"));
+					fornecedor.setNome(rset.getString("nome_fornecedor"));
+					fornecedor.setTipo(TipoFornecedor
+							.fromDescricao(rset.getString("tipo_fornecedor")));
+					fornecedor.setDtCadastro(rset.getDate("dtCadastro_fornecedor"));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorNome(String nomeFornecedor) {
+	public List<Fornecedor> listarFornecedoresPorNome(String nomeFornecedor) throws SQLException {
 
 		String select = "select * from fornecedor where nome_fornecedor = ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, nomeFornecedor);
-			
-			ResultSet rset = pst.executeQuery();
 
-			while (rset.next()) {
-
-				String documento = rset.getString("documento_fornecedor");
-				String nome = rset.getString("nome_fornecedor");
-				TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
-				Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
-
-				listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
-
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while (rset.next()) {
+					
+					String documento = rset.getString("documento_fornecedor");
+					String nome = rset.getString("nome_fornecedor");
+					TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
+					
+					listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
+					
+				}
+				
 			}
-
-			rset.close();
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
+			
 		}
 
 		return listaFornecedores;
 
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipoFornecedor) {
+	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipoFornecedor) throws SQLException {
 
 		String select = "select * from fornecedor where tipo_fornecedor = ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, tipoFornecedor.getDescricao());
-			
-			ResultSet rset = pst.executeQuery();
 
-			while (rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
+				
+				while (rset.next()) {
 
-				String documento = rset.getString("documento_fornecedor");
-				String nome = rset.getString("nome_fornecedor");
-				TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
-				Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
+					String documento = rset.getString("documento_fornecedor");
+					String nome = rset.getString("nome_fornecedor");
+					TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
 
-				listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
+					listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
 
+				}
+				
 			}
-
-			rset.close();
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
 
 		}
 
@@ -188,39 +150,31 @@ public class FornecedorDAO {
 
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
+	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) throws SQLException {
 
 		String select = "select * from fornecedor where dtCadastro_fornecedor between ? and ?";
 		List<Fornecedor> listaFornecedores = new ArrayList<>();
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setDate(1, dataInicial);
 			pst.setDate(2, dataFinal);
-			
-			ResultSet rset = pst.executeQuery();
 
-			while (rset.next()) {
-
-				String documento = rset.getString("documento_fornecedor");
-				String nome = rset.getString("nome_fornecedor");
-				TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
-				Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
-
-				listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
-
+			try (ResultSet rset = pst.executeQuery();) {
+		
+				while (rset.next()) {
+	
+					String documento = rset.getString("documento_fornecedor");
+					String nome = rset.getString("nome_fornecedor");
+					TipoFornecedor tipo = TipoFornecedor.fromDescricao(rset.getString("tipo_fornecedor"));
+					Date dtCadastro = rset.getDate("dtCadastro_fornecedor");
+	
+					listaFornecedores.add(new Fornecedor(documento, nome, tipo, dtCadastro));
+	
+				}
+				
 			}
-
-			rset.close();
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
 
 		}
 
@@ -228,15 +182,13 @@ public class FornecedorDAO {
 
 	}
 
-	public void atualizarFornecedor(String documentoOriginal, Fornecedor fornecedor) {
+	public void atualizarFornecedor(String documentoOriginal, Fornecedor fornecedor) throws SQLException {
 
 		String update = "update fornecedor set documento_fornecedor=?, nome_fornecedor=?, tipo_fornecedor=? where documento_fornecedor=?";
 
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update);) {
 
-			Connection conexao = Conexao.getConnection();
-
-			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setString(1, fornecedor.getDocumento());
 			pst.setString(2, fornecedor.getNome());
 			pst.setString(3, fornecedor.getTipo().name());
@@ -244,33 +196,21 @@ public class FornecedorDAO {
 
 			pst.executeUpdate();
 
-			pst.close();
-			conexao.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
 	
-	public void deletarFornecedor(String documento) {
+	public void deletarFornecedor(String documento) throws SQLException {
 		
 		String delete = "delete from fornecedor where documento_fornecedor=?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setString(1, documento);
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}

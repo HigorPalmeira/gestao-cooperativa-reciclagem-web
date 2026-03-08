@@ -221,87 +221,127 @@ public class FornecedorController extends HttpServlet {
 	
 	protected void buscarFornecedorPorDocumento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String documento = request.getParameter("doc");
-		
-		Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
-		
-		List<LoteBruto> listaLotesBrutos = loteBrutoService.listarLotesBrutosPorFornecedor(fornecedor);
-		
-		List<TransacaoCompra> listaTransacoesCompra = new ArrayList<>();
-		
-		for (LoteBruto loteBruto : listaLotesBrutos) {
-			listaTransacoesCompra.addAll( transacaoCompraService.listarTransacoesCompraPorLoteBruto(loteBruto) );
+		try {
+			
+			String documento = request.getParameter("doc");
+			
+			Fornecedor fornecedor = fornecedorService.buscarFornecedorPorDocumento(documento);
+			
+			List<LoteBruto> listaLotesBrutos = loteBrutoService.listarLotesBrutosPorFornecedor(fornecedor);
+			
+			List<TransacaoCompra> listaTransacoesCompra = new ArrayList<>();
+			
+			for (LoteBruto loteBruto : listaLotesBrutos) {
+				listaTransacoesCompra.addAll( transacaoCompraService.listarTransacoesCompraPorLoteBruto(loteBruto) );
+			}
+			
+			request.setAttribute("fornecedor", fornecedor);
+			request.setAttribute("listaLotesBrutos", listaLotesBrutos);
+			request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/detalheFornecedor.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados do fornecedor!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
-		
-		request.setAttribute("fornecedor", fornecedor);
-		request.setAttribute("listaLotesBrutos", listaLotesBrutos);
-		request.setAttribute("listaTransacoesCompra", listaTransacoesCompra);
-		
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/detalheFornecedor.jsp");
-		
-		reqDis.forward(request, response);
 		
 	}
 	
 	protected void listarFornecedoresPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String nome = request.getParameter("nome");
+		try {
+			
+			String nome = request.getParameter("nome");
 		
-		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorNome(nome);
-		
-		request.setAttribute("listaFornecedores", fornecedores);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
-		
-		reqDis.forward(request, response);
+			List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorNome(nome);
+			
+			request.setAttribute("listaFornecedores", fornecedores);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos fornecedores no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void listarFornecedoresPorTipo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
-		
-		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorTipo(tipo);
-		
-		request.setAttribute("listaFornecedores", fornecedores);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+			
+			TipoFornecedor tipo = TipoFornecedor.fromDescricao(request.getParameter("tipo"));
+			
+			List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorTipo(tipo);
+			
+			request.setAttribute("listaFornecedores", fornecedores);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos fornecedores no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void listarFornecedoresPorData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		Date dataInicial = Date.valueOf(request.getParameter("dataInicial"));
-		Date dataFinal = Date.valueOf(request.getParameter("dataFinal"));
-		
-		List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorDataCadastro(dataInicial, dataFinal);
-		
-		request.setAttribute("listaFornecedores", fornecedores);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+			
+			Date dataInicial = Date.valueOf(request.getParameter("dataInicial"));
+			Date dataFinal = Date.valueOf(request.getParameter("dataFinal"));
+			
+			List<Fornecedor> fornecedores = fornecedorService.listarFornecedoresPorDataCadastro(dataInicial, dataFinal);
+			
+			request.setAttribute("listaFornecedores", fornecedores);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/fornecedor/fornecedores.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos fornecedores no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void inserirFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("UTF-8");
-		
-		String nome = request.getParameter("supplierName");
-		String documento = request.getParameter("supplierDoc");
-		String tipoTexto = request.getParameter("supplierType");
 
 		try {
 			
+			String nome = request.getParameter("supplierName");
+			String documento = request.getParameter("supplierDoc");
+			String tipoTexto = request.getParameter("supplierType");
+
 			TipoFornecedor tipo = TipoFornecedor.fromDescricao(tipoTexto);
 			
 			fornecedorService.inserirFornecedor(documento, nome, tipo);
+
+			response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir os dados do novo fornecedore no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
-		response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
 		
 	}
 
@@ -309,12 +349,13 @@ public class FornecedorController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String documentoOriginal = request.getParameter("doc");
-		String documento = request.getParameter("docEdit");
-		String nome = request.getParameter("name");
-		String tipoTexto = request.getParameter("type");
 		
 		try {
+
+			String documentoOriginal = request.getParameter("doc");
+			String documento = request.getParameter("docEdit");
+			String nome = request.getParameter("name");
+			String tipoTexto = request.getParameter("type");
 			
 			TipoFornecedor tipo = TipoFornecedor.fromDescricao(tipoTexto);
 
@@ -348,18 +389,30 @@ public class FornecedorController extends HttpServlet {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados do fornecedor no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
 	
 	protected void deletarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String documento = request.getParameter("doc");
-		
-		fornecedorService.deletarFornecedor(documento);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
+		try {
+
+			String documento = request.getParameter("doc");
+			
+			fornecedorService.deletarFornecedor(documento);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarFornecedores");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados do fornecedor no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	

@@ -25,7 +25,7 @@ public class FornecedorService {
 		
 	}
 	
-	public void inserirFornecedor(String documento, String nome, TipoFornecedor tipo) {
+	public void inserirFornecedor(String documento, String nome, TipoFornecedor tipo) throws SQLException {
 		
 		Fornecedor fornecedor = new Fornecedor(Formatador.clearDoc(documento), nome, tipo);
 		
@@ -33,7 +33,7 @@ public class FornecedorService {
 		
 	}
 	
-	public void inserirFornecedor(Fornecedor fornecedor) {
+	public void inserirFornecedor(Fornecedor fornecedor) throws SQLException {
 		
 		if (fornecedor == null) {
 			throw new RuntimeException("Fornecedor inválido! Não é possível cadastrar o fornecedor.");
@@ -43,7 +43,7 @@ public class FornecedorService {
 		
 	}
 	
-	public void atualizarFornecedor(String documentoOriginal, String documentoNovo, String nome, TipoFornecedor tipo) {
+	public void atualizarFornecedor(String documentoOriginal, String documentoNovo, String nome, TipoFornecedor tipo) throws SQLException {
 		
 		Fornecedor fornecedor = new Fornecedor(documentoNovo, nome, tipo);
 		
@@ -51,7 +51,7 @@ public class FornecedorService {
 		
 	}
 	
-	public void deletarFornecedor(String documento) {
+	public void deletarFornecedor(String documento) throws SQLException {
 		
 		if (!Validador.isCnpj(documento) && !Validador.isCpf(documento)) {
 			throw new RuntimeException("Documento inválido!");
@@ -61,13 +61,13 @@ public class FornecedorService {
 		
 	}
 	
-	public List<Fornecedor> listarFornecedores() {
+	public List<Fornecedor> listarFornecedores() throws SQLException {
 		
 		return fornecedorDao.listarFornecedores();
 		
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorNome(String nome) {
+	public List<Fornecedor> listarFornecedoresPorNome(String nome) throws SQLException {
 		
 		if (nome == null) {
 			throw new RuntimeException("Nome inválido! O nome não pode estar vazio.");
@@ -81,13 +81,13 @@ public class FornecedorService {
 		
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipo) {
+	public List<Fornecedor> listarFornecedoresPorTipo(TipoFornecedor tipo) throws SQLException {
 		
 		return fornecedorDao.listarFornecedoresPorTipo(tipo);
 		
 	}
 	
-	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) {
+	public List<Fornecedor> listarFornecedoresPorDataCadastro(Date dataInicial, Date dataFinal) throws SQLException {
 		
 		boolean afterInicial = dataInicial.after(Date.valueOf(LocalDate.now()));
 		boolean afterFinal = dataFinal.after(Date.valueOf(LocalDate.now()));
@@ -104,7 +104,7 @@ public class FornecedorService {
 		
 	}
 
-	public Fornecedor buscarFornecedorPorDocumento(String documento) {
+	public Fornecedor buscarFornecedorPorDocumento(String documento) throws SQLException {
 		
 		String fDocumento = Formatador.clearDoc(documento);
 		
