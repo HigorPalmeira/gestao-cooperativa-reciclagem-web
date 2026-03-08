@@ -72,7 +72,32 @@
                 		<tr>
                 			<td><a href="DetalharUsuario?userId=${usuario.id}">${usuario.nome}</a></td>
                 			<td>${usuario.email}</td>
-                			<td><span class="role-badge">${usuario.papel}</span></td>
+                			<td>
+
+                                <c:choose>
+
+                                    <c:when test="${usuario.papel == 'Administrador'}">
+                                        <span class="role-badge role-admin">${usuario.papel}</span>
+                                    </c:when>
+
+                                    <c:when test="${usuario.papel == 'Gerente'}">
+                                        <span class="role-badge role-manager">${usuario.papel}</span>
+                                    </c:when>
+
+                                    <c:when test="${usuario.papel == 'Operador'}">
+                                        <span class="role-badge role-operator">${usuario.papel}</span>
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <span class="role-badge role-user">${usuario.papel}</span>
+                                    </c:otherwise>
+
+                                </c:choose>
+
+                                <!--
+                                <span class="role-badge">${usuario.papel}</span>
+                                -->
+                            </td>
                 		</tr>
                 		
                 	</c:forEach>
