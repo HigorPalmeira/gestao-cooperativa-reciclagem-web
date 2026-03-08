@@ -224,11 +224,15 @@ public class LoteBrutoController extends HttpServlet {
 			
 			loteBrutoService.deletarLoteBruto(idLoteBruto);
 			
+			response.sendRedirect(request.getContextPath() + "/ListarLotesBruto");
+			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao deletar o lote bruto!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
-		response.sendRedirect(request.getContextPath() + "/ListarLotesBruto");
 	}
 	
 	protected void buscarLoteBruto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

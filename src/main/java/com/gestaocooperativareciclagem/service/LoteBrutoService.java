@@ -58,31 +58,31 @@ public class LoteBrutoService {
 		
 	}
 	
-	public void deletarLoteBruto(int idLoteBruto) {
+	public void deletarLoteBruto(int idLoteBruto) throws SQLException {
 		
 		loteBrutoDao.deletarLoteBruto(idLoteBruto);
 		
 	}
 	
-	public List<LoteBruto> listarLotesBrutos() {
+	public List<LoteBruto> listarLotesBrutos() throws SQLException {
 		
 		return loteBrutoDao.listarLotesBruto();
 		
 	}
 	
-	public List<LoteBruto> listarLotesBrutosPorStatus(StatusLoteBruto status) {
+	public List<LoteBruto> listarLotesBrutosPorStatus(StatusLoteBruto status) throws SQLException {
 		
 		return loteBrutoDao.listarLotesBrutoPorStatus(status);
 		
 	}
 	
-	public List<LoteBruto> listarLotesBrutosPorFornecedor(Fornecedor fornecedor) {
+	public List<LoteBruto> listarLotesBrutosPorFornecedor(Fornecedor fornecedor) throws SQLException {
 		
 		return loteBrutoDao.listarLotesBrutoPorFornecedor(fornecedor);
 		
 	}
 	
-	public List<LoteBruto> listarLotesBrutosPorIntervaloDePesoEntrada(BigDecimal pesoEntradaInicial, BigDecimal pesoEntradaFinal) {
+	public List<LoteBruto> listarLotesBrutosPorIntervaloDePesoEntrada(BigDecimal pesoEntradaInicial, BigDecimal pesoEntradaFinal) throws SQLException {
 		
 		if (pesoEntradaInicial.compareTo(BigDecimal.ZERO) < 0 || pesoEntradaFinal.compareTo(BigDecimal.ZERO) < 0) {
 			throw new RuntimeException("Peso de entrada informado é inválido! É necessário informar um valor válido: maior que 0.");
@@ -92,7 +92,7 @@ public class LoteBrutoService {
 		
 	}
 	
-	public LoteBruto buscarLoteBrutoPorId(int id) {
+	public LoteBruto buscarLoteBrutoPorId(int id) throws SQLException {
 		
 		LoteBruto loteBruto = new LoteBruto();
 		loteBruto.setId(id);
