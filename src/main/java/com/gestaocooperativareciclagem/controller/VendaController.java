@@ -147,12 +147,21 @@ public class VendaController extends HttpServlet {
 
 	protected void pageNovaVenda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
-		
-		request.setAttribute("listaTiposMateriais", listaTiposMateriais);
-		
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/novaVenda.jsp");
-		reqDis.forward(request, response);
+		try {
+
+			List<TipoMaterial> listaTiposMateriais = tipoMaterialService.listarTiposMaterial();
+			
+			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/venda/novaVenda.jsp");
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErrp", "Ocorreu um erro ao tentar buscar os dados para acessa o formulário para criação de uma nova venda!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
@@ -165,14 +174,16 @@ public class VendaController extends HttpServlet {
 			String cnpj = request.getParameter("clientCnpj");
 			String itensJson = request.getParameter("itensVendaJson");
 			
-			Gson gson = new Gson();
 			Type typeList = new TypeToken<ArrayList<ItemVenda>>() {}.getType();
 			List<ItemVenda> listaItensVenda = gson.fromJson(itensJson, typeList);
 			
 			vendaService.inserirVenda(Date.valueOf(LocalDate.now()), cnpj, listaItensVenda);
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+
+			request.getSession().setAttribute("msgErrp", "Ocorreu um erro ao tentar inserir os dados de uma nova venda no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+
 		}
 		
 		response.sendRedirect(request.getContextPath() + "/ListarVendas");
@@ -247,7 +258,10 @@ public class VendaController extends HttpServlet {
 			reqDis.forward(request, response);
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErrp", "Ocorreu um erro ao tentar buscar os dados da venda!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
@@ -276,6 +290,7 @@ public class VendaController extends HttpServlet {
 	protected void listarVendasJson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("application/json");
+		
 		try {
 			
 			List<Venda> listaVendas = listarVendas(request);

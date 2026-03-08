@@ -79,7 +79,7 @@ public class VendaService {
 		
 	}
 	
-	private void inserirItemVenda(ItemVenda itemVenda) {
+	private void inserirItemVenda(ItemVenda itemVenda) throws SQLException {
 	
 		if (itemVenda == null) {
 			throw new RuntimeException("Item da Venda inválido! O item da venda não pode estar vazio.");
@@ -97,7 +97,7 @@ public class VendaService {
 		
 	}
 	
-	private void inserirListaItensVenda(List<ItemVenda> listaItensVenda) {
+	private void inserirListaItensVenda(List<ItemVenda> listaItensVenda) throws SQLException {
 		
 		if (listaItensVenda == null || listaItensVenda.size() == 0) {
 			throw new RuntimeException("A lista de itens da venda é inválida! É necessário pelo menos um item na venda para ser cadastrado.");
@@ -155,7 +155,7 @@ public class VendaService {
 		
 	}
 	
-	public void atualizarItemVenda(ItemVenda itemVenda) {
+	public void atualizarItemVenda(ItemVenda itemVenda) throws SQLException {
 		
 		if (itemVenda == null) {
 			throw new RuntimeException("Não é possível atualizar um item da venda inválido!");
@@ -181,7 +181,7 @@ public class VendaService {
 		
 	}
 	
-	private void salvarItemVenda(ItemVenda itemVenda) {
+	private void salvarItemVenda(ItemVenda itemVenda) throws SQLException {
 		
 		if (itemVenda == null) {
 			throw new RuntimeException("Não é possível salvar um item da venda inválido!");
@@ -239,7 +239,7 @@ public class VendaService {
 		
 	}
 	
-	public List<ItemVenda> listarItensVendaPorVenda(Venda venda) {
+	public List<ItemVenda> listarItensVendaPorVenda(Venda venda) throws SQLException {
 		
 		if (venda == null) {
 			throw new RuntimeException("Venda inválida! Informe uma venda válida para buscar seus itens.");
@@ -249,7 +249,7 @@ public class VendaService {
 		
 	}
 	
-	public List<ItemVenda> listarItensVendaPorTipoMaterial(TipoMaterial tipoMaterial) {
+	public List<ItemVenda> listarItensVendaPorTipoMaterial(TipoMaterial tipoMaterial) throws SQLException {
 		
 		if (tipoMaterial == null) {
 			throw new RuntimeException("Tipo de Material inválido! Informe um tipo de material válido para buscar itens de venda do material");
