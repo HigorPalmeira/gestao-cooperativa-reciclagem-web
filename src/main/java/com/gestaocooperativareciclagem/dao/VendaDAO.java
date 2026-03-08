@@ -28,13 +28,13 @@ public class VendaDAO {
 			pst.setDate(1, dtInicio);
 			pst.setDate(2, dtFim);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			if (rset.next()) {
-				valorTotal = rset.getBigDecimal(1);
+			try (ResultSet rset = pst.executeQuery();) {
+
+				if (rset.next()) {
+					valorTotal = rset.getBigDecimal(1);
+				}
+				
 			}
-			
-			rset.close();
 			
 		}
 		
@@ -42,15 +42,12 @@ public class VendaDAO {
 		
 	}
 	
-	public void inserirVenda(Venda venda) {
+	public void inserirVenda(Venda venda) throws SQLException {
 		
 		String insert = "insert into venda (dtVenda_venda, valor_total_venda, cliente) values (?, ?, ?)";
 		
-		try {
-			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);) {
 			
 			pst.setDate(1, venda.getDtVenda());
 			pst.setBigDecimal(2, venda.getValorTotal());
@@ -59,172 +56,145 @@ public class VendaDAO {
 			int linhasAfetadas = pst.executeUpdate();
 			
 			if (linhasAfetadas > 0) {
-				ResultSet rset = pst.getGeneratedKeys();
-				if (rset.next()) {
-					venda.setId(rset.getInt(1));
+				
+				try (ResultSet rset = pst.getGeneratedKeys();) {
+
+					if (rset.next()) {
+						venda.setId(rset.getInt(1));
+					}
+					
 				}
 				
-				rset.close();
 			}
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public List<Venda> listarVendas() {
+	public List<Venda> listarVendas() throws SQLException {
 		
 		List<Venda> listaVenda = new ArrayList<>();
 		
 		String select = "select * from info_venda";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idVenda = rset.getInt("id_venda");
-				Date dtVenda = rset.getDate("dtVenda_venda");
-				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
-				
-				String cnpjCliente = rset.getString("cnpj_cliente");
-				String nomeEmpresa = rset.getString("nome_empresa_cliente");
-				String contatoPrincipal = rset.getString("contato_principal_cliente");
-				String emailCliente = rset.getString("email_contato_cliente");
-				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
-				
-				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
-				
-				listaVenda.add(new Venda(idVenda, dtVenda, valorTotalVenda, cliente));
+				while(rset.next()) {
+					
+					int idVenda = rset.getInt("id_venda");
+					Date dtVenda = rset.getDate("dtVenda_venda");
+					BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
+					
+					String cnpjCliente = rset.getString("cnpj_cliente");
+					String nomeEmpresa = rset.getString("nome_empresa_cliente");
+					String contatoPrincipal = rset.getString("contato_principal_cliente");
+					String emailCliente = rset.getString("email_contato_cliente");
+					Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+					
+					Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
+					
+					listaVenda.add(new Venda(idVenda, dtVenda, valorTotalVenda, cliente));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaVenda;
 		
 	}
 	
-	public List<Venda> listarVendasPorCliente(Cliente clienteBuscado) {
+	public List<Venda> listarVendasPorCliente(Cliente clienteBuscado) throws SQLException {
 		
 		List<Venda> listaVenda = new ArrayList<>();
 		
 		String select = "select * from info_venda where cnpj_cliente = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, clienteBuscado.getCnpj());
 			
-			ResultSet rset = pst.executeQuery();
+			try (ResultSet rset = pst.executeQuery();) {
 			
-			while(rset.next()) {
-				
-				int idVenda = rset.getInt("id_venda");
-				Date dtVenda = rset.getDate("dtVenda_venda");
-				BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
-				
-				String cnpjCliente = rset.getString("cnpj_cliente");
-				String nomeEmpresa = rset.getString("nome_empresa_cliente");
-				String contatoPrincipal = rset.getString("contato_principal_cliente");
-				String emailCliente = rset.getString("email_contato_cliente");
-				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
-				
-				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
-				
-				listaVenda.add(new Venda(idVenda, dtVenda, valorTotalVenda, cliente));
+				while(rset.next()) {
+					
+					int idVenda = rset.getInt("id_venda");
+					Date dtVenda = rset.getDate("dtVenda_venda");
+					BigDecimal valorTotalVenda = rset.getBigDecimal("valor_total_venda");
+					
+					String cnpjCliente = rset.getString("cnpj_cliente");
+					String nomeEmpresa = rset.getString("nome_empresa_cliente");
+					String contatoPrincipal = rset.getString("contato_principal_cliente");
+					String emailCliente = rset.getString("email_contato_cliente");
+					Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+					
+					Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
+					
+					listaVenda.add(new Venda(idVenda, dtVenda, valorTotalVenda, cliente));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaVenda;
 		
 	}
 	
-	public void buscarVendaPorId(Venda venda) {
+	public void buscarVendaPorId(Venda venda) throws SQLException {
 	
 		String select = "select * from info_venda where id_venda = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, venda.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				venda.setId( rset.getInt("id_venda") );
-				venda.setDtVenda( rset.getDate("dtVenda_venda") );
-				venda.setValorTotal( rset.getBigDecimal("valor_total_venda") );
-				
-				String cnpjCliente = rset.getString("cnpj_cliente");
-				String nomeEmpresa = rset.getString("nome_empresa_cliente");
-				String contatoPrincipal = rset.getString("contato_principal_cliente");
-				String emailCliente = rset.getString("email_contato_cliente");
-				Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
-				
-				Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
-				
-				venda.setCliente(cliente);
+				while(rset.next()) {
+					
+					venda.setId( rset.getInt("id_venda") );
+					venda.setDtVenda( rset.getDate("dtVenda_venda") );
+					venda.setValorTotal( rset.getBigDecimal("valor_total_venda") );
+					
+					String cnpjCliente = rset.getString("cnpj_cliente");
+					String nomeEmpresa = rset.getString("nome_empresa_cliente");
+					String contatoPrincipal = rset.getString("contato_principal_cliente");
+					String emailCliente = rset.getString("email_contato_cliente");
+					Date dtCadastroCliente = rset.getDate("dtCadastro_cliente");
+					
+					Cliente cliente = new Cliente(cnpjCliente, nomeEmpresa, contatoPrincipal, emailCliente, dtCadastroCliente);
+					
+					venda.setCliente(cliente);
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	
-	
-	public void atualizarVenda(Venda venda) {
+	public void atualizarVenda(Venda venda) throws SQLException {
 		
 		String update = "update venda set valor_total_venda = ?, cliente = ? where id_venda = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setBigDecimal(1, venda.getValorTotal());
 			pst.setString(2, venda.getCliente().getCnpj());
 			pst.setInt(3, venda.getId());
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
@@ -234,14 +204,11 @@ public class VendaDAO {
 		String delete = "delete from venda where id_venda = ?";
 		
 		try (Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(delete);) {
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
-			
-			pst.close();
-			conexao.close();
 			
 		}
 		

@@ -207,13 +207,13 @@ public class VendaService {
 		
 	}
 	
-	public List<Venda> listarVendas() {
+	public List<Venda> listarVendas() throws SQLException {
 		
 		return vendaDao.listarVendas();
 		
 	}
 	
-	public Venda buscarVendaPorId(int id) {
+	public Venda buscarVendaPorId(int id) throws SQLException {
 		
 		Venda venda = new Venda();
 		venda.setId(id);
@@ -224,7 +224,7 @@ public class VendaService {
 		
 	}
 	
-	public List<Venda> buscarVendaPorCliente(String cnpjCliente) {
+	public List<Venda> buscarVendaPorCliente(String cnpjCliente) throws SQLException {
 		
 		String cnpj = Formatador.clearDoc(cnpjCliente);
 		
