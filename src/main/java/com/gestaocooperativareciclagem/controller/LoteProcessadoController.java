@@ -292,6 +292,8 @@ public class LoteProcessadoController extends HttpServlet {
 			List<LoteProcessado> listaLotesProcessados = loteProcessadoService.listarLotesProcessado();
 			List<EtapaProcessamento> listaEtapasProcessamento = new ArrayList<>(listaLotesProcessados.size());
 			
+			List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamento();
+			
 			for (LoteProcessado loteProcessado : listaLotesProcessados) {
 				EtapaProcessamento etapa = etapaProcessamentoService.buscarEtapaProcessamentoAtualPorLoteProcessado(loteProcessado.getId());
 				listaEtapasProcessamento.add(etapa);
@@ -299,6 +301,7 @@ public class LoteProcessadoController extends HttpServlet {
 			
 			request.setAttribute("listaLotesProcessados", listaLotesProcessados);
 			request.setAttribute("listaEtapasProcessamento", listaEtapasProcessamento);
+			request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
 			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/lotesProcessados.jsp");
 			
 			reqDis.forward(request, response);
@@ -359,8 +362,11 @@ public class LoteProcessadoController extends HttpServlet {
 		String idLoteProcessadoTxt = request.getParameter("id");
 		String idLoteBrutoTxt = request.getParameter("idLoteBruto");
 		String idTipoMaterialTxt = request.getParameter("idTipoMaterial");
-		String pesoAtualTxt = request.getParameter("pesoAtual");
-		String dtCriacaoTxt = request.getParameter("dataCriacao");
+		String idEtapaTxt = request.getParameter("etapa");
+		String pesoMinTxt = request.getParameter("pesoMin");
+		String pesoMaxTxt = request.getParameter("pesoMax");
+		String dtInicialTxt = request.getParameter("dataInicial");
+		String dtFinalTxt = request.getParameter("dataFinal");
 		
 		Integer idLoteProcessado = null;
 		if (idLoteProcessadoTxt != null && !idLoteProcessadoTxt.isBlank()) {
@@ -377,17 +383,33 @@ public class LoteProcessadoController extends HttpServlet {
 			idTipoMaterial = Integer.parseInt(idTipoMaterialTxt.trim());
 		}
 		
-		BigDecimal pesoAtual = null;
-		if (pesoAtualTxt != null && !pesoAtualTxt.isBlank()) {
-			pesoAtual = new BigDecimal(pesoAtualTxt.trim());
+		Integer idEtapa = null;
+		if (idEtapaTxt != null && !idEtapaTxt.isBlank()) {
+			idEtapa = Integer.parseInt(idEtapaTxt);
 		}
 		
-		Date dtCriacao = null;
-		if (dtCriacaoTxt != null && !dtCriacaoTxt.isBlank()) {
-			dtCriacao = Date.valueOf(LocalDate.parse(dtCriacaoTxt.trim()));
+		BigDecimal pesoMin = null;
+		if (pesoMinTxt != null && !pesoMinTxt.isBlank()) {
+			pesoMin = new BigDecimal(pesoMinTxt.trim());
 		}
 		
-		return loteProcessadoService.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, pesoAtual, dtCriacao);
+		BigDecimal pesoMax = null;
+		if (pesoMaxTxt != null && !pesoMaxTxt.isBlank()) {
+			pesoMax = new BigDecimal(pesoMaxTxt.trim());
+		}
+		
+		Date dtInicial = null;
+		if (dtInicialTxt != null && !dtInicialTxt.isBlank()) {
+			dtInicial = Date.valueOf(LocalDate.parse(dtInicialTxt.trim()));
+		}
+		
+		Date dtFinal = null;
+		if (dtFinalTxt != null && !dtFinalTxt.isBlank()) {
+			dtFinal = Date.valueOf(LocalDate.parse(dtFinalTxt.trim()));
+		}
+		
+		
+		return loteProcessadoService.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, idEtapa, pesoMin, pesoMax, dtInicial, dtFinal);
 		
 	}
 

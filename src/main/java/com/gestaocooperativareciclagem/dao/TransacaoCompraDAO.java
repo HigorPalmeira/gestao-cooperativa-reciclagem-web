@@ -307,12 +307,14 @@ public class TransacaoCompraDAO {
 		
 	}
 
-	public List<TransacaoCompra> listarTransacoesCompraComParametros(Integer paramIdTransacaoCompra, Integer paramIdLoteBruto, BigDecimal paramValorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra paramStatusPagamentoTransacaoCompra) throws SQLException {
+	public List<TransacaoCompra> listarTransacoesCompraComParametros(Integer paramIdTransacaoCompra, Integer paramIdLoteBruto, 
+			Date paramDtPagamentoInicial, Date paramDtPagamentoFinal, BigDecimal paramValorMin, BigDecimal paramValorMax, 
+			StatusPagamentoTransacaoCompra paramStatusPagamentoTransacaoCompra) throws SQLException {
 		
 		List<TransacaoCompra> listaTransacoesCompra = new ArrayList<>();
 		
 		List<Object> parametros = new ArrayList<>();
-		String select = buildQuerySelect(parametros, paramIdTransacaoCompra, paramIdLoteBruto, paramValorTotalCalculadoTransacaoCompra, paramStatusPagamentoTransacaoCompra);
+		String select = buildQuerySelect(parametros, paramIdTransacaoCompra, paramIdLoteBruto, paramDtPagamentoInicial, paramDtPagamentoFinal, paramValorMin, paramValorMax, paramStatusPagamentoTransacaoCompra);
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(select);) {
@@ -357,7 +359,8 @@ public class TransacaoCompraDAO {
 		
 	}
 	
-	private String buildQuerySelect(List<Object> parametros, Integer idTransacaoCompra, Integer idLoteBruto, BigDecimal valorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) {
+	private String buildQuerySelect(List<Object> parametros, Integer idTransacaoCompra, Integer idLoteBruto, Date dtPagamentoInicial, 
+			Date dtPagamentoFinal, BigDecimal valorMin, BigDecimal valorMax, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) {
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -373,9 +376,24 @@ public class TransacaoCompraDAO {
 			parametros.add(idLoteBruto);
 		}
 		
-		if (valorTotalCalculadoTransacaoCompra != null) {
-			builder.append(" and valor_total_calculado_transacaocompra = ?");
-			parametros.add(valorTotalCalculadoTransacaoCompra);
+		if (valorMin != null) {
+			builder.append(" and valor_total_calculado_transacaocompra >= ?");
+			parametros.add(valorMin);
+		}
+		
+		if (valorMax != null) {
+			builder.append(" and valor_total_calculado_transacaocompra <= ?");
+			parametros.add(valorMax);
+		}
+		
+		if (dtPagamentoInicial != null) {
+			builder.append(" and dtPagamento_transacaocompra >= ?");
+			parametros.add(dtPagamentoInicial);
+		}
+		
+		if (dtPagamentoFinal != null) {
+			builder.append(" and dtPagamento_transacaocompra <= ?");
+			parametros.add(dtPagamentoFinal);
 		}
 		
 		if (statusPagamentoTransacaoCompra != null) {

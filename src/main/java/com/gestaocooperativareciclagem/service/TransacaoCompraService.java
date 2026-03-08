@@ -19,9 +19,10 @@ public class TransacaoCompraService {
 		this.transacaoCompraDao = transacaoCompraDao;
 	}
 	
-	public List<TransacaoCompra> listarTransacoesCompraComParametro(Integer idTransacaoCompra, Integer idLoteBruto, BigDecimal valorTotalCalculadoTransacaoCompra, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) throws SQLException {
+	public List<TransacaoCompra> listarTransacoesCompraComParametro(Integer idTransacaoCompra, Integer idLoteBruto, Date dtPagamentoInicial,
+			Date dtPagamentoFinal, BigDecimal valorMin, BigDecimal valorMax, StatusPagamentoTransacaoCompra statusPagamentoTransacaoCompra) throws SQLException {
 		
-		return transacaoCompraDao.listarTransacoesCompraComParametros(idTransacaoCompra, idLoteBruto, valorTotalCalculadoTransacaoCompra, statusPagamentoTransacaoCompra);
+		return transacaoCompraDao.listarTransacoesCompraComParametros(idTransacaoCompra, idLoteBruto, dtPagamentoInicial, dtPagamentoFinal, valorMin, valorMax, statusPagamentoTransacaoCompra);
 		
 	}
 	

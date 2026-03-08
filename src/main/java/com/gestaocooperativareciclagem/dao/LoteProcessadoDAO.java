@@ -296,12 +296,13 @@ public class LoteProcessadoDAO {
 		
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer paramIdLoteProcessado, Integer paramIdLoteBruto, Integer paramIdTipoMaterial, BigDecimal paramPesoAtualLoteProcessado, Date paramDtCriacaoLoteProcessado) throws SQLException {
+	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer paramIdLoteProcessado, Integer paramIdLoteBruto, 
+			Integer paramIdTipoMaterial, BigDecimal paramPesoMin, BigDecimal paramPesoMax, Date paramDtInicial, Date paramDtFinal) throws SQLException {
 		
 		List<LoteProcessado> listaLotesProcessado = new ArrayList<>();
 		
 		List<Object> parametros = new ArrayList<>();
-		String select = buildQuerySelect(parametros, paramIdLoteProcessado, paramIdLoteBruto, paramIdTipoMaterial, paramPesoAtualLoteProcessado, paramDtCriacaoLoteProcessado);
+		String select = buildQuerySelect(parametros, paramIdLoteProcessado, paramIdLoteBruto, paramIdTipoMaterial, paramPesoMin, paramPesoMax, paramDtInicial, paramDtFinal);
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(select);) {
@@ -347,7 +348,8 @@ public class LoteProcessadoDAO {
 		
 	}
 	
-	private String buildQuerySelect(List<Object> parametros, Integer idLoteProcessado, Integer idLoteBruto, Integer idTipoMaterial, BigDecimal pesoAtualLoteProcessado, Date dtCriacaoLoteProcessado) {
+	private String buildQuerySelect(List<Object> parametros, Integer idLoteProcessado, Integer idLoteBruto, 
+			Integer idTipoMaterial, BigDecimal pesoMin, BigDecimal pesoMax, Date dtInicial, Date dtFinal) {
 	
 		StringBuilder builder = new StringBuilder();
 		
@@ -368,14 +370,24 @@ public class LoteProcessadoDAO {
 			parametros.add(idTipoMaterial);
 		}
 		
-		if (pesoAtualLoteProcessado != null) {
-			builder.append(" and peso_atual_kg_loteprocessado = ?");
-			parametros.add(pesoAtualLoteProcessado);
+		if (pesoMin != null) {
+			builder.append(" and peso_atual_kg_loteprocessado >= ?");
+			parametros.add(pesoMin);
 		}
 		
-		if (dtCriacaoLoteProcessado != null) {
-			builder.append(" and dtCriacao_loteprocessado = ?");
-			parametros.add(dtCriacaoLoteProcessado);
+		if (pesoMax != null) {
+			builder.append(" and peso_atual_kg_loteprocessado <= ?");
+			parametros.add(pesoMax);
+		}
+		
+		if (dtInicial != null) {
+			builder.append(" and dtCriacao_loteprocessado >= ?");
+			parametros.add(dtInicial);
+		}
+		
+		if (dtFinal != null) {
+			builder.append(" and dtCriacao_loteprocessado <= ?");
+			parametros.add(dtFinal);
 		}
 		
 		builder.append(" order by dtCriacao_loteprocessado desc");

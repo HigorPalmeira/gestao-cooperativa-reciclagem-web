@@ -66,7 +66,7 @@ function searchSales() {
         feedbackMsg.style.display = 'none';
     }
 
-    const parametros = `dataVenda=${dateStart}&dataFinal=${dateEnd}&valor=${valMin}&valorMax=${valMax}`;
+    const parametros = `dataInicial=${dateStart}&dataFinal=${dateEnd}&valorMin=${valMin}&valorMax=${valMax}`;
 
     fetch((ctx + '/ListagemVendas?' + parametros))
         .then(response => {

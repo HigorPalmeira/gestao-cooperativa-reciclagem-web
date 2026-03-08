@@ -1,5 +1,6 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,6 +23,13 @@ public class EtapaProcessamentoService {
 	public List<EtapaProcessamento> listarEtapasProcessamentoComParametro(Integer idLoteProcessado, Integer idCategoriaProcessamento, Integer idTipoMaterial, String status, Date dtProcessamento) throws SQLException {
 		
 		return etapaProcessamentoDao.listarEtapasProcessamentoComParametro(idLoteProcessado, idCategoriaProcessamento, idTipoMaterial, status, dtProcessamento);
+		
+	}
+	
+	public List<EtapaProcessamento> listarEtapasProcessamentoParaLoteProcessadoComParametro(Integer idLoteProcessado, Integer idLoteBruto, Integer idCategoriaProcessamento, 
+			Integer idTipoMaterial, BigDecimal pesoMin, BigDecimal pesoMax, Date dtInicial, Date dtFinal) throws SQLException {
+		
+		return etapaProcessamentoDao.listarEtapasProcessamentoParaLoteProcessadoComParametro(idLoteProcessado, idLoteBruto, idCategoriaProcessamento, idTipoMaterial, pesoMin, pesoMax, dtInicial, dtFinal);
 		
 	}
 	

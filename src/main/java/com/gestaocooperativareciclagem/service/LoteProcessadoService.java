@@ -34,9 +34,22 @@ public class LoteProcessadoService {
 		this.loteBrutoService = loteBrutoService;
 	}
 	
-	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer idLoteProcessado, Integer idLoteBruto, Integer idTipoMaterial, BigDecimal pesoAtualLoteProcessado, Date dtCriacaoLoteProcessado) throws SQLException {
+	public List<LoteProcessado> listarLotesProcessadoComParametro(Integer idLoteProcessado, Integer idLoteBruto, Integer idTipoMaterial, Integer idCategoriaProcessamento, 
+			BigDecimal pesoMin, BigDecimal pesoMax, Date dtInicial, Date dtFinal) throws SQLException {
 		
-		return loteProcessadoDao.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, pesoAtualLoteProcessado, dtCriacaoLoteProcessado);
+		if (idCategoriaProcessamento == null) {
+			
+			return loteProcessadoDao.listarLotesProcessadoComParametro(idLoteProcessado, idLoteBruto, idTipoMaterial, pesoMin, pesoMax, dtInicial, dtFinal);
+			
+		} else {
+			
+			return etapaProcessamentoService.listarEtapasProcessamentoParaLoteProcessadoComParametro(idLoteProcessado, idLoteBruto, idCategoriaProcessamento, idTipoMaterial, pesoMin, pesoMax, dtInicial, dtFinal)
+					.stream()
+					.map(EtapaProcessamento::getLoteProcessado)
+					.toList();
+			
+		}
+		
 		
 	}
 

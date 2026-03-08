@@ -71,11 +71,11 @@
                     <div class="inputs-row">
                         <select id="stageSelect">
                             <option value="">Todas as etapas...</option>
-                            <option value="Triagem">Triagem</option>
-                            <option value="Trituração">Trituração</option>
-                            <option value="Lavagem">Lavagem</option>
-                            <option value="Extrusão">Extrusão</option>
-                            <option value="Armazenado">Armazenado</option>
+
+                            <c:forEach items="${listaCategoriasProcessamento}" var="categoria">
+                                <option value="${categoria.id}">${categoria.nome}</option>
+                            </c:forEach>
+
                         </select>
                     </div>
                 </div>
@@ -108,39 +108,77 @@
 	                		<c:set var="etapaProcessamento" value="${listaEtapasProcessamento[status.index]}"/>
 	                		
 	                		<tr>
-	                			<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
+	                			<td><a href="${pageContext.request.contextPath}/DetalharLoteProcessado?id=${loteProcessado.id}" class="id-link">#LP-${String.format("%03d", loteProcessado.id)}</a></td>
 	                			<td>${loteProcessado.pesoAtualKg}</td>
 	                			<td>${loteProcessado.dtCriacao}</td>
 	                			<td>${loteProcessado.tipoMaterial.nome}</td>
+
+                                <c:choose>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Triagem'}">
+                                        <td>
+                                            <span class="stage-badge stage-triagem">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Trituração'}">
+                                        <td>
+                                            <span class="stage-badge stage-trituracao">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Limpeza'}">
+                                        <td>
+                                            <span class="stage-badge stage-lavagem">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Extrusão'}">
+                                        <td>
+                                            <span class="stage-badge stage-extrusao">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Armazenado'}">
+                                        <td>
+                                            <span class="stage-badge stage-armazenado">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:when test="${etapaProcessamento.categoriaProcessamento.nome == 'Descarte'}">
+                                        <td>
+                                            <span class="stage-badge stage-descarte">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <td>
+                                            <span class="stage-badge badge-info">
+                                                ${etapaProcessamento.categoriaProcessamento.nome}
+                                            </span>
+                                        </td>
+                                    </c:otherwise>
+
+                                </c:choose>
+
+                                <!--
 	                			<td><span class="stage-badge badge-info">${etapaProcessamento.categoriaProcessamento.nome}</span></td>
+                                -->
 	                		</tr>
 	                	</c:forEach>
                 
-                    <!-- Conteúdo inicial (Mock) -->
-                    <!--
-                    <tr>
-                        <td><a href="DetalharLoteProcessado?id=201" class="id-link">#LP-201</a></td>
-                        <td>250,00</td>
-                        <td>20/01/2026</td>
-                        <td>Plástico PET</td>
-                        <td><span class="stage-badge stage-lavagem">Lavagem</span></td>
-                    </tr>
-                    <tr>
-                        <td><a href="DetalharLoteProcessado?id=205" class="id-link">#LP-205</a></td>
-                        <td>120,50</td>
-                        <td>22/01/2026</td>
-                        <td>Alumínio</td>
-                        <td><span class="stage-badge stage-armazenado">Armazenado</span></td>
-                    </tr>
-                    <tr>
-                        <td><a href="DetalharLoteProcessado?id=210" class="id-link">#LP-210</a></td>
-                        <td>500,00</td>
-                        <td>25/01/2026</td>
-                        <td>Plástico HDPE</td>
-                        <td><span class="stage-badge stage-trituracao">Trituração</span></td>
-                    </tr>
-                     -->
-                     
                 </tbody>
             </table>
         </section>

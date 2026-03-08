@@ -75,7 +75,7 @@ function searchTransactions() {
         feedbackMsg.style.display = 'none';
     }
 
-    const parametros = `dataInicio=${dateStart}&dataFinal=${dateEnd}&valor=${valMin}&valorMax=${valMax}&status=${status}`;
+    const parametros = `dataInicio=${dateStart}&dataFinal=${dateEnd}&valorMin=${valMin}&valorMax=${valMax}&status=${status}`;
     
     fetch((ctx + '/ListagemTransacoesCompra?' + parametros))
         .then(response => {

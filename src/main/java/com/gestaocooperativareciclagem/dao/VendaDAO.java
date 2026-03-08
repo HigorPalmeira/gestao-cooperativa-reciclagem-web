@@ -214,12 +214,13 @@ public class VendaDAO {
 		
 	}
 	
-	public List<Venda> listarVendasComParametro(Integer paramIdVenda, Date paramDtVenda, BigDecimal paramValorTotalVenda, String paramCnpjCliente) throws SQLException {
+	public List<Venda> listarVendasComParametro(Integer paramIdVenda, Date paramDtInicial, Date paramDtFinal, BigDecimal paramValorMin, 
+			BigDecimal paramValorMax, String paramCnpjCliente) throws SQLException {
 		
 		List<Venda> listaVendas = new ArrayList<>();
 		
 		List<Object> parametros = new ArrayList<>();
-		String select = buildQuerySelect(parametros, paramIdVenda, paramDtVenda, paramValorTotalVenda, paramCnpjCliente);
+		String select = buildQuerySelect(parametros, paramIdVenda, paramDtInicial, paramDtFinal, paramValorMin, paramValorMax, paramCnpjCliente);
 		
 		try(Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(select);) {
@@ -256,7 +257,8 @@ public class VendaDAO {
 		
 	}
 	
-	private String buildQuerySelect(List<Object> parametros, Integer idVenda, Date dtVenda, BigDecimal valorTotalVenda, String cnpjCliente) {
+	private String buildQuerySelect(List<Object> parametros, Integer idVenda, Date dtInicial, Date dtFinal, BigDecimal valorMin, 
+			BigDecimal valorMax, String cnpjCliente) {
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -267,14 +269,24 @@ public class VendaDAO {
 			parametros.add(idVenda);
 		}
 		
-		if (dtVenda != null) {
-			builder.append(" and dtVenda_venda = ?");
-			parametros.add(dtVenda);
+		if (dtInicial != null) {
+			builder.append(" and dtVenda_venda >= ?");
+			parametros.add(dtInicial);
 		}
 		
-		if (valorTotalVenda != null) {
-			builder.append(" and valor_total_venda = ?");
-			parametros.add(valorTotalVenda);
+		if (dtFinal != null) {
+			builder.append(" and dtVenda_venda <= ?");
+			parametros.add(dtFinal);
+		}
+		
+		if (valorMin != null) {
+			builder.append(" and valor_total_venda >= ?");
+			parametros.add(valorMin);
+		}
+		
+		if (valorMax != null) {
+			builder.append(" and valor_total_venda <= ?");
+			parametros.add(valorMax);
 		}
 		
 		if (cnpjCliente != null && !cnpjCliente.isBlank()) {

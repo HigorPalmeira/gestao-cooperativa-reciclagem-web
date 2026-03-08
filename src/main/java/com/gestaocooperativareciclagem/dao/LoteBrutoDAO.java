@@ -310,12 +310,12 @@ public class LoteBrutoDAO {
 		
 	}
 
-	public List<LoteBruto> listarLotesBrutoComParametro(Integer paramIdLoteBruto, String paramDocumentoFornecedor, StatusLoteBruto paramStatusLoteBruto, BigDecimal paramPesoEntrada, Date paramDtEntradaLoteBruto) throws SQLException {
+	public List<LoteBruto> listarLotesBrutoComParametro(Integer paramIdLoteBruto, String paramDocumentoFornecedor, StatusLoteBruto paramStatusLoteBruto, BigDecimal paramPesoMin, BigDecimal paramPesoMax, Date paramDtInicial, Date paramDtFinal) throws SQLException {
 		
 		List<LoteBruto> listaLotesBruto = new ArrayList<>();
 		
 		List<Object> parametros = new ArrayList<>();
-		String select = buildQuerySelect(parametros, paramIdLoteBruto, paramDocumentoFornecedor, paramStatusLoteBruto, paramPesoEntrada, paramDtEntradaLoteBruto);
+		String select = buildQuerySelect(parametros, paramIdLoteBruto, paramDocumentoFornecedor, paramStatusLoteBruto, paramPesoMin, paramPesoMax, paramDtInicial, paramDtFinal);
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(select);) {
@@ -352,7 +352,8 @@ public class LoteBrutoDAO {
 		
 	}
 	
-	private String buildQuerySelect(List<Object> parametros, Integer idLoteBruto, String documentoFornecedor, StatusLoteBruto statusLoteBruto, BigDecimal pesoEntrada, Date dtEntradaLoteBruto) {
+	private String buildQuerySelect(List<Object> parametros, Integer idLoteBruto, String documentoFornecedor, 
+			StatusLoteBruto statusLoteBruto, BigDecimal pesoMin, BigDecimal pesoMax, Date dtInicial, Date dtFinal) {
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -373,14 +374,26 @@ public class LoteBrutoDAO {
 			parametros.add(statusLoteBruto.name());
 		}
 		
-		if (pesoEntrada != null) {
-			builder.append(" and peso_entrada_kg_lotebruto = ?");
-			parametros.add(pesoEntrada);
+			
+		if (pesoMin != null) {
+			builder.append(" and peso_entrada_kg_lotebruto >= ?");
+			parametros.add(pesoMin);
+		}
+			
+		if (pesoMax != null) {
+			builder.append(" and peso_entrada_kg_lotebruto <= ?");
+			parametros.add(pesoMax);
 		}
 		
-		if (dtEntradaLoteBruto != null) {
-			builder.append(" and dtEntrada_lotebruto = ?");
-			parametros.add(dtEntradaLoteBruto);
+		
+		if (dtInicial != null) {
+			builder.append(" and dtEntrada_lotebruto >= ?");
+			parametros.add(dtInicial);
+		}
+		
+		if (dtFinal != null) {
+			builder.append(" and dtEntrada_lotebruto <= ?");
+			parametros.add(dtFinal);
 		}
 		
 		builder.append(" order by dtEntrada_lotebruto desc");

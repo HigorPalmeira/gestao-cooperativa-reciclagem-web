@@ -381,8 +381,10 @@ public class LoteBrutoController extends HttpServlet {
 		String idLoteBrutoTxt = request.getParameter("id");
 		String documentoFornecedor = request.getParameter("doc");
 		String statusTxt = request.getParameter("status");
-		String pesoEntradaTxt = request.getParameter("pesoEntrada");
-		String dtEntradaTxt = request.getParameter("dataEntrada");
+		String pesoMinTxt = request.getParameter("pesoMin");
+		String pesoMaxTxt = request.getParameter("pesoMax");
+		String dtInicialTxt = request.getParameter("dataInicial");
+		String dtFinalTxt = request.getParameter("dataFinal");
 		
 		Integer idLoteBruto = null;
 		if (idLoteBrutoTxt != null && !idLoteBrutoTxt.isBlank()) {
@@ -394,17 +396,27 @@ public class LoteBrutoController extends HttpServlet {
 			status = StatusLoteBruto.valueOf(statusTxt.trim());
 		}
 		
-		BigDecimal pesoEntrada = null;
-		if (pesoEntradaTxt != null && !pesoEntradaTxt.isBlank()) {
-			pesoEntrada = new BigDecimal(pesoEntradaTxt.trim());
+		BigDecimal pesoMin = null;
+		if (pesoMinTxt != null && !pesoMinTxt.isBlank()) {
+			pesoMin = new BigDecimal(pesoMinTxt.trim());
 		}
 		
-		Date dtEntrada = null;
-		if (dtEntradaTxt != null && !dtEntradaTxt.isBlank()) {
-			dtEntrada = Date.valueOf(LocalDate.parse(dtEntradaTxt.trim()));
+		BigDecimal pesoMax = null;
+		if (pesoMaxTxt != null && !pesoMaxTxt.isBlank()) {
+			pesoMax = new BigDecimal(pesoMaxTxt.trim());
 		}
 		
-		return loteBrutoService.listarLotesBrutoComParametro(idLoteBruto, documentoFornecedor, status, pesoEntrada, dtEntrada);
+		Date dtInicial = null;
+		if (dtInicialTxt != null && !dtInicialTxt.isBlank()) {
+			dtInicial = Date.valueOf(LocalDate.parse(dtInicialTxt.trim()));
+		}
+		
+		Date dtFinal = null;
+		if (dtFinalTxt != null && !dtFinalTxt.isBlank()) {
+			dtFinal = Date.valueOf(LocalDate.parse(dtFinalTxt.trim()));
+		}
+		
+		return loteBrutoService.listarLotesBrutoComParametro(idLoteBruto, documentoFornecedor, status, pesoMin, pesoMax, dtInicial, dtFinal);
 		
 	}
 

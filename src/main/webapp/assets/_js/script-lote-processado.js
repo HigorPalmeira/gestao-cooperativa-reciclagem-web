@@ -88,7 +88,7 @@ function searchProcessedBatches() {
         feedbackMsg.style.display = 'none';
     }
 
-    const parametros = `dataCriacao=${dateStart}&dataFinal=${dateEnd}&pesoAtual=${weightMin}&pesoMax=${weightMax}&etapa=${stage}`;
+    const parametros = `dataInicial=${dateStart}&dataFinal=${dateEnd}&pesoMin=${weightMin}&pesoMax=${weightMax}&etapa=${stage}`;
 
     fetch((ctx + '/ListagemLotesProcessado?' + parametros))
         .then(response => {

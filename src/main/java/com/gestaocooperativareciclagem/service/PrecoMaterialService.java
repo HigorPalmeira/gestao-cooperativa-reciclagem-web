@@ -20,9 +20,10 @@ public class PrecoMaterialService {
 		this.tipoMaterialService = tipoMaterialService;
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer idPrecoMaterial, BigDecimal precoCompraMaterial, Date dtVigenciaMaterial, Integer idTipoMaterial, String nomeTipoMaterial) throws SQLException {
+	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer idPrecoMaterial, BigDecimal precoMin, 
+			BigDecimal precoMax, Date dtInicial, Date dtFinal, Integer idTipoMaterial, String nomeTipoMaterial) throws SQLException {
 		
-		return precoMaterialDao.listarPrecosMaterialComParametro(idPrecoMaterial, precoCompraMaterial, dtVigenciaMaterial, idTipoMaterial, nomeTipoMaterial);
+		return precoMaterialDao.listarPrecosMaterialComParametro(idPrecoMaterial, precoMin, precoMax, dtInicial, dtFinal, idTipoMaterial, nomeTipoMaterial);
 		
 	}
 	

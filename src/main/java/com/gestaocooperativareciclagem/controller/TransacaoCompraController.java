@@ -247,7 +247,10 @@ public class TransacaoCompraController extends HttpServlet {
 		
 		String idTransacaoCompraTxt = request.getParameter("id");
 		String idLoteBrutoTxt = request.getParameter("idLoteBruto");
-		String valorTotalCalculadoTxt = request.getParameter("valor");
+		String dtPagamentoInicialTxt = request.getParameter("dataInicial");
+		String dtPagamentoFinalTxt = request.getParameter("dataFinal");
+		String valorMinTxt = request.getParameter("valorMin");
+		String valorMaxTxt = request.getParameter("valorMax");
 		String statusPagamentoTxt = request.getParameter("status");
 		
 		Integer idTransacaoCompra = null;
@@ -260,9 +263,24 @@ public class TransacaoCompraController extends HttpServlet {
 			idLoteBruto = Integer.parseInt(idLoteBrutoTxt.trim());
 		}
 		
-		BigDecimal valorTotalCalculado = null;
-		if (valorTotalCalculadoTxt != null && !valorTotalCalculadoTxt.isBlank()) {
-			valorTotalCalculado = new BigDecimal(valorTotalCalculadoTxt.trim());
+		Date dtPagamentoInicial = null;
+		if (dtPagamentoInicialTxt != null && !dtPagamentoInicialTxt.isBlank()) {
+			dtPagamentoInicial = Date.valueOf(LocalDate.parse(dtPagamentoInicialTxt.trim()));
+		}
+		
+		Date dtPagamentoFinal = null;
+		if (dtPagamentoFinalTxt != null && !dtPagamentoFinalTxt.isBlank()) {
+			dtPagamentoFinal = Date.valueOf(LocalDate.parse(dtPagamentoFinalTxt.trim()));
+		}
+		
+		BigDecimal valorMin = null;
+		if (valorMinTxt != null && !valorMinTxt.isBlank()) {
+			valorMin = new BigDecimal(valorMinTxt.trim());
+		}
+		
+		BigDecimal valorMax = null;
+		if (valorMaxTxt != null && !valorMaxTxt.isBlank()) {
+			valorMax = new BigDecimal(valorMaxTxt.trim());
 		}
 		
 		StatusPagamentoTransacaoCompra statusPagamento = null;
@@ -270,7 +288,7 @@ public class TransacaoCompraController extends HttpServlet {
 			statusPagamento = StatusPagamentoTransacaoCompra.valueOf(statusPagamentoTxt.trim());
 		}
 		
-		return transacaoCompraService.listarTransacoesCompraComParametro(idTransacaoCompra, idLoteBruto, valorTotalCalculado, statusPagamento);
+		return transacaoCompraService.listarTransacoesCompraComParametro(idTransacaoCompra, idLoteBruto, dtPagamentoInicial, dtPagamentoFinal, valorMin, valorMax, statusPagamento);
 		
 	}
 

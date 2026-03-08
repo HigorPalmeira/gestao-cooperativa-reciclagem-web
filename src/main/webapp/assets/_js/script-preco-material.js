@@ -185,7 +185,7 @@ function handleSearch() {
     }
 
 
-    const parametros = `precoCompra=${valMin}&dataVigencia=${dateStart}&idTipoMaterial=${matId}`;
+    const parametros = `precoMin=${valMin}&precoMax=${valMax}&dataInicial=${dateStart}&dataFinal=${dateEnd}&idTipoMaterial=${matId}`;
 
     fetch((ctx + "/ListagemPrecosMaterial?" + parametros))
         .then(response => {

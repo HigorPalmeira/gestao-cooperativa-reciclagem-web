@@ -269,8 +269,10 @@ public class PrecoMaterialController extends HttpServlet {
 	private List<PrecoMaterial> listarPrecosMaterial(HttpServletRequest request) throws ServletException, IOException, SQLException {
 		
 		String idPrecoMaterialTxt = request.getParameter("id");
-		String precoCompraTxt = request.getParameter("precoCompra");
-		String dtVigenciaTxt = request.getParameter("dataVigencia");
+		String precoMinTxt = request.getParameter("precoMin");
+		String precoMaxTxt = request.getParameter("precoMax");
+		String dtInicialTxt = request.getParameter("dataInicial");
+		String dtFinalTxt = request.getParameter("dataFinal");
 		String idTipoMaterialTxt = request.getParameter("idTipoMaterial");
 		String nomeTipoMaterial = request.getParameter("nomeTipoMaterial");
 		
@@ -284,17 +286,27 @@ public class PrecoMaterialController extends HttpServlet {
 			idTipoMaterial = Integer.parseInt(idTipoMaterialTxt.trim());
 		}
 		
-		BigDecimal precoCompra = null;
-		if (precoCompraTxt != null && !precoCompraTxt.isBlank()) {
-			precoCompra = new BigDecimal(precoCompraTxt.trim());
+		BigDecimal precoMin = null;
+		if (precoMinTxt != null && !precoMinTxt.isBlank()) {
+			precoMin = new BigDecimal(precoMinTxt.trim());
 		}
 		
-		Date dtVigencia = null;
-		if (dtVigenciaTxt != null && !dtVigenciaTxt.isBlank()) {
-			dtVigencia = Date.valueOf(LocalDate.parse(dtVigenciaTxt.trim()));
+		BigDecimal precoMax = null;
+		if (precoMaxTxt != null && !precoMaxTxt.isBlank()) {
+			precoMax = new BigDecimal(precoMaxTxt.trim());
 		}
 		
-		return precoMaterialService.listarPrecosMaterialComParametro(idPrecoMaterial, precoCompra, dtVigencia, idTipoMaterial, nomeTipoMaterial);
+		Date dtInicial = null;
+		if (dtInicialTxt != null && !dtInicialTxt.isBlank()) {
+			dtInicial = Date.valueOf(LocalDate.parse(dtInicialTxt.trim()));
+		}
+		
+		Date dtFinal = null;
+		if (dtFinalTxt != null && !dtFinalTxt.isBlank()) {
+			dtFinal = Date.valueOf(LocalDate.parse(dtFinalTxt.trim()));
+		}
+		
+		return precoMaterialService.listarPrecosMaterialComParametro(idPrecoMaterial, precoMin, precoMax, dtInicial, dtFinal, idTipoMaterial, nomeTipoMaterial);
 		
 	}
 

@@ -353,12 +353,13 @@ public class PrecoMaterialDAO {
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer paramIdPrecoMaterial, BigDecimal paramPrecoCompraMaterial, Date dtVigenciaMaterial, Integer paramIdTipoMaterial, String paramNomeTipoMaterial) throws SQLException {
+	public List<PrecoMaterial> listarPrecosMaterialComParametro(Integer paramIdPrecoMaterial, BigDecimal paramPrecoMin, 
+			BigDecimal paramPrecoMax, Date dtInicial, Date dtFinal, Integer paramIdTipoMaterial, String paramNomeTipoMaterial) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecosMaterial = new ArrayList<>();
 		
 		List<Object> parametros = new ArrayList<>();
-		String select = buildQuerySelect(parametros, paramIdPrecoMaterial, paramPrecoCompraMaterial, dtVigenciaMaterial, paramIdTipoMaterial, paramNomeTipoMaterial);
+		String select = buildQuerySelect(parametros, paramIdPrecoMaterial, paramPrecoMin, paramPrecoMax, dtInicial, dtFinal, paramIdTipoMaterial, paramNomeTipoMaterial);
 		
 		try (Connection conexao = Conexao.getConnection();
 				PreparedStatement pst = conexao.prepareStatement(select);) {
@@ -391,7 +392,8 @@ public class PrecoMaterialDAO {
 		
 	}
 	
-	private String buildQuerySelect(List<Object> parametros, Integer idPrecoMaterial, BigDecimal precoCompraMaterial, Date dtVigenciaMaterial, Integer idTipoMaterial, String nomeTipoMaterial) {
+	private String buildQuerySelect(List<Object> parametros, Integer idPrecoMaterial, BigDecimal precoMin, BigDecimal precoMax, 
+			Date dtInicial, Date dtFinal, Integer idTipoMaterial, String nomeTipoMaterial) {
 	
 		StringBuilder builder = new StringBuilder();
 		
@@ -402,14 +404,24 @@ public class PrecoMaterialDAO {
 			parametros.add(idPrecoMaterial);
 		}
 		
-		if (precoCompraMaterial != null) {
-			builder.append(" and preco_compra_kg_precomaterial = ?");
-			parametros.add(precoCompraMaterial);
+		if (precoMin != null) {
+			builder.append(" and preco_compra_kg_precomaterial >= ?");
+			parametros.add(precoMin);
 		}
 		
-		if (dtVigenciaMaterial != null) {
-			builder.append(" and dtVigencia_precomaterial = ?");
-			parametros.add(dtVigenciaMaterial);
+		if (precoMax != null) {
+			builder.append(" and preco_compra_kg_precomaterial <= ?");
+			parametros.add(precoMax);
+		}
+		
+		if (dtInicial != null) {
+			builder.append(" and dtVigencia_precomaterial >= ?");
+			parametros.add(dtInicial);
+		}
+		
+		if (dtFinal != null) {
+			builder.append(" and dtVigencia_precomaterial <= ?");
+			parametros.add(dtFinal);
 		}
 		
 		if (idTipoMaterial != null && idTipoMaterial != 0) {

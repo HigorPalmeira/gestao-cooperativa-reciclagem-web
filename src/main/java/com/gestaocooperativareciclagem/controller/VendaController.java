@@ -322,8 +322,10 @@ public class VendaController extends HttpServlet {
 	private List<Venda> listarVendas(HttpServletRequest request) throws ServletException, IOException, SQLException {
 		
 		String idVendaTxt = request.getParameter("id");
-		String dtVendaTxt = request.getParameter("dataVenda");
-		String valorTotalTxt = request.getParameter("valor");
+		String dtInicialTxt = request.getParameter("dataInicial");
+		String dtFinalTxt = request.getParameter("dataFinal");
+		String valorMinTxt = request.getParameter("valorMin");
+		String valorMaxTxt = request.getParameter("valorMax");
 		String cnpjCliente = request.getParameter("cnpj");
 		
 		Integer idVenda = null;
@@ -331,17 +333,27 @@ public class VendaController extends HttpServlet {
 			idVenda = Integer.parseInt(idVendaTxt.trim());
 		}
 		
-		Date dtVenda = null;
-		if (dtVendaTxt != null && !dtVendaTxt.isBlank()) {
-			dtVenda = Date.valueOf(LocalDate.parse(dtVendaTxt.trim()));
+		Date dtInicial = null;
+		if (dtInicialTxt != null && !dtInicialTxt.isBlank()) {
+			dtInicial = Date.valueOf(LocalDate.parse(dtInicialTxt.trim()));
 		}
 		
-		BigDecimal valorTotal = null;
-		if (valorTotalTxt != null && !valorTotalTxt.isBlank()) {
-			valorTotal = new BigDecimal(valorTotalTxt.trim());
+		Date dtFinal = null;
+		if (dtFinalTxt != null && !dtFinalTxt.isBlank()) {
+			dtFinal = Date.valueOf(LocalDate.parse(dtFinalTxt.trim()));
 		}
 		
-		return vendaService.listarVendasComParametro(idVenda, dtVenda, valorTotal, cnpjCliente);
+		BigDecimal valorMin = null;
+		if (valorMinTxt != null && !valorMinTxt.isBlank()) {
+			valorMin = new BigDecimal(valorMinTxt.trim());
+		}
+		
+		BigDecimal valorMax = null;
+		if (valorMaxTxt != null && !valorMaxTxt.isBlank()) {
+			valorMax = new BigDecimal(valorMaxTxt.trim());
+		}
+		
+		return vendaService.listarVendasComParametro(idVenda, dtInicial, dtFinal, valorMin, valorMax, cnpjCliente);
 		
 	}
 	

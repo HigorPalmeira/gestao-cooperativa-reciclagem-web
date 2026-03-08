@@ -78,7 +78,7 @@ function searchBatches() {
         feedbackMsg.style.display = 'none';
     }
 
-    const parametros = `dataEntrada=${dateStart}&pesoEntrada=${weightMin}`;
+    const parametros = `dataInicial=${dateStart}&dataFinal=${dateEnd}&pesoMin=${weightMin}&pesoMax=${weightMax}`;
 
     fetch((ctx + '/ListagemLotesBruto?' + parametros))
         .then(response => {
