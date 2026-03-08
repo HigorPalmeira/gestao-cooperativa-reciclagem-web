@@ -26,7 +26,7 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public void inserirPrecoMaterial(BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) {
+	public void inserirPrecoMaterial(BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) throws SQLException {
 		
 		if (precoCompra.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Preço de Compra inválido! É necessário informar um valor válido: maior que zero.");
@@ -44,7 +44,7 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public void atualizarPrecoMaterial(int idPrecoMaterial, BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) {
+	public void atualizarPrecoMaterial(int idPrecoMaterial, BigDecimal precoCompra, Date dtVigencia, int idTipoMaterial) throws SQLException {
 		
 		if (precoCompra.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new RuntimeException("Preço de Compra inválido! É necessário informar um valor válido: maior que zero.");
@@ -69,49 +69,49 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public void deletarPrecoMaterial(int id) {
+	public void deletarPrecoMaterial(int id) throws SQLException {
 		
 		precoMaterialDao.deletarPrecoMaterial(id);
 		
 	}
 
-	public List<PrecoMaterial> listarPrecosMaterial() {
+	public List<PrecoMaterial> listarPrecosMaterial() throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterial();
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) {
+	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterialPorPrecoCompra(precoCompra);
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterialPorIntervaloPrecoCompra(precoCompraInicial, precoCompraFinal);
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorDataVigencia(Date dtVigencia) {
+	public List<PrecoMaterial> listarPrecosMaterialPorDataVigencia(Date dtVigencia) throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterialPorDataVigencia(dtVigencia);
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloDataVigencia(Date dtVigenciaInicial, Date dtVigenciaFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloDataVigencia(Date dtVigenciaInicial, Date dtVigenciaFinal) throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterialPorIntervaloDataVigencia(dtVigenciaInicial, dtVigenciaFinal);
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorTipoMaterial(int idTipoMaterial) {
+	public List<PrecoMaterial> listarPrecosMaterialPorTipoMaterial(int idTipoMaterial) throws SQLException {
 		
 		return precoMaterialDao.listarPrecosMaterialPorTipoMaterial(idTipoMaterial);
 		
 	}
 	
-	public PrecoMaterial buscarPrecoMaterialPorId(int id) {
+	public PrecoMaterial buscarPrecoMaterialPorId(int id) throws SQLException {
 		
 		PrecoMaterial precoMaterial = new PrecoMaterial();
 		precoMaterial.setId(id);
@@ -122,7 +122,7 @@ public class PrecoMaterialService {
 		
 	}
 	
-	public PrecoMaterial buscarPrecoMaterialVigentePorTipoMaterial(TipoMaterial tipoMaterial) {
+	public PrecoMaterial buscarPrecoMaterialVigentePorTipoMaterial(TipoMaterial tipoMaterial) throws SQLException {
 		
 		PrecoMaterial precoMaterial = new PrecoMaterial();
 		precoMaterial.setTipoMaterial(tipoMaterial);

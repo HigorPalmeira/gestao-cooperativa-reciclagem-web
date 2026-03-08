@@ -143,13 +143,22 @@ public class PrecoMaterialController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
-		Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
-		int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
-		
-		precoMaterialService.inserirPrecoMaterial(preco, dtVigencia, idMaterial);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+		try {
+
+			BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
+			Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
+			int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
+			
+			precoMaterialService.inserirPrecoMaterial(preco, dtVigencia, idMaterial);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir os dados de um novo preço de material!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
@@ -157,24 +166,42 @@ public class PrecoMaterialController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		int idPreco = Integer.parseInt(request.getParameter("modalId"));
-		BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
-		Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
-		int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
-		
-		precoMaterialService.atualizarPrecoMaterial(idPreco, preco, dtVigencia, idMaterial);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+		try {
+			
+			int idPreco = Integer.parseInt(request.getParameter("modalId"));
+			BigDecimal preco = new BigDecimal(request.getParameter("modalPrice"));
+			Date dtVigencia = Date.valueOf(request.getParameter("modalDate"));
+			int idMaterial = Integer.parseInt(request.getParameter("modalMaterial"));
+			
+			precoMaterialService.atualizarPrecoMaterial(idPreco, preco, dtVigencia, idMaterial);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados de um preço de material!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void deletarPrecoMaterial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int idPreco = Integer.parseInt(request.getParameter("modalId"));
-		
-		precoMaterialService.deletarPrecoMaterial(idPreco);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+		try {
+			
+			int idPreco = Integer.parseInt(request.getParameter("modalId"));
+			
+			precoMaterialService.deletarPrecoMaterial(idPreco);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarPrecosMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados do preço de material!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	

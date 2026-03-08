@@ -40,7 +40,7 @@ public class LoteProcessadoService {
 		
 	}
 
-	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, BigDecimal pesoKg) {
+	private void gerarTransacaoCompra(LoteBruto loteBruto, TipoMaterial tipoMaterial, BigDecimal pesoKg) throws SQLException {
 		
 		PrecoMaterial precoMaterial = precoMaterialService.buscarPrecoMaterialVigentePorTipoMaterial(tipoMaterial);
 		

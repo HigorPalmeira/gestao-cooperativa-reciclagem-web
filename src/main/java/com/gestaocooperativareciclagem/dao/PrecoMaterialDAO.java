@@ -16,368 +16,317 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class PrecoMaterialDAO {
 
-	public void inserirPrecoMaterial(PrecoMaterial precoMaterial) {
+	public void inserirPrecoMaterial(PrecoMaterial precoMaterial) throws SQLException {
 		
 		String insert = "insert into preco_material (preco_compra_kg_precomaterial, dtVigencia_precomaterial, tipo_material) values (?, ?, ?)";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(insert);
 			pst.setBigDecimal(1, precoMaterial.getPrecoCompra());
 			pst.setDate(2, precoMaterial.getDtVigencia());
 			pst.setInt(3, precoMaterial.getTipoMaterial().getId());
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterial() {
+	public List<PrecoMaterial> listarPrecosMaterial() throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) {
+	public List<PrecoMaterial> listarPrecosMaterialPorPrecoCompra(BigDecimal precoCompra) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material where preco_compra_kg_precomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setBigDecimal(1, precoCompra);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloPrecoCompra(BigDecimal precoCompraInicial, BigDecimal precoCompraFinal) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material where preco_compra_kg_precomaterial between ? and ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setBigDecimal(1, precoCompraInicial);
 			pst.setBigDecimal(2, precoCompraFinal);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorDataVigencia(Date dtVigencia) {
+	public List<PrecoMaterial> listarPrecosMaterialPorDataVigencia(Date dtVigencia) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material where dtVigencia_precomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setDate(1, dtVigencia);
-			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+		
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloDataVigencia(Date dtVigenciaInicial, Date dtVigenciaFinal) {
+	public List<PrecoMaterial> listarPrecosMaterialPorIntervaloDataVigencia(Date dtVigenciaInicial, Date dtVigenciaFinal) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material where dtVigencia_precomaterial between ? and ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setDate(1, dtVigenciaInicial);
 			pst.setDate(2, dtVigenciaFinal);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public List<PrecoMaterial> listarPrecosMaterialPorTipoMaterial(int idTipoMaterialBuscado) {
+	public List<PrecoMaterial> listarPrecosMaterialPorTipoMaterial(int idTipoMaterialBuscado) throws SQLException {
 		
 		List<PrecoMaterial> listaPrecoMaterial = new ArrayList<>();
 		
 		String select = "select * from info_preco_material where id_tipomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, idTipoMaterialBuscado);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int idPrecoMaterial = rset.getInt("id_precomaterial");
-				BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
-				Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
-				
-				listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+				while(rset.next()) {
+					
+					int idPrecoMaterial = rset.getInt("id_precomaterial");
+					BigDecimal precoCompraMaterial = rset.getBigDecimal("preco_compra_kg_precomaterial");
+					Date dtVigenciaPrecoMaterial = rset.getDate("dtVigencia_precomaterial");
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					TipoMaterial tipoMaterial = new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial);
+					
+					listaPrecoMaterial.add(new PrecoMaterial(idPrecoMaterial, precoCompraMaterial, dtVigenciaPrecoMaterial, tipoMaterial));
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaPrecoMaterial;
 		
 	}
 	
-	public void buscarPrecoMaterialPorId(PrecoMaterial precoMaterial) {
+	public void buscarPrecoMaterialPorId(PrecoMaterial precoMaterial) throws SQLException {
 		
 		String select = "select * from info_preco_material where id_precomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, precoMaterial.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				precoMaterial.setId( rset.getInt("id_precomaterial") );
-				precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
-				precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				precoMaterial.setTipoMaterial( new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial) );
+				while(rset.next()) {
+					
+					precoMaterial.setId( rset.getInt("id_precomaterial") );
+					precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
+					precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					precoMaterial.setTipoMaterial( new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial) );
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void buscarPrecoMaterialVigentePorTipoMaterial(PrecoMaterial precoMaterial) {
+	public void buscarPrecoMaterialVigentePorTipoMaterial(PrecoMaterial precoMaterial) throws SQLException {
 		
 		String select = "select * from info_preco_material where id_tipomaterial = ? "
 				+ "and dtVigencia_precomaterial <= ? "
 				+ "order by dtVigencia_precomaterial desc limit 1";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, precoMaterial.getTipoMaterial().getId());
 			pst.setDate(2, Date.valueOf(LocalDate.now()));
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				precoMaterial.setId( rset.getInt("id_precomaterial") );
-				precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
-				precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
-				
-				int idTipoMaterial = rset.getInt("id_tipomaterial");
-				String nomeTipoMaterial = rset.getString("nome_tipomaterial");
-				String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
-				
-				precoMaterial.setTipoMaterial( new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial) );
+				while(rset.next()) {
+					
+					precoMaterial.setId( rset.getInt("id_precomaterial") );
+					precoMaterial.setPrecoCompra( rset.getBigDecimal("preco_compra_kg_precomaterial") );
+					precoMaterial.setDtVigencia( rset.getDate("dtVigencia_precomaterial") );
+					
+					int idTipoMaterial = rset.getInt("id_tipomaterial");
+					String nomeTipoMaterial = rset.getString("nome_tipomaterial");
+					String descricaoTipoMaterial = rset.getString("descricao_tipomaterial");
+					
+					precoMaterial.setTipoMaterial( new TipoMaterial(idTipoMaterial, nomeTipoMaterial, descricaoTipoMaterial) );
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void atualizarPrecoMaterial(PrecoMaterial precoMaterial) {
+	public void atualizarPrecoMaterial(PrecoMaterial precoMaterial) throws SQLException {
 		
 		String update = "update preco_material set preco_compra_kg_precomaterial = ?, dtVigencia_precomaterial = ?, tipo_material = ? where id_precomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setBigDecimal(1, precoMaterial.getPrecoCompra());
 			pst.setDate(2, precoMaterial.getDtVigencia());
 			pst.setInt(3, precoMaterial.getTipoMaterial().getId());
@@ -385,33 +334,21 @@ public class PrecoMaterialDAO {
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void deletarPrecoMaterial(int id) {
+	public void deletarPrecoMaterial(int id) throws SQLException {
 		
 		String delete = "delete from preco_material where id_precomaterial = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
