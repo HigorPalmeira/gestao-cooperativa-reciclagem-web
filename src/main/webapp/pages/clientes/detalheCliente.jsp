@@ -72,7 +72,7 @@
                     <!-- <span id="feedback-msg">Alterações salvas com sucesso!</span> -->
                 </div>
             </form>
-            
+            <br>
             <h3 class="section-title">Histórico de Vendas</h3>
             <table>
                 <thead>

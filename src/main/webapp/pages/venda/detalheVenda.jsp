@@ -124,7 +124,7 @@
 					
 					</tbody>
 					<tfoot>
-						<tr style="background-color: #fafafa; font-weight: bold;">
+						<tr style="background-color: #e8e9eb; font-weight: bold;">
 							<td colspan="3" style="text-align: right;">Total Geral:</td>
 							<td id="grandTotal">R$ 0,00</td>
 							<td></td>
