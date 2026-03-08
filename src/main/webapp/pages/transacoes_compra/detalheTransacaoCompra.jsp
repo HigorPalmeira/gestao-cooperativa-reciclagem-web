@@ -107,7 +107,38 @@
 						</td>
 						<td>${transacaoCompra.loteBruto.pesoEntradaKg}</td>
 						<td>${transacaoCompra.loteBruto.dtEntrada}</td>
+
+                        <c:choose>
+
+                            <c:when test="${transacaoCompra.loteBruto.status == 'RECEBIDO'}">
+                                <td>
+                                    <span class="status-badge status-recebido">
+                                        ${transacaoCompra.loteBruto.status.descricao}
+                                    </span>
+                                </td>
+                            </c:when>
+
+                            <c:when test="${transacaoCompra.loteBruto.status == 'EM_TRIAGEM'}">
+                                <td>
+                                    <span class="status-badge status-processamento">
+                                        ${transacaoCompra.loteBruto.status.descricao}
+                                    </span>
+                                </td>
+                            </c:when>
+
+                            <c:otherwise>
+                                <td>
+                                    <span class="status-badge status-concluido">
+                                        ${transacaoCompra.loteBruto.status.descricao}
+                                    </span>
+                                </td>
+                            </c:otherwise>
+
+                        </c:choose>
+
+                        <!--
 						<td>${transacaoCompra.loteBruto.status.descricao}</td>
+                        -->
 						<td>${transacaoCompra.loteBruto.fornecedor.nome}</td>
 					</tr>
 
