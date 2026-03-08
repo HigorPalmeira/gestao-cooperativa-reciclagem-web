@@ -20,7 +20,7 @@ public class TipoMaterialService {
 		
 	}
 	
-	public void inserirTipoMaterial(String nome, String descricao) {
+	public void inserirTipoMaterial(String nome, String descricao) throws SQLException {
 		
 		if (nome == null || nome.isBlank()) {
 			throw new RuntimeException("Nome inválido! É necessário informar um nome para criar um novo tipo de material.");
@@ -36,7 +36,7 @@ public class TipoMaterialService {
 
 	}
 	
-	public void atualizarTipoMaterial(int id, String nome, String descricao) {
+	public void atualizarTipoMaterial(int id, String nome, String descricao) throws SQLException {
 		
 		TipoMaterial tipoMaterialOriginal = buscarTipoMaterialPorId(id);
 		
@@ -54,19 +54,19 @@ public class TipoMaterialService {
 		
 	}
 	
-	public void deletarTipoMaterial(int id) {
+	public void deletarTipoMaterial(int id) throws SQLException {
 		
 		tipoMaterialDao.deletarTipoMaterial(id);
 		
 	}
 	
-	public List<TipoMaterial> listarTiposMaterial() {
+	public List<TipoMaterial> listarTiposMaterial() throws SQLException {
 		
 		return tipoMaterialDao.listarTiposMaterial();
 		
 	}
 	
-	public List<TipoMaterial> listarTiposMaterialPorDescricao(String descricao) {
+	public List<TipoMaterial> listarTiposMaterialPorDescricao(String descricao) throws SQLException {
 		
 		if (descricao == null || descricao.isBlank()) {
 			throw new RuntimeException("Descrição inválida! É necessário informar uma 'Descrição' para realizar a busca.");
@@ -76,7 +76,7 @@ public class TipoMaterialService {
 		
 	}
 	
-	public TipoMaterial buscarTipoMaterialPorId(int id) {
+	public TipoMaterial buscarTipoMaterialPorId(int id) throws SQLException {
 		
 		TipoMaterial tipoMaterial = new TipoMaterial();
 		tipoMaterial.setId(id);
@@ -87,7 +87,7 @@ public class TipoMaterialService {
 		
 	}
 	
-	public TipoMaterial buscarTipoMaterialPorNome(String nome) {
+	public TipoMaterial buscarTipoMaterialPorNome(String nome) throws SQLException {
 		
 		if (nome == null || nome.isBlank()) {
 			throw new RuntimeException("Nome inválido! É necessário informar um 'Nome' para realizar a busca.");

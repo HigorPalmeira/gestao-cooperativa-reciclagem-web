@@ -24,10 +24,9 @@ import com.google.gson.Gson;
  */
 @WebServlet(
 		name="TipoMaterialController",
-		urlPatterns={ "/TipoMaterialController", "/ListarTiposMateriais", 
-	"/DetalharTipoMaterial", "/InserirTipoMaterial", 
-	"/AtualizarTipoMaterial", "/DeletarTipoMaterial",
-	"/ListagemTiposMaterial"})
+		urlPatterns={ "/TipoMaterialController", "/ListarTiposMateriais",
+				"/InserirTipoMaterial", "/AtualizarTipoMaterial", 
+				"/DeletarTipoMaterial", "/ListagemTiposMaterial"})
 public class TipoMaterialController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -68,9 +67,6 @@ public class TipoMaterialController extends HttpServlet {
 		try {
 			
 			switch(path) {
-				case "/DetalharTipoMaterial":
-					System.out.println("Sem implementação...");
-					break;
 					
 				case "/ListagemTiposMaterial":
 					listarTiposMateriais(request, response);
@@ -126,12 +122,21 @@ public class TipoMaterialController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String nome = request.getParameter("modalName");
-		String descricao = request.getParameter("modalDesc");
+		try {
 		
-		tipoMaterialService.inserirTipoMaterial(nome, descricao);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+			String nome = request.getParameter("modalName");
+			String descricao = request.getParameter("modalDesc");
+			
+			tipoMaterialService.inserirTipoMaterial(nome, descricao);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir os dados de um novo tipo de material no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
@@ -139,23 +144,41 @@ public class TipoMaterialController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		int id = Integer.parseInt(request.getParameter("modalId"));
-		String nome = request.getParameter("modalName");
-		String descricao = request.getParameter("modalDesc");
+		try {
 		
-		tipoMaterialService.atualizarTipoMaterial(id, nome, descricao);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+			int id = Integer.parseInt(request.getParameter("modalId"));
+			String nome = request.getParameter("modalName");
+			String descricao = request.getParameter("modalDesc");
+			
+			tipoMaterialService.atualizarTipoMaterial(id, nome, descricao);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados de um tipo de material no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void deletarTipoMaterial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("modalId"));
-		
-		tipoMaterialService.deletarTipoMaterial(id);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("modalId"));
+			
+			tipoMaterialService.deletarTipoMaterial(id);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarTiposMateriais");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados de um tipo de material no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 
@@ -164,7 +187,6 @@ public class TipoMaterialController extends HttpServlet {
 		try {
 
 			List<TipoMaterial> listaTiposMateriais = listarTipos(request); 
-			//tipoMaterialService.listarTiposMaterial();
 			
 			request.setAttribute("listaTiposMateriais", listaTiposMateriais);
 			RequestDispatcher reqDis = request.getRequestDispatcher("pages/tipos_materiais/tiposMaterial.jsp");
@@ -172,7 +194,10 @@ public class TipoMaterialController extends HttpServlet {
 			reqDis.forward(request, response);
 			
 		} catch (Exception e) {
-			throw new ServletException(e);
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos tipos de material registrados no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
