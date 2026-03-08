@@ -122,36 +122,63 @@ public class CategoriaProcessamentoController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String nome = request.getParameter("modalName");
-		String descricao = request.getParameter("modalDesc");
-		
-		categoriaProcessamentoService.inserirCategoriaProcessamento(nome, descricao);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
-		
+		try {
+			
+			String nome = request.getParameter("modalName");
+			String descricao = request.getParameter("modalDesc");
+			
+			categoriaProcessamentoService.inserirCategoriaProcessamento(nome, descricao);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir uma nova categoria de processamento no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 	}
 	
 	protected void atualizarCategoriaProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		int id = Integer.parseInt(request.getParameter("modalId"));
-		String nome = request.getParameter("modalName");
-		String descricao = request.getParameter("modalDesc");
-		
-		categoriaProcessamentoService.atualizarCategoriaProcessamento(id, nome, descricao);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("modalId"));
+			String nome = request.getParameter("modalName");
+			String descricao = request.getParameter("modalDesc");
+			
+			categoriaProcessamentoService.atualizarCategoriaProcessamento(id, nome, descricao);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados de uma categoria de processamento no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void deletarCategoriaProcessamento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("modalId"));
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("modalId"));
+			
+			categoriaProcessamentoService.deletarCategoriaProcessamento(id);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados de uma categoria de processamento no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		categoriaProcessamentoService.deletarCategoriaProcessamento(id);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarCategoriasProcessamento");
 		
 	}
 

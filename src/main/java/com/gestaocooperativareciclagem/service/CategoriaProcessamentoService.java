@@ -20,7 +20,7 @@ public class CategoriaProcessamentoService {
 		
 	}
 	
-	public void inserirCategoriaProcessamento(String nome, String descricao) {
+	public void inserirCategoriaProcessamento(String nome, String descricao) throws SQLException {
 		
 		if (nome == null || nome.isBlank()) {
 			throw new RuntimeException("É necessário informar um nome válido para uma nova categoria de processamento!");
@@ -36,7 +36,7 @@ public class CategoriaProcessamentoService {
 		
 	}
 	
-	public void atualizarCategoriaProcessamento(int id, String nome, String descricao) {
+	public void atualizarCategoriaProcessamento(int id, String nome, String descricao) throws SQLException {
 		
 		CategoriaProcessamento categoriaProcessamentoOriginal = buscarCategoriaProcessamentoPorId(id);
 		
@@ -55,19 +55,19 @@ public class CategoriaProcessamentoService {
 		
 	}
 	
-	public void deletarCategoriaProcessamento(int id) {
+	public void deletarCategoriaProcessamento(int id) throws SQLException {
 		
 		categoriaProcessamentoDao.deletarCategoriaProcessamento(id);
 		
 	}
 	
-	public List<CategoriaProcessamento> listarCategoriasProcessamento() {
+	public List<CategoriaProcessamento> listarCategoriasProcessamento() throws SQLException {
 		
 		return categoriaProcessamentoDao.listarCategoriasProcessamento();
 		
 	}
 	
-	public CategoriaProcessamento buscarCategoriaProcessamentoPorNome(String nome) {
+	public CategoriaProcessamento buscarCategoriaProcessamentoPorNome(String nome) throws SQLException {
 		
 		if (nome == null || nome.isBlank()) {
 			throw new RuntimeException("É necessário informar um nome válido para realizar uma busca!");
@@ -82,7 +82,7 @@ public class CategoriaProcessamentoService {
 		
 	}
 	
-	public CategoriaProcessamento buscarCategoriaProcessamentoPorId(int id) {
+	public CategoriaProcessamento buscarCategoriaProcessamentoPorId(int id) throws SQLException {
 		
 		CategoriaProcessamento categoriaProcessamento = new CategoriaProcessamento();
 		categoriaProcessamento.setId(id);

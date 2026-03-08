@@ -260,18 +260,27 @@ public class LoteProcessadoController extends HttpServlet {
 	
 	protected void pageNovoLoteProcessado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<TipoMaterial> listaTiposMaterial = tipoMaterialService.listarTiposMaterial();
-		
-		List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamento();
-		
-		List<LoteBruto> listaLotesBrutos = loteBrutoService.listarLotesBrutosPorStatus(StatusLoteBruto.EM_TRIAGEM);
-	
-		request.setAttribute("listaTiposMateriais", listaTiposMaterial);
-		request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
-		request.setAttribute("listaLotesBrutos", listaLotesBrutos);
-		
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/novoLoteProcessado.jsp");
-		reqDis.forward(request, response);
+		try {
+			
+			List<TipoMaterial> listaTiposMaterial = tipoMaterialService.listarTiposMaterial();
+			
+			List<CategoriaProcessamento> listaCategoriasProcessamento = categoriaProcessamentoService.listarCategoriasProcessamento();
+			
+			List<LoteBruto> listaLotesBrutos = loteBrutoService.listarLotesBrutosPorStatus(StatusLoteBruto.EM_TRIAGEM);
+			
+			request.setAttribute("listaTiposMateriais", listaTiposMaterial);
+			request.setAttribute("listaCategoriasProcessamento", listaCategoriasProcessamento);
+			request.setAttribute("listaLotesBrutos", listaLotesBrutos);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/lotes_processados/novoLoteProcessado.jsp");
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados para acessar o formulário de criação de novos lotes processados!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
