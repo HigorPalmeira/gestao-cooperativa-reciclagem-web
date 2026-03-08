@@ -12,15 +12,13 @@ import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class UsuarioDAO {
 	
-	public void inserirUsuario(Usuario usuario) {
+	public void inserirUsuario(Usuario usuario) throws SQLException {
 		
 		String insert = "insert into usuario (nome_usuario, email_usuario, senha_usuario, papel) values (?, ?, ?, ?)";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(insert);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(insert);
 			pst.setString(1, usuario.getNome());
 			pst.setString(2, usuario.getEmail());
 			pst.setString(3, usuario.getSenha());
@@ -28,220 +26,183 @@ public class UsuarioDAO {
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public List<Usuario> listarUsuarios() {
+	public List<Usuario> listarUsuarios() throws SQLException {
 		
 		List<Usuario> listaUsuarios = new ArrayList<>();
 		
 		String select = "select * from usuario";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int id = rset.getInt("id_usuario");
-				String nome = rset.getString("nome_usuario");
-				String email = rset.getString("email_usuario");
-				String papel = rset.getString("papel");
-				
-				Usuario usuario = new Usuario();
-				usuario.setId(id);
-				usuario.setNome(nome);
-				usuario.setEmail(email);
-				usuario.setPapel(papel);
-				
-				listaUsuarios.add(usuario);
+				while(rset.next()) {
+					
+					int id = rset.getInt("id_usuario");
+					String nome = rset.getString("nome_usuario");
+					String email = rset.getString("email_usuario");
+					String papel = rset.getString("papel");
+					
+					Usuario usuario = new Usuario();
+					usuario.setId(id);
+					usuario.setNome(nome);
+					usuario.setEmail(email);
+					usuario.setPapel(papel);
+					
+					listaUsuarios.add(usuario);
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaUsuarios;
 		
 	}
 	
-	public List<Usuario> listarUsuariosPorPapel(String papelUsuario) {
+	public List<Usuario> listarUsuariosPorPapel(String papelUsuario) throws SQLException {
 		
 		List<Usuario> listaUsuarios = new ArrayList<>();
 		
 		String select = "select * from usuario where papel = ?;";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, papelUsuario);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int id = rset.getInt("id_usuario");
-				String nome = rset.getString("nome_usuario");
-				String email = rset.getString("email_usuario");
-				String papel = rset.getString("papel");
-				
-				Usuario usuario = new Usuario();
-				usuario.setId(id);
-				usuario.setNome(nome);
-				usuario.setEmail(email);
-				usuario.setPapel(papel);
-				
-				listaUsuarios.add(usuario);
+				while(rset.next()) {
+					
+					int id = rset.getInt("id_usuario");
+					String nome = rset.getString("nome_usuario");
+					String email = rset.getString("email_usuario");
+					String papel = rset.getString("papel");
+					
+					Usuario usuario = new Usuario();
+					usuario.setId(id);
+					usuario.setNome(nome);
+					usuario.setEmail(email);
+					usuario.setPapel(papel);
+					
+					listaUsuarios.add(usuario);
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaUsuarios;
 		
 	}
 	
-	public List<Usuario> listarUsuariosPorNome(String nomeUsuario) {
+	public List<Usuario> listarUsuariosPorNome(String nomeUsuario) throws SQLException {
 		
 		List<Usuario> listaUsuarios = new ArrayList<>();
 		
 		String select = "select * from usuario where nome_usuario = ?;";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, nomeUsuario);
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				int id = rset.getInt("id_usuario");
-				String nome = rset.getString("nome_usuario");
-				String email = rset.getString("email_usuario");
-				String papel = rset.getString("papel");
-				
-				Usuario usuario = new Usuario();
-				usuario.setId(id);
-				usuario.setNome(nome);
-				usuario.setEmail(email);
-				usuario.setPapel(papel);
-				
-				listaUsuarios.add(usuario);
+				while(rset.next()) {
+					
+					int id = rset.getInt("id_usuario");
+					String nome = rset.getString("nome_usuario");
+					String email = rset.getString("email_usuario");
+					String papel = rset.getString("papel");
+					
+					Usuario usuario = new Usuario();
+					usuario.setId(id);
+					usuario.setNome(nome);
+					usuario.setEmail(email);
+					usuario.setPapel(papel);
+					
+					listaUsuarios.add(usuario);
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 		return listaUsuarios;
 		
 	}
 	
-	public void buscarUsuarioPorId(Usuario usuario) {
+	public void buscarUsuarioPorId(Usuario usuario) throws SQLException {
 		
 		String select = "select * from usuario where id_usuario = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setInt(1, usuario.getId());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				usuario.setId( rset.getInt("id_usuario") );
-				usuario.setNome( rset.getString("nome_usuario") );
-				usuario.setEmail( rset.getString("email_usuario") );
-				usuario.setSenha( rset.getString("senha_usuario") );
-				usuario.setPapel( rset.getString("papel") );
+				while(rset.next()) {
+					
+					usuario.setId( rset.getInt("id_usuario") );
+					usuario.setNome( rset.getString("nome_usuario") );
+					usuario.setEmail( rset.getString("email_usuario") );
+					usuario.setSenha( rset.getString("senha_usuario") );
+					usuario.setPapel( rset.getString("papel") );
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void buscarUsuarioPorEmail(Usuario usuario) {
+	public void buscarUsuarioPorEmail(Usuario usuario) throws SQLException {
 		
 		String select = "select * from usuario where email_usuario = ?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(select);
 			pst.setString(1, usuario.getEmail());
 			
-			ResultSet rset = pst.executeQuery();
-			
-			while(rset.next()) {
+			try (ResultSet rset = pst.executeQuery();) {
 				
-				usuario.setId( rset.getInt("id_usuario") );
-				usuario.setNome( rset.getString("nome_usuario") );
-				usuario.setEmail( rset.getString("email_usuario") );
-				usuario.setSenha( rset.getString("senha_usuario") );
-				usuario.setPapel( rset.getString("papel") );
+				while(rset.next()) {
+					
+					usuario.setId( rset.getInt("id_usuario") );
+					usuario.setNome( rset.getString("nome_usuario") );
+					usuario.setEmail( rset.getString("email_usuario") );
+					usuario.setSenha( rset.getString("senha_usuario") );
+					usuario.setPapel( rset.getString("papel") );
+					
+				}
 				
 			}
 			
-			rset.close();
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void atualizarUsuario(Usuario usuario) {
+	public void atualizarUsuario(Usuario usuario) throws SQLException {
 		
 		String update = "update usuario set nome_usuario=?, email_usuario=?, senha_usuario=?, papel=? where id_usuario=?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(update);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(update);
 			pst.setString(1, usuario.getNome());
 			pst.setString(2, usuario.getEmail());
 			pst.setString(3, usuario.getSenha());
@@ -250,33 +211,21 @@ public class UsuarioDAO {
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
-	public void deletarUsuario(int id) {
+	public void deletarUsuario(int id) throws SQLException {
 		
 		String delete = "delete from usuario where id_usuario=?";
 		
-		try {
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(delete);) {
 			
-			Connection conexao = Conexao.getConnection();
-			
-			PreparedStatement pst = conexao.prepareStatement(delete);
 			pst.setInt(1, id);
 			
 			pst.executeUpdate();
 			
-			pst.close();
-			conexao.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}
@@ -323,7 +272,7 @@ public class UsuarioDAO {
 	}
 	
 	private String buildQuerySelect(List<Object> parametros, Integer idUsuario, String nomeUsuario, String emailUsuario, String papelUsuario) {
-		// nome_usuario, email_usuario, senha_usuario, papel
+
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("select * from usuario where 1=1");

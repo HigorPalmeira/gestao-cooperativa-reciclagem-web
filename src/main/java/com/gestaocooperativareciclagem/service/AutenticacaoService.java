@@ -1,5 +1,7 @@
 package com.gestaocooperativareciclagem.service;
 
+import java.sql.SQLException;
+
 import com.gestaocooperativareciclagem.dao.UsuarioDAO;
 import com.gestaocooperativareciclagem.model.Usuario;
 
@@ -44,7 +46,7 @@ public class AutenticacaoService {
 		
 	}
 	
-	public boolean temEmailCadastrado(Usuario usuario) {
+	public boolean temEmailCadastrado(Usuario usuario) throws SQLException {
 		
 		if (usuario == null) {
 			throw new RuntimeException("Não foi possível verificar o e-mail no sistema.");
@@ -60,7 +62,7 @@ public class AutenticacaoService {
 		
 	}
 	
-	public void alterarSenha(int idUsuario, String senha) {
+	public void alterarSenha(int idUsuario, String senha) throws SQLException {
 		
 		Usuario usuario = new Usuario();
 		usuario.setId(idUsuario);

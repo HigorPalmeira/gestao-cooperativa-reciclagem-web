@@ -2,8 +2,6 @@ package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -125,49 +123,52 @@ public class UsuarioController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String nome = request.getParameter("userName");
-		String email = request.getParameter("userEmail");
-		String senha = null;
-		String confirmSenha = null;
-		String papel = request.getParameter("userRole");
-		
-		boolean senhaCorresponde = false;
-		
 		try {
+
+			String nome = request.getParameter("userName");
+			String email = request.getParameter("userEmail");
+			String senha = null;
+			String confirmSenha = null;
+			String papel = request.getParameter("userRole");
+			
+			boolean senhaCorresponde = false;
+			
 			senha = Criptografia.criptografar(request.getParameter("userPass"));
 			confirmSenha = Criptografia.criptografar(request.getParameter("userPassConfirm"));
 			
 			senhaCorresponde = senha.equals(confirmSenha);
-					
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			
+			if (senhaCorresponde) {
+				usuarioService.inserirUsuario(nome, email, senha, papel);
+			}
+			
+			response.sendRedirect("ListarUsuarios");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir os dados de um novo usuário no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
-		
-		if (senhaCorresponde) {
-			usuarioService.inserirUsuario(nome, email, senha, papel);
-		}
-		
-		response.sendRedirect("ListarUsuarios");
 		
 	}
 	
 	protected void atualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt( request.getParameter("userId") );
-		String nome = request.getParameter("userName").trim();
-		String email = request.getParameter("userEmail").trim();
-		String papel = request.getParameter("userRole").trim();
-		
-		String senhaBruta = request.getParameter("newPass").trim();
-		String confirmSenhaBruta = request.getParameter("confirmPass").trim();
-		String senhaCriptografada = null;
-
-		StringBuilder msgErro = new StringBuilder("Erro: ");
-		boolean temErro = false;
 
 		try {
+
+			int id = Integer.parseInt( request.getParameter("userId") );
+			String nome = request.getParameter("userName").trim();
+			String email = request.getParameter("userEmail").trim();
+			String papel = request.getParameter("userRole").trim();
+			
+			String senhaBruta = request.getParameter("newPass").trim();
+			String confirmSenhaBruta = request.getParameter("confirmPass").trim();
+			String senhaCriptografada = null;
+			
+			StringBuilder msgErro = new StringBuilder("Erro: ");
+			boolean temErro = false;
 			
 			if (senhaBruta != null && !senhaBruta.isEmpty()) {
 				
@@ -208,18 +209,29 @@ public class UsuarioController extends HttpServlet {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e);
+
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados de um usuário no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+
 		}
 		
 	}
 	
 	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("userId"));
-		usuarioService.deletarUsuario(id);
-		
-		response.sendRedirect("ListarUsuarios");
+		try {
+			
+			int id = Integer.parseInt(request.getParameter("userId"));
+			usuarioService.deletarUsuario(id);
+			
+			response.sendRedirect("ListarUsuarios");
+
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados de um usuário no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
@@ -295,53 +307,89 @@ public class UsuarioController extends HttpServlet {
 	
 	protected void listarUsuariosPorPapel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String papel = request.getParameter("papel");
-		
-		List<Usuario> usuarios = usuarioService.listarUsuariosPorPapel(papel);
-		
-		request.setAttribute("listaUsuarios", usuarios);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+
+			String papel = request.getParameter("papel");
+			
+			List<Usuario> usuarios = usuarioService.listarUsuariosPorPapel(papel);
+			
+			request.setAttribute("listaUsuarios", usuarios);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos usuários no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void listarUsuariosPorNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String nome = request.getParameter("nome");
-		
-		List<Usuario> usuarios = usuarioService.listarUsuariosPorNome(nome);
-		
-		request.setAttribute("listaUsuarios", usuarios);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+
+			String nome = request.getParameter("nome");
+			
+			List<Usuario> usuarios = usuarioService.listarUsuariosPorNome(nome);
+			
+			request.setAttribute("listaUsuarios", usuarios);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/usuarios.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados dos usuários no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+
+		}
 		
 	}
 	
 	protected void buscarUsuarioPorId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("userId"));
-		
-		Usuario usuario = usuarioService.buscarUsuarioPorId(id);
-		
-		request.setAttribute("usuario", usuario);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+
+			int id = Integer.parseInt(request.getParameter("userId"));
+			
+			Usuario usuario = usuarioService.buscarUsuarioPorId(id);
+			
+			request.setAttribute("usuario", usuario);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados do usuário no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	
 	protected void buscarUsuarioPorEmail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String email = request.getParameter("email");
-		
-		Usuario usuario = usuarioService.buscarUsuarioPorEmail(email);
-		
-		request.setAttribute("usuario", usuario);
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+
+			String email = request.getParameter("email");
+			
+			Usuario usuario = usuarioService.buscarUsuarioPorEmail(email);
+			
+			request.setAttribute("usuario", usuario);
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/usuario/detalheUsuario.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar os dados do usuário no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 

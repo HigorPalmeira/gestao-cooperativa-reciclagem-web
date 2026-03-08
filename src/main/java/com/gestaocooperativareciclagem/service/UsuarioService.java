@@ -20,7 +20,7 @@ public class UsuarioService {
 		
 	}
 	
-	public void inserirUsuario(String nome, String email, String senha, String papel) {
+	public void inserirUsuario(String nome, String email, String senha, String papel) throws SQLException {
 		
 		Usuario usuario = new Usuario(nome, email, senha, papel);
 		
@@ -28,7 +28,7 @@ public class UsuarioService {
 		
 	}
 	
-	public void atualizarUsuario(int id, String nome, String email, String senha, String papel) {
+	public void atualizarUsuario(int id, String nome, String email, String senha, String papel) throws SQLException {
 		
 		Usuario usuarioOriginal = buscarUsuarioPorId(id);
 		
@@ -58,19 +58,19 @@ public class UsuarioService {
 		
 	}
 	
-	public void deletarUsuario(int id) {
+	public void deletarUsuario(int id) throws SQLException {
 		
 		usuarioDao.deletarUsuario(id);
 		
 	}
 	
-	public List<Usuario> listarUsuarios() {
+	public List<Usuario> listarUsuarios() throws SQLException {
 		
 		return usuarioDao.listarUsuarios();
 		
 	}
 	
-	public List<Usuario> listarUsuariosPorPapel(String papel) {
+	public List<Usuario> listarUsuariosPorPapel(String papel) throws SQLException {
 
 		if (papel == null || papel.isBlank()) {
 			throw new RuntimeException("Papel inválido! É necessário informar um 'Papel' para realizar a busca.");
@@ -80,7 +80,7 @@ public class UsuarioService {
 
 	}
 	
-	public List<Usuario> listarUsuariosPorNome(String nome) {
+	public List<Usuario> listarUsuariosPorNome(String nome) throws SQLException {
 		
 		if (nome == null || nome.isBlank()) {
 			throw new RuntimeException("Nome inválido! É necessário informar um 'Nome' para realizar a busca.");
@@ -90,7 +90,7 @@ public class UsuarioService {
 		
 	}
 	
-	public Usuario buscarUsuarioPorId(int id) {
+	public Usuario buscarUsuarioPorId(int id) throws SQLException {
 		
 		Usuario usuario = new Usuario();
 		usuario.setId(id);
@@ -101,7 +101,7 @@ public class UsuarioService {
 		
 	}
 	
-	public Usuario buscarUsuarioPorEmail(String email) {
+	public Usuario buscarUsuarioPorEmail(String email) throws SQLException {
 		
 		if (email == null || email.isBlank()) {
 			throw new RuntimeException("E-mail inválido! É necessário informar um 'E-mail' para realizar a busca.");
