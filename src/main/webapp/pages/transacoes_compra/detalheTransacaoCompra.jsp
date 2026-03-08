@@ -146,23 +146,6 @@
             </table>
         </section>
 
-        <!-- SEÇÃO 3: Tabela Preço de Compra -->
-        <h2>Referência: Preço de Compra do Material</h2>
-        <section class="card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Preço de Compra (R$/Kg)</th>
-                        <th>Data de Vigência</th>
-                        <th>Tipo de Material</th>
-                    </tr>
-                </thead>
-                <tbody id="priceTableBody">
-                    <!-- Preenchido via JS -->
-                </tbody>
-            </table>
-        </section>
-
         <!-- Rodapé: Excluir -->
         <div class="danger-zone">
         
