@@ -55,10 +55,15 @@ public class UsuarioDAO {
 				int id = rset.getInt("id_usuario");
 				String nome = rset.getString("nome_usuario");
 				String email = rset.getString("email_usuario");
-				String senha = rset.getString("senha_usuario");
 				String papel = rset.getString("papel");
 				
-				listaUsuarios.add(new Usuario(id, nome, email, senha, papel));
+				Usuario usuario = new Usuario();
+				usuario.setId(id);
+				usuario.setNome(nome);
+				usuario.setEmail(email);
+				usuario.setPapel(papel);
+				
+				listaUsuarios.add(usuario);
 				
 			}
 			
@@ -94,10 +99,15 @@ public class UsuarioDAO {
 				int id = rset.getInt("id_usuario");
 				String nome = rset.getString("nome_usuario");
 				String email = rset.getString("email_usuario");
-				String senha = rset.getString("senha_usuario");
 				String papel = rset.getString("papel");
 				
-				listaUsuarios.add(new Usuario(id, nome, email, senha, papel));
+				Usuario usuario = new Usuario();
+				usuario.setId(id);
+				usuario.setNome(nome);
+				usuario.setEmail(email);
+				usuario.setPapel(papel);
+				
+				listaUsuarios.add(usuario);
 				
 			}
 			
@@ -133,10 +143,15 @@ public class UsuarioDAO {
 				int id = rset.getInt("id_usuario");
 				String nome = rset.getString("nome_usuario");
 				String email = rset.getString("email_usuario");
-				String senha = rset.getString("senha_usuario");
 				String papel = rset.getString("papel");
 				
-				listaUsuarios.add(new Usuario(id, nome, email, senha, papel));
+				Usuario usuario = new Usuario();
+				usuario.setId(id);
+				usuario.setNome(nome);
+				usuario.setEmail(email);
+				usuario.setPapel(papel);
+				
+				listaUsuarios.add(usuario);
 				
 			}
 			
@@ -287,10 +302,15 @@ public class UsuarioDAO {
 					int id = rset.getInt("id_usuario");
 					String nome = rset.getString("nome_usuario");
 					String email = rset.getString("email_usuario");
-					String senha = rset.getString("senha_usuario");
 					String papel = rset.getString("papel");
 					
-					listaUsuarios.add(new Usuario(id, nome, email, senha, papel));
+					Usuario usuario = new Usuario();
+					usuario.setId(id);
+					usuario.setNome(nome);
+					usuario.setEmail(email);
+					usuario.setPapel(papel);
+					
+					listaUsuarios.add(usuario);
 					
 				}
 				
