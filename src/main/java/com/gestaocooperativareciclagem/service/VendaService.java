@@ -49,7 +49,7 @@ public class VendaService {
 		
 	}
 	
-	public void inserirVenda(Date dtVenda, String cnpjCliente, List<ItemVenda> listaItensVenda) {
+	public void inserirVenda(Date dtVenda, String cnpjCliente, List<ItemVenda> listaItensVenda) throws SQLException {
 		
 		if (dtVenda.after(Date.valueOf(LocalDate.now()))) {
 			throw new RuntimeException("Data da venda inválida! Não é possível cadastrar uma venda em uma data posterior à atual.");

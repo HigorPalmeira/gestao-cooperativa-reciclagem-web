@@ -144,14 +144,24 @@ public class ClienteController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String cnpj = request.getParameter("clientCnpj");
-		String nomeEmpresa = request.getParameter("clientName");
-		String contatoPrincipal = request.getParameter("clientContact");
-		String emailContato = request.getParameter("clientEmail");
+		try {
+
+			String cnpj = request.getParameter("clientCnpj");
+			String nomeEmpresa = request.getParameter("clientName");
+			String contatoPrincipal = request.getParameter("clientContact");
+			String emailContato = request.getParameter("clientEmail");
+			
+			clienteService.inserirCliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarClientes");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar inserir um novo cliente no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
-		clienteService.inserirCliente(cnpj, nomeEmpresa, contatoPrincipal, emailContato);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarClientes");
 		
 	}
 	
@@ -202,18 +212,29 @@ public class ClienteController extends HttpServlet {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar atualizar os dados do cliente!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 		
 	}
 	
 	protected void deletarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String cnpj = request.getParameter("cnpj");
-		
-		clienteService.deletarCliente(cnpj);
-		
-		response.sendRedirect(request.getContextPath() + "/ListarClientes");
+		try {
+
+			String cnpj = request.getParameter("cnpj");
+			
+			clienteService.deletarCliente(cnpj);
+			
+			response.sendRedirect(request.getContextPath() + "/ListarClientes");
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar deletar os dados do cliente no sistema!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+		}
 		
 	}
 	
@@ -246,18 +267,27 @@ public class ClienteController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		
-		String cnpj = request.getParameter("cnpj");
-		
-		Cliente cliente = clienteService.buscarClientePorCnpj(cnpj);
-		
-		List<Venda> listaVendas = vendaService.buscarVendaPorCliente(cnpj);
-		
-		request.setAttribute("cliente", cliente);
-		request.setAttribute("listaVendas", listaVendas);
-		
-		RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/detalheCliente.jsp");
-		
-		reqDis.forward(request, response);
+		try {
+			
+			String cnpj = request.getParameter("cnpj");
+			
+			Cliente cliente = clienteService.buscarClientePorCnpj(cnpj);
+			
+			List<Venda> listaVendas = vendaService.buscarVendaPorCliente(cnpj);
+			
+			request.setAttribute("cliente", cliente);
+			request.setAttribute("listaVendas", listaVendas);
+			
+			RequestDispatcher reqDis = request.getRequestDispatcher("pages/clientes/detalheCliente.jsp");
+			
+			reqDis.forward(request, response);
+			
+		} catch (Exception e) {
+			
+			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar buscar o cliente pelo CNPJ informado!<br>Erro: " + e.getMessage());
+			response.sendRedirect(request.getHeader("referer"));
+			
+		}
 		
 	}
 	

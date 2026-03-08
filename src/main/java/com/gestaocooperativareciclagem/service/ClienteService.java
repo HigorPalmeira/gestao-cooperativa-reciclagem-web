@@ -22,7 +22,7 @@ public class ClienteService {
 		
 	}
 	
-	public void inserirCliente(String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) {
+	public void inserirCliente(String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) throws SQLException {
 		
 		Cliente cliente = new Cliente(Formatador.clearDoc(cnpj), nomeEmpresa, Formatador.clearFone(contatoPrincipal), emailContato);
 		
@@ -30,7 +30,7 @@ public class ClienteService {
 		
 	}
 	
-	public void atualizarCliente(String cnpjOriginal, String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) {
+	public void atualizarCliente(String cnpjOriginal, String cnpj, String nomeEmpresa, String contatoPrincipal, String emailContato) throws SQLException {
 		
 		Cliente clienteOriginal = buscarClientePorCnpj(cnpjOriginal);
 		
@@ -56,7 +56,7 @@ public class ClienteService {
 		
 	}
 	
-	public void deletarCliente(String cnpj) {
+	public void deletarCliente(String cnpj) throws SQLException {
 		
 		if (cnpj == null || cnpj.isBlank()) {
 			throw new RuntimeException("CNPJ inválido! É necessário informar um 'CNPJ' para realizar a remoção.");
@@ -66,13 +66,13 @@ public class ClienteService {
 		
 	}
 
-	public List<Cliente> listarClientes() {
+	public List<Cliente> listarClientes() throws SQLException {
 		
 		return clienteDao.listarClientes();
 		
 	}
 	
-	public List<Cliente> listarClientesPorNomeEmpresa(String nomeEmpresa) {
+	public List<Cliente> listarClientesPorNomeEmpresa(String nomeEmpresa) throws SQLException {
 		
 		if (nomeEmpresa == null || nomeEmpresa.isBlank()) {
 			throw new RuntimeException("Nome da empresa inválido! É necessário informar um 'Nome da empresa' para realizar a busca.");
@@ -82,7 +82,7 @@ public class ClienteService {
 		
 	}
 	
-	public Cliente buscarClientePorCnpj(String cnpj) {
+	public Cliente buscarClientePorCnpj(String cnpj) throws SQLException {
 		
 		if (cnpj == null || cnpj.isBlank()) {
 			throw new RuntimeException("CNPJ inválido! É necessário informar um 'CNPJ' para realizar a busca.");
@@ -97,7 +97,7 @@ public class ClienteService {
 		
 	}
 	
-	public Cliente buscarClientePorEmailContato(String emailContato) {
+	public Cliente buscarClientePorEmailContato(String emailContato) throws SQLException {
 		
 		if (emailContato == null || emailContato.isBlank()) {
 			throw new RuntimeException("E-mail de contato inválido! É necessário informar um 'E-mail de contato' para realizar a busca.");
@@ -112,7 +112,7 @@ public class ClienteService {
 		
 	}
 	
-	public Cliente buscarClientePorContatoPrincipal(String contatoPrincipal) {
+	public Cliente buscarClientePorContatoPrincipal(String contatoPrincipal) throws SQLException {
 		
 		if (contatoPrincipal == null || contatoPrincipal.isBlank()) {
 			throw new RuntimeException("Contato Principal inválido! É necessário informar um 'Contato Principal' para realizar a busca.");
