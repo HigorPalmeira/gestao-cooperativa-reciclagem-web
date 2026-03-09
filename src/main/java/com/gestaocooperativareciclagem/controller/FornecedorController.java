@@ -422,7 +422,7 @@ public class FornecedorController extends HttpServlet {
 	protected void verificarFornecedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String documento = request.getParameter("supplierDoc");
-		String origem = request.getParameter("origem");
+		// String origem = request.getParameter("origem");
 
 		try {
 
@@ -430,16 +430,13 @@ public class FornecedorController extends HttpServlet {
 
 			request.getSession().setAttribute("fornecedorEncontrado", fornecedor);
 
+			response.sendRedirect(request.getHeader("referer"));
+			
 		} catch (Exception e) {
 
 			request.getSession().setAttribute("msgErro", "Fornecedor não encontrado!");
-
-		}
-
-		if (origem == null || origem.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
-		} else {
-			response.sendRedirect(request.getContextPath() + origem);
+			response.sendRedirect(request.getHeader("referer"));
+			
 		}
 
 	}

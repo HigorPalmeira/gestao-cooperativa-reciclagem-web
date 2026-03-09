@@ -173,7 +173,7 @@
         </section>
 
         <!-- SEÇÃO 4: Excluir (Rodapé) -->
-        <div class="danger-zone">
+        <div class="danger-zone" style="display: none;">
         
         	<form action="${pageContext.request.contextPath}/DeletarLoteProcessado" method="POST" onsubmit="return confirmDelete()">
         	

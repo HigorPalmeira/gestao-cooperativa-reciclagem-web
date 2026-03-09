@@ -22,11 +22,12 @@
 
     <main class="container">
         
-        <c:if test="${not empty msgErro}">
-        	<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
-        		<strong>Erro:</strong> ${msgErro}
-        	</div>
-        </c:if>
+        <c:if test="${not empty sessionScope.msgErro}">
+    		<div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #f5c6cb;">
+    			<strong>Erro:</strong> ${sessionScope.msgErro}
+    		</div>
+    		<% session.removeAttribute("msgErro"); %>
+    	</c:if>
         
         <c:if test="${not empty sessionScope.msgSucesso}">
         	<div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #c3e6cb;">
