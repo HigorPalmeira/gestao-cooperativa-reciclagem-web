@@ -27,6 +27,7 @@
             <a href="${pageContext.request.contextPath}/Producao">Produção</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
+            <a href="${pageContext.request.contextPath}/RelatorioLoteProcessado" target="_blank">Relatório</a>
         </div>
     </nav>
 

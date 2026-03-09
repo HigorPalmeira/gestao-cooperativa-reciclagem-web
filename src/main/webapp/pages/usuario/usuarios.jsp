@@ -21,7 +21,7 @@
         <div style="font-weight: bold; font-size: 1.2rem;">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
-            <a href="#">Relatórios</a>
+            <a href="${pageContext.request.contextPath}/RelatorioUsuario" target="_blank">Relatório</a>
         </div>
     </nav>
 

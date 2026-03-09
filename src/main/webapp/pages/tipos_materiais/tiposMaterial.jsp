@@ -23,6 +23,7 @@
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarPrecosMateriais">Preços de Materiais</a>
+            <a href="${pageContext.request.contextPath}/RelatorioTipoMaterial" target="_blank">Relatório</a>
         </div>
     </nav>
 

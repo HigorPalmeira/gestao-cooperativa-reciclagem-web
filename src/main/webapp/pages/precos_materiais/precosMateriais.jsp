@@ -27,6 +27,7 @@
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarTiposMateriais">Tipos de Materiais</a>
+            <a href="${pageContext.request.contextPath}/RelatorioPrecoMaterial" target="_blank">Relatório</a>
         </div>
     </nav>
 

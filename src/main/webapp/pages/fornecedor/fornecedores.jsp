@@ -24,6 +24,7 @@
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarTransacoesCompra">Transações de Compra</a>
+            <a href="${pageContext.request.contextPath}/RelatorioFornecedor" target="_blank">Relatório</a>
         </div>
     </nav>
 

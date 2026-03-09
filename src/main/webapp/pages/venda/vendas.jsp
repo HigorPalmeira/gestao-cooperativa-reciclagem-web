@@ -22,7 +22,7 @@
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarClientes">Clientes</a>
-            <a href="#">Relatórios</a>
+            <a href="${pageContext.request.contextPath}/RelatorioVenda" target="_blank">Relatório</a>
         </div>
     </nav>
 

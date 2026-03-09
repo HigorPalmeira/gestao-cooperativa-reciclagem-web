@@ -20,7 +20,7 @@
             <a href="${pageContext.request.contextPath}/Home">Início</a>
             <a href="${pageContext.request.contextPath}/ListarLotesBruto">Lotes Brutos</a>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
-            <a href="#" onclick="alert('Navegar para Relatórios de Operação')">Meus Relatórios</a>
+            <a href="${pageContext.request.contextPath}/RelatorioProducao" target="_blank">Relatório</a>
         </div>
     </nav>
 

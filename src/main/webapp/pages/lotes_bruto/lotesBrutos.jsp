@@ -26,6 +26,7 @@
             <a href="${pageContext.request.contextPath}/ListarFornecedores">Fornecedores</a>
             <a href="${pageContext.request.contextPath}/ListarLotesProcessados">Lotes Processados</a>
             <a href="${pageContext.request.contextPath}/Producao">Produção</a>
+            <a href="${pageContext.request.contextPath}/RelatorioLoteBruto" target="_blank">Relatório</a>
         </div>
     </nav>
 

@@ -23,7 +23,7 @@
         <div>
             <!-- Links com alertas para simulação -->
             <a href="${pageContext.request.contextPath}/Home">Início</a>
-            <a href="#" onclick="alert('Navegar para Relatórios')">Relatórios Financeiros</a>
+            <a href="${pageContext.request.contextPath}/RelatorioTransacaoCompra" target="_blank">Relatório</a>
         </div>
     </nav>
 
