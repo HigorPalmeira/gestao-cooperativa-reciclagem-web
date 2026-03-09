@@ -160,7 +160,7 @@ public class HomeController extends HttpServlet {
 
 			Long totalPagamentosPendentes = transacaoCompraService.contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
 			BigDecimal valorTotalPagamentosPendentes = transacaoCompraService.somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
-			BigDecimal lotesProcessadosKgProntos = loteProcessadoService.somarPesoTotalLoteProcessadoPorEtapaProcessamento("Pronto para Venda");
+			BigDecimal lotesProcessadosKgProntos = loteProcessadoService.somarPesoTotalLoteProcessadoPorEtapaProcessamento("Finalizado");
 
 			request.setAttribute("lotesBrutosRecebidosHoje", lotesBrutosRecebidosHoje);
 			request.setAttribute("lotesBrutosKgRecebidosHoje", lotesBrutosKgRecebidosHoje);
