@@ -125,11 +125,12 @@
                     <label for="newWeight">Novo Peso Atual (Kg) *</label>
                     <input type="number" id="newWeight" step="0.01" required placeholder="Peso após perdas/resíduos">
                 </div>
+                <!--
                 <div class="form-group">
                     <label for="operatorNotes">Observações do Operador</label>
                     <textarea id="operatorNotes" rows="3" placeholder="Houve quebra? Excesso de sujidade?"></textarea>
                 </div>
-                
+                -->
                 <div class="modal-footer">
                     <button type="button" class="btn-delete" onclick="cancelTransition()">Cancelar Movimento</button>
                     <button type="submit" class="btn-save">Salvar Etapa</button>
@@ -363,7 +364,6 @@
      document.getElementById('transLoteId').textContent = pendingTransition.loteId;
      document.getElementById('transTargetStage').textContent = categorias.find(cat => cat.id === parseInt(pendingTransition.idCategoriaDestino, 10)).nome;
      document.getElementById('newWeight').value = pendingTransition.pesoAtual;
-     document.getElementById('operatorNotes').value = 'RETIRAR ISSO';
      document.getElementById('transitionModal').style.display = 'flex';
 
  }
