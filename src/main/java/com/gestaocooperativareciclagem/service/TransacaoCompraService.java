@@ -59,7 +59,7 @@ public class TransacaoCompraService {
 				: transacaoCompraOriginal.getStatus()
 				);
 
-		transacaoCompraAtualizada.setDtCalculo(transacaoCompraAtualizada.getDtCalculo());
+		transacaoCompraAtualizada.setDtCalculo(transacaoCompraOriginal.getDtCalculo());
 		if ( dtCalculo != null && !(dtCalculo.after(Date.valueOf(LocalDate.now()))) ) {
 			transacaoCompraAtualizada.setDtCalculo(dtCalculo);
 		}

@@ -106,7 +106,7 @@ public class TransacaoCompraController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		String path = request.getContextPath();
+		String path = request.getServletPath();
 
 		try {
 

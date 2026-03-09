@@ -192,7 +192,7 @@
             const currentStatus = statusSelect.value;
             
             // Regra: Se status for 'Pago', bloqueia tudo.
-            if (currentStatus === 'Pago') {
+            if (currentStatus === 'PAGO') {
                 statusSelect.disabled = true;
                 btnSave.disabled = true;
                 btnDelete.disabled = true;
@@ -212,7 +212,7 @@
 
         // Monitora mudança no select antes de salvar
         function handleStatusChange() {
-            if (statusSelect.value === 'Pago') {
+            if (statusSelect.value === 'PAGO') {
                 alert("Atenção: Ao definir como 'Pago' e salvar, este registo será fechado para futuras edições.");
             }
         }

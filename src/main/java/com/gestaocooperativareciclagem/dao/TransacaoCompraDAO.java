@@ -272,7 +272,7 @@ public class TransacaoCompraDAO {
 
 	public void atualizarTransacaoCompra(TransacaoCompra transacaoCompra) throws SQLException {
 
-		String update = "update transacao_compra set valor_total_calculado = ?, status_pagamento_transacaocompra = ?, "
+		String update = "update transacao_compra set valor_total_calculado_transacaocompra = ?, status_pagamento_transacaocompra = ?, "
 				+ "dtCalculo_transacaocompra = ?, dtPagamento_transacaocompra = ?, "
 				+ "lote_bruto = ? where id_transacaocompra = ?";
 
