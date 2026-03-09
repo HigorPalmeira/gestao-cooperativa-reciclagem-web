@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.gestaocooperativareciclagem.dao.LoteBrutoDAO;
 import com.gestaocooperativareciclagem.model.Fornecedor;
@@ -126,6 +127,12 @@ public class LoteBrutoService {
 
 		return loteBrutoDao.somarPesoEntradaLoteBrutoPorDatas(dtInicio, dtFim);
 
+	}
+	
+	public Map<LocalDate, BigDecimal> buscarEntradasUltimos7Dias() throws SQLException {
+		
+		return loteBrutoDao.buscarEntradasUltimos7Dias();
+		
 	}
 
 }

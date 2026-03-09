@@ -282,8 +282,8 @@
                     <td>R$ \${item.precoUnitarioKg.toFixed(2)}</td>
                     <td><strong>R$ \${item.total.toFixed(2)}</strong></td>
                     <td class="actions-col">
-                        <button class="btn-edit" onclick="editItem(\${item.idJs})">Editar</button>
-                        <button class="btn-remove" onclick="removeItem(\${item.idJs})">Remover</button>
+                        <button class="action-btn text-edit" onclick="editItem(\${item.idJs})">Editar</button>
+                        <button class="action-btn text-remove" onclick="removeItem(\${item.idJs})">Remover</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);

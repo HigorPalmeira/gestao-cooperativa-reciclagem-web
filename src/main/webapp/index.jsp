@@ -138,18 +138,18 @@
             
             // Dados simulados para o gráfico
             const chartData = {
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                labels: [${chartLabels}],
                 datasets: [
                     {
                         label: 'Entrada (Kg)',
-                        data: [500, 750, 400, 900, 600, 200, 100],
+                        data: [${chartEntradas}],
                         backgroundColor: 'rgba(0, 86, 179, 0.6)', // Azul
                         borderColor: 'rgba(0, 86, 179, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Saída/Venda (Kg)',
-                        data: [300, 400, 450, 200, 800, 150, 0],
+                        data: [${chartSaidas}],
                         backgroundColor: 'rgba(40, 167, 69, 0.6)', // Verde
                         borderColor: 'rgba(40, 167, 69, 1)',
                         borderWidth: 1

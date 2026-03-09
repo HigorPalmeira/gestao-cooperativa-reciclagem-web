@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.gestaocooperativareciclagem.dao.ItemVendaDAO;
 import com.gestaocooperativareciclagem.dao.VendaDAO;
@@ -278,6 +279,12 @@ public class VendaService {
 
 		return itemVendaDao.somarPesoVendidoItemVendaPorDatas(dtInicio, dtFim);
 
+	}
+	
+	public Map<LocalDate, BigDecimal> buscarSaidasUltimos7Dias() throws SQLException {
+		
+		return vendaDao.buscarSaidasUltimos7Dias();
+		
 	}
 
 }

@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gestaocooperativareciclagem.model.Cliente;
 import com.gestaocooperativareciclagem.model.Venda;
@@ -40,6 +43,39 @@ public class VendaDAO {
 
 		return valorTotal;
 
+	}
+	
+	public Map<LocalDate, BigDecimal> buscarSaidasUltimos7Dias() throws SQLException {
+		
+		Map<LocalDate, BigDecimal> saidas = new HashMap<>();
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("select date(v.dtVenda_venda) as data, coalesce(sum(iv.peso_vendido_kg_itemvenda), 0) as total ")
+			.append("from venda as v ")
+			.append("left join item_venda as iv ")
+			.append("on v.id_venda = iv.venda ")
+			.append("where v.dtVenda_venda >= date_sub(curdate(), interval 6 day)")
+			.append("group by date(v.dtVenda_venda)");
+		
+		String select = builder.toString();
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);
+				ResultSet rset = pst.executeQuery();) {
+			
+			while(rset.next()) {
+				
+				LocalDate data = rset.getDate("data").toLocalDate();
+				BigDecimal total = rset.getBigDecimal("total");
+				
+				saidas.put(data, total);
+				
+			}
+			
+		}
+		
+		return saidas;
+		
 	}
 
 	public void inserirVenda(Venda venda) throws SQLException {

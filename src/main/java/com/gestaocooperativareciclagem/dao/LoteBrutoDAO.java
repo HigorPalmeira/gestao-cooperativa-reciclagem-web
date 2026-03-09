@@ -6,8 +6,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gestaocooperativareciclagem.model.Fornecedor;
 import com.gestaocooperativareciclagem.model.LoteBruto;
@@ -66,6 +69,37 @@ public class LoteBrutoDAO {
 
 		return pesoTotal;
 
+	}
+	
+	public Map<LocalDate, BigDecimal> buscarEntradasUltimos7Dias() throws SQLException {
+		
+		Map<LocalDate, BigDecimal> entradas = new HashMap<>();
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("select date(dtEntrada_lotebruto) as data, sum(peso_entrada_kg_lotebruto) as total ")
+			.append("from lote_bruto ")
+			.append("where dtEntrada_lotebruto >= date_sub(curdate(), interval 6 day)")
+			.append("group by date(dtEntrada_lotebruto)");
+		
+		String select = builder.toString();
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(select);
+				ResultSet rset = pst.executeQuery();) {
+			
+			while(rset.next()) {
+				
+				LocalDate data = rset.getDate("data").toLocalDate();
+				BigDecimal total = rset.getBigDecimal("total");
+				
+				entradas.put(data, total);
+				
+			}
+			
+		}
+		
+		return entradas;
+		
 	}
 
 	public void inserirLoteBruto(LoteBruto loteBruto) throws SQLException {

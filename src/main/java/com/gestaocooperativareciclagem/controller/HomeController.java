@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -169,6 +174,33 @@ public class HomeController extends HttpServlet {
 
 			request.setAttribute("lotesProcessadosKgProntos", lotesProcessadosKgProntos);
 
+			
+			Map<LocalDate, BigDecimal> mapEntradas = loteBrutoService.buscarEntradasUltimos7Dias();
+			Map<LocalDate, BigDecimal> mapSaidas = vendaService.buscarSaidasUltimos7Dias();
+			
+			List<String> labels = new ArrayList<>();
+			List<String> dadosEntrada = new ArrayList<>();
+			List<String> dadosSaida = new ArrayList<>();
+			
+			DateTimeFormatter formatadorDia = DateTimeFormatter.ofPattern("EEE", new Locale("pt", "BR"));
+			
+			for (int i=6; i>=0; i--) {
+				
+				LocalDate data = hoje.minusDays(i);
+				
+				String diaSemana = data.format(formatadorDia);
+				diaSemana = diaSemana.substring(0, 1).toUpperCase() + diaSemana.substring(1);
+				labels.add("'" + diaSemana + "'");
+				
+				dadosEntrada.add( String.format("%.2f", mapEntradas.getOrDefault(data, BigDecimal.ZERO).doubleValue()).replace(",", ".") );
+				dadosSaida.add( String.format("%.2f", mapSaidas.getOrDefault(data, BigDecimal.ZERO).doubleValue()).replace(",", ".") );
+				
+			}
+			
+			request.setAttribute("chartLabels", String.join(", ", labels));
+			request.setAttribute("chartEntradads", String.join(", ", dadosEntrada));
+			request.setAttribute("chartSaidas", String.join(", ", dadosSaida));
+			
 			RequestDispatcher reqDis = request.getRequestDispatcher("index.jsp");
 			reqDis.forward(request, response);
 
