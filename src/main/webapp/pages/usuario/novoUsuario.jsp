@@ -13,7 +13,7 @@
 <body>
 
     <nav class="main-nav">
-        <div class="brand">ERP Reciclagem/div>
+        <div class="brand">ERP Reciclagem</div>
         <div>&rsaquo; Novo Usuário</div>
     </nav>
 
