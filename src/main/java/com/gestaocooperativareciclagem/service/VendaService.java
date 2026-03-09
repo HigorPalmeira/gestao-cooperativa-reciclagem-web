@@ -27,6 +27,18 @@ public class VendaService {
 		this.itemVendaDao = itemVendaDao;
 		this.clienteService = clienteService;
 	}
+	
+	public BigDecimal somarValorTotalVendasMesAtual() throws SQLException {
+		
+		return vendaDao.somarValorTotalVendasMesAtual();
+		
+	}
+	
+	public BigDecimal somarValorTotalVendasMesAnterior() throws SQLException {
+		
+		return vendaDao.somarValorTotalVendasMesAnterior();
+		
+	}
 
 	public List<Venda> listarVendasComParametro(Integer idVenda, Date dtInicial, Date dtFinal, BigDecimal valorMin,
 			BigDecimal valorMax, String cnpjCliente) throws SQLException {

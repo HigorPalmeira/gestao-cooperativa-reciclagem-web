@@ -75,15 +75,15 @@
             <!-- KPI 2 -->
             <div class="kpi-card kpi-green" onclick="window.location.href='ListarVendas'">
                 <div class="kpi-title">Vendas do Mês (R$)</div>
-                <div class="kpi-value">${String.format("R$ %.2f", totalVendasMes.doubleValue())}</div>
-                <div class="kpi-desc">+15% vs mês anterior</div>
+                <div class="kpi-value">${String.format("R$ %,.2f", totalVendasMes.doubleValue())}</div>
+                <div class="kpi-desc">${variacaoVendaMes}</div>
             </div>
 
             <!-- KPI 3 -->
             <div class="kpi-card kpi-yellow" onclick="window.location.href='ListarTransacoesCompra'">
                 <div class="kpi-title">Pagamentos Pendentes</div>
                 <div class="kpi-value">${totalPagamentosPendentes}</div>
-                <div class="kpi-desc">Valor Total: ${String.format("R$ %.2f", valorTotalPagamentosPendentes.doubleValue())}</div>
+                <div class="kpi-desc">Valor Total: ${String.format("R$ %,.2f", valorTotalPagamentosPendentes.doubleValue())}</div>
             </div>
 
             <!-- KPI 4 -->
@@ -120,10 +120,16 @@
                 </div>
                 
                 <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                    
                     <p style="font-size: 0.85rem; color: #666;">
                         <strong>Status do Sistema:</strong> <span style="color: var(--success-color)">Online</span><br>
-                        <strong>Última atualização:</strong> Hoje, 14:30
+                        <strong>Última atualização:</strong> ${ultimaAtualizacao}
                     </p>
+                    
+                    <a href="${pageContext.request.contextPath}/Home" style="font-size: 0.85rem; color: var(--primary-color); text-decoration: none; font-weight: bold; cursor: pointer;">
+                    	&#8635; Atualizar Painel
+                    </a>
+                    
                 </div>
             </div>
 

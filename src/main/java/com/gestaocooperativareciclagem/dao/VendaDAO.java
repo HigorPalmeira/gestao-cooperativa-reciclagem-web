@@ -18,6 +18,46 @@ import com.gestaocooperativareciclagem.model.Venda;
 import com.gestaocooperativareciclagem.utils.Conexao;
 
 public class VendaDAO {
+	
+	public BigDecimal somarValorTotalVendasMesAtual() throws SQLException {
+		
+		String sum = "select coalesce(sum(valor_total_venda), 0) from venda where month(dtVenda_venda) = month(curdate()) and year(dtVenda_venda) = year(curdate())";
+		
+		BigDecimal valorTotal = BigDecimal.ZERO;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);
+				ResultSet rset = pst.executeQuery()) {
+			
+			if(rset.next()) {
+				valorTotal = rset.getBigDecimal(1);
+			}
+			
+		}
+		
+		return valorTotal;
+		
+	}
+	
+	public BigDecimal somarValorTotalVendasMesAnterior() throws SQLException {
+		
+		String sum = "select coalesce(sum(valor_total_venda), 0) from venda where month(dtVenda_venda) = month(date_sub(curdate(), interval 1 month)) and year(dtVenda_venda) = year(date_sub(curdate(), interval 1 month))";
+		
+		BigDecimal valorTotal = BigDecimal.ZERO;
+		
+		try (Connection conexao = Conexao.getConnection();
+				PreparedStatement pst = conexao.prepareStatement(sum);
+				ResultSet rset = pst.executeQuery()) {
+			
+			if(rset.next()) {
+				valorTotal = rset.getBigDecimal(1);
+			}
+			
+		}
+		
+		return valorTotal;
+		
+	}
 
 	public BigDecimal somarValorTotalVendasPorDatas(Date dtInicio, Date dtFim) throws SQLException {
 

@@ -2,10 +2,11 @@ package com.gestaocooperativareciclagem.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -151,14 +152,11 @@ public class HomeController extends HttpServlet {
 		try {
 
 			LocalDate hoje = LocalDate.now();
-			LocalDate inicioMes = hoje.with(TemporalAdjusters.firstDayOfMonth());
-			LocalDate fimMes = hoje.with(TemporalAdjusters.lastDayOfMonth());
-
+			
 			Date dtHoje = Date.valueOf(hoje);
 
 			Long lotesBrutosRecebidosHoje = loteBrutoService.contarLoteBrutoPorData(dtHoje);
 			BigDecimal lotesBrutosKgRecebidosHoje = loteBrutoService.somarPesoEntradaLoteBrutoPorDatas(dtHoje, dtHoje);
-			BigDecimal totalVendasNoMes = vendaService.somarValorTotalVendasPorDatas(Date.valueOf(inicioMes), Date.valueOf(fimMes));
 
 			Long totalPagamentosPendentes = transacaoCompraService.contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
 			BigDecimal valorTotalPagamentosPendentes = transacaoCompraService.somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
@@ -167,14 +165,38 @@ public class HomeController extends HttpServlet {
 			request.setAttribute("lotesBrutosRecebidosHoje", lotesBrutosRecebidosHoje);
 			request.setAttribute("lotesBrutosKgRecebidosHoje", lotesBrutosKgRecebidosHoje);
 
-			request.setAttribute("totalVendasMes", totalVendasNoMes);
-
 			request.setAttribute("totalPagamentosPendentes", totalPagamentosPendentes);
 			request.setAttribute("valorTotalPagamentosPendentes", valorTotalPagamentosPendentes);
 
 			request.setAttribute("lotesProcessadosKgProntos", lotesProcessadosKgProntos);
 
+			BigDecimal totalVendasMesAtual = vendaService.somarValorTotalVendasMesAtual();
+			BigDecimal totalVendasMesAnterior = vendaService.somarValorTotalVendasMesAnterior();
 			
+			String textoVariacao = "0% vs mês anterior";
+			
+			if (totalVendasMesAnterior.compareTo(BigDecimal.ZERO) > 0) {
+				
+				BigDecimal diferenca = totalVendasMesAtual.subtract(totalVendasMesAnterior);
+				
+				BigDecimal divisao = diferenca.divide(totalVendasMesAnterior, 4, RoundingMode.HALF_UP);
+				
+				BigDecimal porcentagem = divisao.multiply(new BigDecimal("100"));
+				
+				if (porcentagem.compareTo(BigDecimal.ZERO) > 0) {
+					textoVariacao = String.format("+%.1f%% vs mês anterior", porcentagem.doubleValue());
+				} else {
+					textoVariacao = String.format("%.1f%% vs mês anterior", porcentagem.doubleValue());
+				}
+				
+			} else if (totalVendasMesAtual.compareTo(BigDecimal.ZERO) > 0) {
+				textoVariacao = "+100% vs mês anterior";
+			}
+			
+			request.setAttribute("totalVendasMes", totalVendasMesAtual);
+			request.setAttribute("variacaoVendaMes", textoVariacao);
+			
+			// para o gráfico
 			Map<LocalDate, BigDecimal> mapEntradas = loteBrutoService.buscarEntradasUltimos7Dias();
 			Map<LocalDate, BigDecimal> mapSaidas = vendaService.buscarSaidasUltimos7Dias();
 			
@@ -201,11 +223,17 @@ public class HomeController extends HttpServlet {
 			request.setAttribute("chartEntradads", String.join(", ", dadosEntrada));
 			request.setAttribute("chartSaidas", String.join(", ", dadosSaida));
 			
+			LocalDateTime agora = LocalDateTime.now();
+			DateTimeFormatter formatadorHora = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
+			
+			request.setAttribute("ultimaAtualizacao", agora.format(formatadorHora));
+			
 			RequestDispatcher reqDis = request.getRequestDispatcher("index.jsp");
 			reqDis.forward(request, response);
 
 		} catch (Exception e) {
 
+			e.printStackTrace();
 			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar ir para a página inicial!<br>Erro: " + e.getMessage());
 			response.sendRedirect(request.getHeader("referer"));
 
