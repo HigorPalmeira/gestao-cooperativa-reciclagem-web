@@ -6,23 +6,19 @@ public class Validador {
 
 	private static final String EMAIL_REGEX_PATTERN = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 	private static final String TELEFONE_REGEX_PATTERN = "(\\(?\\d{2}\\)?\\s?)?(\\d{4,5}\\-?\\d{4})";
-	
+
 	public static boolean isCpf(String cpf) {
 
-		if (cpf == null)
+		if ((cpf == null) || cpf.isBlank() || (cpf.length() != 11)) {
 			return false;
-
-		if (cpf.isBlank())
-			return false;
-
-		if (cpf.length() != 11)
-			return false;
+		}
 
 		if (cpf.equals("00000000000") || cpf.equals("11111111111") || cpf.equals("22222222222")
 				|| cpf.equals("33333333333") || cpf.equals("44444444444") || cpf.equals("55555555555")
 				|| cpf.equals("66666666666") || cpf.equals("77777777777") || cpf.equals("88888888888")
-				|| cpf.equals("99999999999"))
+				|| cpf.equals("99999999999")) {
 			return false;
+		}
 
 		char dv1, dv2;
 		int soma, resto, num, peso;
@@ -34,7 +30,7 @@ public class Validador {
 			// primeiro digito verificador
 			for (int i = 0; i < 9; i++) {
 
-				num = (int) (cpf.charAt(i) - 48);
+				num = cpf.charAt(i) - 48;
 				soma += (num * peso--);
 
 			}
@@ -52,7 +48,7 @@ public class Validador {
 
 			for (int i = 0; i < 10; i++) {
 
-				num = (int) (cpf.charAt(i) - 48);
+				num = cpf.charAt(i) - 48;
 				soma += (num * peso--);
 
 			}
@@ -81,20 +77,16 @@ public class Validador {
 
 	public static boolean isCnpj(String cnpj) {
 
-		if (cnpj == null)
+		if ((cnpj == null) || cnpj.isBlank() || (cnpj.length() != 14)) {
 			return false;
-
-		if (cnpj.isBlank())
-			return false;
-
-		if (cnpj.length() != 14)
-			return false;
+		}
 
 		if (cnpj.equals("00000000000000") || cnpj.equals("11111111111111") || cnpj.equals("22222222222222")
 				|| cnpj.equals("33333333333333") || cnpj.equals("44444444444444") || cnpj.equals("55555555555555")
 				|| cnpj.equals("66666666666666") || cnpj.equals("77777777777777") || cnpj.equals("88888888888888")
-				|| cnpj.equals("99999999999999"))
+				|| cnpj.equals("99999999999999")) {
 			return false;
+		}
 
 		char dv1, dv2;
 		int soma, resto, num, peso;
@@ -107,7 +99,7 @@ public class Validador {
 
 			for (int i = 11; i >= 0; i--) {
 
-				num = (int) (cnpj.charAt(i) - 48);
+				num = cnpj.charAt(i) - 48;
 				soma += (num * peso++);
 				if (peso == 10) {
 					peso = 2;
@@ -128,7 +120,7 @@ public class Validador {
 
 			for (int i = 12; i >= 0; i--) {
 
-				num = (int) (cnpj.charAt(i) - 48);
+				num = cnpj.charAt(i) - 48;
 				soma += (num * peso++);
 				if (peso == 10) {
 					peso = 2;
@@ -160,8 +152,9 @@ public class Validador {
 
 	public static boolean isEmail(String email) {
 
-		if (email == null)
+		if (email == null) {
 			return false;
+		}
 
 		return Pattern.compile(EMAIL_REGEX_PATTERN).matcher(email).matches();
 
@@ -169,8 +162,9 @@ public class Validador {
 
 	public static boolean isTelefone(String telefone) {
 
-		if (telefone == null)
+		if (telefone == null) {
 			return false;
+		}
 
 		return Pattern.compile(TELEFONE_REGEX_PATTERN).matcher(telefone).matches();
 

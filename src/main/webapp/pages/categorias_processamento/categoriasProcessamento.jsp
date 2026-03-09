@@ -22,6 +22,7 @@
         <div class="brand">ERP Reciclagem</div>
         <div>
             <a href="${pageContext.request.contextPath}/Home">Início</a>
+            <a href="${pageContext.request.contextPath}/RelatorioCategoriaProcessamento" class="btn-submit" target="_blank">Relatório</a>
         </div>
     </nav>
 

@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 public class PrecoMaterial {
-	
+
 	private int id;
 	private BigDecimal precoCompra;
 	private Date dtVigencia;
 	private TipoMaterial tipoMaterial;
-	
+
 	public PrecoMaterial() {}
-	
+
 	public PrecoMaterial(int id, BigDecimal precoCompra, Date dtVigencia, TipoMaterial tipoMaterial) {
 		this.id = id;
 		this.precoCompra = precoCompra;

@@ -45,12 +45,12 @@ import com.gestaocooperativareciclagem.service.VendaService;
 		)
 public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	private LoteBrutoService loteBrutoService;
 	private VendaService vendaService;
 	private LoteProcessadoService loteProcessadoService;
 	private TransacaoCompraService transacaoCompraService;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -62,40 +62,42 @@ public class HomeController extends HttpServlet {
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
+	@Override
 	public void init(ServletConfig config) throws ServletException {
-		
+
 		try {
-			
+
 			loteBrutoService = new LoteBrutoService(new LoteBrutoDAO());
 			vendaService = new VendaService(new VendaDAO(), new ItemVendaDAO(), new ClienteService(new ClienteDAO()));
 			transacaoCompraService = new TransacaoCompraService(new TransacaoCompraDAO());
-			loteProcessadoService = new LoteProcessadoService(new LoteProcessadoDAO(), 
-					transacaoCompraService, 
+			loteProcessadoService = new LoteProcessadoService(new LoteProcessadoDAO(),
+					transacaoCompraService,
 					new PrecoMaterialService(new PrecoMaterialDAO(), new TipoMaterialService(new TipoMaterialDAO())),
 					new EtapaProcessamentoService(new EtapaProcessamentoDAO()),
 					loteBrutoService);
-			
+
 		} catch (Exception e) {
 			throw new ServletException("Erro ao inicializar LoteBrutoService e/ou VendaService e/ou TransacaoCompraService e/ou LoteProcessadoService", e);
 		}
-		
+
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String path = request.getServletPath();
-		
+
 		try {
-			
+
 			switch(path) {
 				case "/Home":
 					filtro(request, response);
 					break;
 			}
-			
+
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
@@ -105,77 +107,78 @@ public class HomeController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
+
 	protected void filtro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		request.setCharacterEncoding("UTF-8");
-		
+
 		try {
-			
+
 			Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
-			
+
 			if (usuario.getPapel().equalsIgnoreCase("operador")) {
-				
+
 				response.sendRedirect(request.getContextPath() + "/Producao");
-				
+
 			} else if (Arrays.asList("administrador", "gerente").contains(usuario.getPapel().toLowerCase())) {
-				
+
 				pageIndexDashboard(request, response);
-				
+
 			} else {
-				
+
 				throw new RuntimeException("O papel do usuário (" + usuario.getPapel() +") não reconhecido pelo sistema!");
-				
+
 			}
-			
+
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
-		
+
 	}
-	
+
 	protected void pageIndexDashboard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		try {
-			
+
 			LocalDate hoje = LocalDate.now();
 			LocalDate inicioMes = hoje.with(TemporalAdjusters.firstDayOfMonth());
 			LocalDate fimMes = hoje.with(TemporalAdjusters.lastDayOfMonth());
-			
+
 			Date dtHoje = Date.valueOf(hoje);
-			
+
 			Long lotesBrutosRecebidosHoje = loteBrutoService.contarLoteBrutoPorData(dtHoje);
 			BigDecimal lotesBrutosKgRecebidosHoje = loteBrutoService.somarPesoEntradaLoteBrutoPorDatas(dtHoje, dtHoje);
 			BigDecimal totalVendasNoMes = vendaService.somarValorTotalVendasPorDatas(Date.valueOf(inicioMes), Date.valueOf(fimMes));
-			
+
 			Long totalPagamentosPendentes = transacaoCompraService.contarTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
 			BigDecimal valorTotalPagamentosPendentes = transacaoCompraService.somarValorTotalTransacaoCompraPorStatus(StatusPagamentoTransacaoCompra.PENDENTE);
 			BigDecimal lotesProcessadosKgProntos = loteProcessadoService.somarPesoTotalLoteProcessadoPorEtapaProcessamento("Pronto para Venda");
-			
+
 			request.setAttribute("lotesBrutosRecebidosHoje", lotesBrutosRecebidosHoje);
 			request.setAttribute("lotesBrutosKgRecebidosHoje", lotesBrutosKgRecebidosHoje);
-			
+
 			request.setAttribute("totalVendasMes", totalVendasNoMes);
-			
+
 			request.setAttribute("totalPagamentosPendentes", totalPagamentosPendentes);
 			request.setAttribute("valorTotalPagamentosPendentes", valorTotalPagamentosPendentes);
-			
+
 			request.setAttribute("lotesProcessadosKgProntos", lotesProcessadosKgProntos);
-			
+
 			RequestDispatcher reqDis = request.getRequestDispatcher("index.jsp");
 			reqDis.forward(request, response);
-			
+
 		} catch (Exception e) {
-			
+
 			request.getSession().setAttribute("msgErro", "Ocorreu um erro ao tentar ir para a página inicial!<br>Erro: " + e.getMessage());
 			response.sendRedirect(request.getHeader("referer"));
-		
+
 		}
-		
+
 	}
 
 }

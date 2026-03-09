@@ -6,15 +6,15 @@ import java.sql.Date;
 import com.gestaocooperativareciclagem.model.enums.StatusLoteBruto;
 
 public class LoteBruto {
-	
+
 	private int id;
 	private BigDecimal pesoEntradaKg;
 	private Date dtEntrada;
 	private StatusLoteBruto status;
 	private Fornecedor fornecedor;
-	
+
 	public LoteBruto() {}
-	
+
 	public LoteBruto(int id, BigDecimal pesoEntradaKg, Date dtEntrada, StatusLoteBruto status, Fornecedor fornecedor) {
 		this.id = id;
 		this.pesoEntradaKg = pesoEntradaKg;

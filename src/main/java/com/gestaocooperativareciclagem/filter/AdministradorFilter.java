@@ -22,9 +22,9 @@ import com.gestaocooperativareciclagem.model.Usuario;
  */
 @WebFilter(filterName="AdministradorFilter")
 public class AdministradorFilter extends HttpFilter implements Filter {
-       
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3707588381401565707L;
 
@@ -39,6 +39,7 @@ public class AdministradorFilter extends HttpFilter implements Filter {
 	/**
 	 * @see Filter#destroy()
 	 */
+	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
 	}
@@ -46,31 +47,33 @@ public class AdministradorFilter extends HttpFilter implements Filter {
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		List<String> papeisPermitidos = Arrays.asList("administrador");
-		
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		
+
 		Usuario usuario = (Usuario) req.getSession().getAttribute("usuarioLogado");
-		
+
 		if (papeisPermitidos.contains(usuario.getPapel().toLowerCase())) {
-			
+
 			chain.doFilter(request, response);
-			
+
 		} else {
-			
+
 			req.getSession().setAttribute("msgErro", "Acesso restrito a Administradores");
 			res.sendRedirect(req.getContextPath() + "/index.jsp");
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
+	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		// TODO Auto-generated method stub
 	}

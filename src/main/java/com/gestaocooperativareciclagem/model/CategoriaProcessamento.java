@@ -1,11 +1,11 @@
 package com.gestaocooperativareciclagem.model;
 
 public class CategoriaProcessamento {
-	
+
 	private int id;
 	private String nome;
 	private String descricao;
-	
+
 	public CategoriaProcessamento() {}
 
 	public CategoriaProcessamento(int id, String nome, String descricao) {

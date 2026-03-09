@@ -3,22 +3,22 @@ package com.gestaocooperativareciclagem.model;
 import com.gestaocooperativareciclagem.utils.Validador;
 
 public class Usuario {
-	
+
 	private int id;
 	private String nome;
 	private String email;
 	private String senha;
 	private String papel;
-	
+
 	public Usuario() {}
-	
+
 	public Usuario(int id, String nome, String email, String senha, String papel) {
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.papel = papel;
-		
+
 		this.validar();
 	}
 
@@ -27,40 +27,40 @@ public class Usuario {
 		this.email = email;
 		this.senha = senha;
 		this.papel = papel;
-		
+
 		this.validar();
 	}
-	
+
 	private void validar() {
-		
+
 		if (nome == null) {
 			throw new RuntimeException("Nome inválido! O nome não pode estar vazio.");
 		}
-		
+
 		if (nome.isBlank()) {
 			throw new RuntimeException("Nome inválido! O nome não pode estar branco.");
 		}
-		
+
 		if (!Validador.isEmail(this.email)) {
 			throw new RuntimeException("E-mail inválido! É necessário informar um e-mail válido.");
 		}
-		
+
 		if (senha == null) {
 			throw new RuntimeException("Senha inválida! A senha não pode estar vazia.");
 		}
-		
+
 		if (senha.isBlank()) {
 			throw new RuntimeException("Senha inválida! O senha não pode estar branco.");
 		}
-		
+
 		if (papel == null) {
 			throw new RuntimeException("Papel inválido! A papel não pode estar vazia.");
 		}
-		
+
 		if (papel.isBlank()) {
 			throw new RuntimeException("Papel inválido! O papel não pode estar branco.");
 		}
-		
+
 	}
 
 	public int getId() {

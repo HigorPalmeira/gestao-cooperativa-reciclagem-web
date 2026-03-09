@@ -6,14 +6,14 @@ import java.sql.Date;
 import com.gestaocooperativareciclagem.model.enums.StatusPagamentoTransacaoCompra;
 
 public class TransacaoCompra {
-	
+
 	private int id;
 	private BigDecimal valorTotalCalculado;
 	private StatusPagamentoTransacaoCompra status;
 	private Date dtCalculo;
 	private Date dtPagamento;
 	private LoteBruto loteBruto;
-	
+
 	public TransacaoCompra() {}
 
 	public TransacaoCompra(int id, BigDecimal valorTotalCalculado, StatusPagamentoTransacaoCompra status, Date dtCalculo,

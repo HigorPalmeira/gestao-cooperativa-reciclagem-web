@@ -3,13 +3,13 @@ package com.gestaocooperativareciclagem.model;
 import java.math.BigDecimal;
 
 public class ItemVenda {
-	
+
 	private int id;
 	private TipoMaterial tipoMaterial;
 	private Venda venda;
 	private BigDecimal pesoVendidoKg;
 	private BigDecimal precoUnitarioKg;
-	
+
 	public ItemVenda() {}
 
 	public ItemVenda(int id, TipoMaterial tipoMaterial, Venda venda, BigDecimal pesoVendidoKg, BigDecimal precoUnitarioKg) {

@@ -19,11 +19,11 @@ public class Criptografia {
 		return hexString.toString();
 
 	}
-	
+
 	public static String criptografar(String senha) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		
+
 		return getHexString(senha);
-		
+
 	}
 
 }

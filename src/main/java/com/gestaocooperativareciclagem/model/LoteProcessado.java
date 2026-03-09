@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class LoteProcessado {
-	
+
 	private int id;
 	private BigDecimal pesoAtualKg;
 	private Date dtCriacao;
 	private TipoMaterial tipoMaterial;
 	private LoteBruto loteBruto;
-	
+
 	public LoteProcessado() {}
 
 	public LoteProcessado(int id, BigDecimal pesoAtualKg, Date dtCriacao, TipoMaterial tipoMaterial,

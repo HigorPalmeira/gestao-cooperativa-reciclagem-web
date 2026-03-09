@@ -3,12 +3,12 @@ package com.gestaocooperativareciclagem.model;
 import java.sql.Date;
 
 public class EtapaProcessamento {
-	
+
 	private LoteProcessado loteProcessado;
 	private CategoriaProcessamento categoriaProcessamento;
 	private Date dtProcessamento;
 	private String status;
-	
+
 	public EtapaProcessamento() {}
 
 	public EtapaProcessamento(LoteProcessado loteProcessado, CategoriaProcessamento categoriaProcessamento,
@@ -56,5 +56,5 @@ public class EtapaProcessamento {
 		return "EtapaProcessamento [loteProcessado=" + loteProcessado + ", categoriaProcessamento="
 				+ categoriaProcessamento + ", dtProcessamento=" + dtProcessamento + ", status=" + status + "]";
 	}
-	
+
 }

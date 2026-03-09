@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 public class Venda {
-	
+
 	private int id;
 	private Date dtVenda;
 	private BigDecimal valorTotal;
 	private Cliente cliente;
-	
+
 	public Venda() {}
 
 	public Venda(int id, Date dtVenda, BigDecimal valorTotal, Cliente cliente) {

@@ -1,13 +1,13 @@
 package com.gestaocooperativareciclagem.model;
 
 public class TipoMaterial {
-	
+
 	private int id;
 	private String nome;
 	private String descricao;
-	
+
 	public TipoMaterial() {}
-	
+
 	public TipoMaterial(int id, String nome, String descricao) {
 		this.id = id;
 		this.nome = nome;
