@@ -56,4 +56,38 @@ Descrição das entidades:
 
 Este tópico apresenta a arquitetura do projeto, que segue o padrão MVC (*Model-View-Controller*), o que garante a separação clara entre a interface do usuário, a lógica de negócios e o acesso aos dados do sistema de Gestão de Cooperativa de Reciclagem. Abaixo, apresentamos a Figura 2, com a árvore de pacotes e pastas do projeto.
 
-![Figura 2 - Árvore de pacotes e pastas do projeto implementada na IDE Eclipse](#)
+![Figura 2 - Árvore de pacotes e pastas do projeto implementada na IDE Eclipse](https://github.com/HigorPalmeira/gestao-cooperativa-reciclagem-web/blob/main/pacotes-projeto.png?raw=true)
+
+#### 4.1.1 Modelo
+
+A camada Modelo está representada no projeto nos pacotes/packages *model*, *dao*, *service* e o sub-pacote *model.enums*.
+
+#### 4.1.2 Visão
+
+A camada Visão está representada no projeto nos pacotes/packages *webapp* e nas sub-pastas *pages*.
+
+### 4.1.3 Controlador
+
+A camada Controlador está representada no projeto no pacote/package *controller*.
+
+### 4.1.4 Outros Pacotes
+
+Nesta seção, contém detalhes sobre outros pacotes presentes no projeto.
+
+#### 4.1.4.1 Filtro
+
+A camada Filtro está representada no projeto no pacote/package *filter*.
+
+#### 4.1.4.2 Utilitários
+
+A camada Utilitário está representada no projeto no pacote/package *utils*.
+
+### 4.2 Telas
+
+Este tópico apresenta o sistema de **Gestão de Cooperativa de Reciclagem**. As telas abaixo são apresentadas por ordem de usabilidade no sistema e são explicadas de forma detalhada após cada imagem.
+
+## 5. Links
+
+Esta seção contém o link do projeto disponibilizado no GitHub, para visualização da estrutura implementada.
+
+Link: [gestao-cooperativa-reciclagem-web](https://github.com/HigorPalmeira/gestao-cooperativa-reciclagem-web).
